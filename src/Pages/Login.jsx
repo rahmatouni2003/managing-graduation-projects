@@ -1,24 +1,25 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../assets/logo.png";
-// import "../App.css";
+
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  // submit handler
   const handleSubmit = (e) => {
-    e.preventDefault(); //  prevent reload
+    e.preventDefault();
     console.log("Login form submitted");
   };
 
   return (
     <div
       className="bg-white px-4 
-                h-auto        
-                md:min-h-screen
-                flex flex-col 
-                justify-center md:justify-start
-                overflow-hidden"
+                 h-auto        
+                 md:min-h-screen
+                 flex flex-col 
+                 justify-center md:justify-start
+                 overflow-hidden"
     >
       {/* Logo */}
       <div className="p-4">
@@ -26,10 +27,10 @@ export default function Login() {
       </div>
 
       {/* Form */}
-      <div className="flex justify-center items-center md:items-start w-full mt-20 md:mt-0 ">
+      <div className="flex justify-center items-center md:items-start w-full mt-20 md:mt-0">
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-lg md:max-w-xl lg:max-w-2xl mt-0 md:mt-10"
+          className="w-full max-w-lg md:max-w-xl lg:max-w-2xl md:mt-10"
         >
           {/* ID */}
           <div className="mb-6">
@@ -37,7 +38,8 @@ export default function Login() {
             <input
               type="text"
               placeholder="221"
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md px-4 py-2 
+                         focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -51,8 +53,10 @@ export default function Login() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="********"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-4 py-2 pr-10 
+                           focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -67,6 +71,7 @@ export default function Login() {
           <div className="text-right mb-6">
             <button
               type="button"
+              onClick={() => navigate("/forget-password")}
               className="text-red-500 text-sm hover:underline"
             >
               Forget Password ?
@@ -76,7 +81,8 @@ export default function Login() {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-3 rounded-md 
+                       font-medium hover:bg-blue-700 transition"
           >
             Login
           </button>
