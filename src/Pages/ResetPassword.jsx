@@ -7,9 +7,24 @@ export default function ResetPassword() {
   const navigate = useNavigate();
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!newPassword.trim() || !confirmPassword.trim()) {
+      setError("Both fields are required");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setError("");
     console.log("password reset");
     navigate("/");
   };
@@ -43,6 +58,9 @@ export default function ResetPassword() {
             </p>
           </div>
 
+          {/* Error Message */}
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+
           {/* New Password */}
           <div className="mb-5">
             <label className="block text-blue-600 font-medium mb-2">
@@ -53,6 +71,8 @@ export default function ResetPassword() {
               <input
                 type={showNew ? "text" : "password"}
                 placeholder="********"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 pr-10
                            focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -76,6 +96,8 @@ export default function ResetPassword() {
               <input
                 type={showConfirm ? "text" : "password"}
                 placeholder="********"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 pr-10
                            focus:outline-none focus:ring-2 focus:ring-blue-500"
               />

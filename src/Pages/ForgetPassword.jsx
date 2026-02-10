@@ -1,11 +1,28 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 
 export default function ForgetPassword() {
   const navigate = useNavigate();
+  const [id, setId] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // empty check
+    if (!id.trim()) {
+      setError("ID is required");
+      return;
+    }
+
+    // numbers only check
+    if (!/^\d+$/.test(id)) {
+      setError("ID must contain numbers only");
+      return;
+    }
+
+    setError("");
     navigate("/verify-otp");
   };
 
@@ -18,12 +35,10 @@ export default function ForgetPassword() {
                  justify-center md:justify-start
                  overflow-hidden"
     >
-      {/* Logo */}
       <div className="p-4">
         <img src={logo} alt="Logo" className="w-24 h-24 mb-6 md:mb-0" />
       </div>
 
-      {/* Form */}
       <div className="flex justify-center items-center md:items-start w-full mt-20 md:mt-0">
         <form
           onSubmit={handleSubmit}
@@ -35,12 +50,15 @@ export default function ForgetPassword() {
             Please enter your ID to receive a verification code.
           </p>
 
-          {/* ID */}
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+
           <div className="mb-6">
             <label className="block text-blue-600 font-medium mb-2">
               Enter your ID :
             </label>
             <input
+              value={id}
+              onChange={(e) => setId(e.target.value)}
               type="text"
               placeholder="221"
               className="w-full border border-gray-300 rounded-md px-4 py-2 
@@ -48,7 +66,6 @@ export default function ForgetPassword() {
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-3 rounded-md 
@@ -57,7 +74,6 @@ export default function ForgetPassword() {
             Submit
           </button>
 
-          {/* Back */}
           <div className="text-center">
             <button
               type="button"
