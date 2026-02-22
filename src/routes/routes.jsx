@@ -7,6 +7,7 @@ import Doctor from "../Pages/Doctor";
 import Tasks from "../Components/Tasks";
 import AiFilterLayout from "../Pages/AiFilterLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
+import EditProfile from "../Pages/EditProfile";
 
 export const router = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -14,6 +15,14 @@ export const router = createBrowserRouter([
   { path: "/verify-otp", element: <VerifyOTP /> },
   { path: "/reset-password", element: <ResetPassword /> },
 
+  {
+    path: "/edit-profile",
+    element: (
+      <ProtectedRoute>
+        <EditProfile />
+      </ProtectedRoute>
+    ),
+  },
   {
     path: "/doctor",
     element: (

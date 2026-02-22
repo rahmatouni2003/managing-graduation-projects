@@ -1,73 +1,121 @@
-import Header from "../Components/Header"; // عدلي المسار حسب مكان ملفك
-import Sidebar from "../Components/Sidebar";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaCamera } from "react-icons/fa";
+import { useProfile } from "../context/ProfileContext";
+import { FaUserCircle } from "react-icons/fa";
+// import ProfileSidebar from "../components/ProfileSidebar";
 
 export default function EditProfile() {
+  const navigate = useNavigate();
+
+  const { profileImage, saveProfileImage } = useProfile();
+
+  const [previewImage, setPreviewImage] = useState(profileImage);
+
   const [formData, setFormData] = useState({
-    name: "Ahmed Khaled Yasser",
+    name: "",
     faculty: "Computer and Artificial Intelligence",
     track: "AI",
     department: "CS",
-    universityEmail: "AhmedKhaled1240@fcis.bsu.eg",
+    universityEmail: "",
     city: "BeniSuef",
-    phone: "01223479790",
-    email: "ahmedkhaled@gmail.com",
-    password: "********",
+    phone: "",
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewImage(url);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Updated data:", formData);
-    alert("Profile Updated!");
-  };
 
+    saveProfileImage(previewImage);
+
+    navigate("/doctor");
+  };
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-200">
       {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
+      {/* Main */}
+      <div className="flex-1 flex flex-col ">
         <Header />
 
-        {/* Form */}
-        <div className="p-6 flex-1 overflow-auto">
-          <h1 className="text-2xl font-semibold mb-6">Edit Profile</h1>
+        <div className="">
+          {/* Header Section */}
+          <div className=" p-3 mb-1 flex items-center gap-6">
+            {/* Profile Image */}
+            <label className="relative cursor-pointer">
+              {previewImage ? (
+                <img
+                  src={previewImage}
+                  className="w-32 h-32 rounded-full object-cover "
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-black  flex items-center justify-center">
+                  <FaUserCircle className="text-white text-5xl" />
+                </div>
+              )}
 
+              <div className="absolute bottom-0 right-0 bg-gray-200 p-2 rounded-full">
+                <FaCamera />
+              </div>
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
+
+            {/* Title */}
+            <h1 className="text-3xl font-bold text-blue-600">Edit Profile</h1>
+          </div>
+
+          {/* Form */}
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className=" p-6 grid grid-cols-1 md:grid-cols-3 gap-6"
           >
             {/* Name */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Name
-              </label>
+              <label className="block  mb-2 font-medium">Name</label>
               <input
-                type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full  bg-white  rounded-md px-4 py-2"
               />
             </div>
 
             {/* Faculty */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Faculty
-              </label>
+              <label className="block mb-2 font-medium">Faculty</label>
               <select
                 name="faculty"
                 value={formData.faculty}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border-0 rounded-md px-4 py-2"
               >
                 <option>Computer and Artificial Intelligence</option>
                 <option>Engineering</option>
@@ -77,14 +125,12 @@ export default function EditProfile() {
 
             {/* Track */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Track
-              </label>
+              <label className="block mb-2 font-medium">Track</label>
               <select
                 name="track"
                 value={formData.track}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full  border-0  rounded-md px-4 py-2"
               >
                 <option>AI</option>
                 <option>Data Science</option>
@@ -94,14 +140,12 @@ export default function EditProfile() {
 
             {/* Department */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Department
-              </label>
+              <label className="block mb-2 font-medium">Department</label>
               <select
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full  border-0 rounded-md px-4 py-2"
               >
                 <option>CS</option>
                 <option>IT</option>
@@ -110,28 +154,24 @@ export default function EditProfile() {
 
             {/* University Email */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                University Email
-              </label>
+              <label className="block mb-2 font-medium">University Email</label>
               <input
                 type="email"
                 name="universityEmail"
                 value={formData.universityEmail}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border-0 rounded-md px-4 py-2"
               />
             </div>
 
             {/* City */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                City
-              </label>
+              <label className="block mb-2 font-medium">City</label>
               <select
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border-0 rounded-md px-4 py-2"
               >
                 <option>BeniSuef</option>
                 <option>Cairo</option>
@@ -139,58 +179,50 @@ export default function EditProfile() {
               </select>
             </div>
 
-            {/* Phone Number */}
+            {/* Phone */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Phone Number
-              </label>
+              <label className="block mb-2 font-medium">Phone Number</label>
               <input
-                type="text"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border-0 bg-white  rounded-md px-4 py-2"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Email
-              </label>
+              <label className="block mb-2 font-medium">Email</label>
               <input
-                type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full  bg-white  rounded-md px-4 py-2"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">
-                Password
-              </label>
+              <label className="block mb-2 font-medium">Password</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border-0  bg-white rounded-md px-4 py-2"
               />
             </div>
-          </form>
 
-          {/* Save Button */}
-          <div className="mt-6">
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition"
-            >
-              Save Changes
-            </button>
-          </div>
+            {/* Button */}
+            <div className="md:col-span-3">
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-15 py-3 rounded-md hover:bg-blue-700 transition"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

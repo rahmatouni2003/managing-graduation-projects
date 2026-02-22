@@ -23,7 +23,7 @@ export default function Login() {
 
     setError("");
     login();
-    navigate("/doctor");
+    navigate("/edit-profile");
   };
 
   return (

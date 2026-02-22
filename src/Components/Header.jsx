@@ -1,8 +1,10 @@
 import logo from "../assets/logo2.png";
 import { useState } from "react";
 import { FaRegBell, FaUserCircle, FaBars, FaSearch } from "react-icons/fa";
+import { useProfile } from "../context/ProfileContext";
 function Header() {
   const [open, setOpen] = useState(false);
+  const { profileImage } = useProfile();
   return (
     <div>
       <nav className="bg-[#243B56]">
@@ -26,7 +28,14 @@ function Header() {
                 <FaRegBell className="text-xl text-white hover:text-gray-300 transition" />
                 <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full" />
               </div>
-              <FaUserCircle className="hidden md:block text-3xl cursor-pointer" />
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  className="w-9 h-9 rounded-full object-cover"
+                />
+              ) : (
+                <FaUserCircle className="text-3xl" />
+              )}
               <button
                 className="md:hidden text-xl"
                 onClick={() => setOpen(!open)}
