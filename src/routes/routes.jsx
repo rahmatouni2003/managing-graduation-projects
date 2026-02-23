@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Doctor from "../Pages/Doctor";
 import Tasks from "../Components/Tasks";
 import AiFilterLayout from "../Pages/AiFilterLayout";
+import ProjectsManagedTeams from "../Pages/ProjectsManagedTeams";
+import ProjectDetails from "../Pages/ProjectDetails";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -23,11 +25,15 @@ export const router = createBrowserRouter([
             path: "milestones",
             element: <div>Milestone Content</div>,
           },
-          {
-            path: "team",
-            element: <div>Team Content</div>,
-          },
         ],
+      },
+       {
+            path: "projects",
+            element: <ProjectsManagedTeams />,
+          },
+          {
+        path: "project-details", // 👈 الصفحة الجديدة
+        element: <ProjectDetails />,
       },
     ],
   },
