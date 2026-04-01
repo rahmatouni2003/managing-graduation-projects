@@ -4,6 +4,7 @@ import Tasks from "../Components/Tasks";
 import AiFilterLayout from "../Pages/AiFilterLayout";
 import ProjectsManagedTeams from "../Pages/ProjectsManagedTeams";
 import ProjectDetails from "../Pages/ProjectDetails";
+import JoinRequests from "../Pages/JoinRequests";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
           {
         path: "project-details", // 👈 الصفحة الجديدة
         element: <ProjectDetails />,
+      },
+      {
+        path: "join-requests",
+        element: <JoinRequests />,
       },
     ],
   },
