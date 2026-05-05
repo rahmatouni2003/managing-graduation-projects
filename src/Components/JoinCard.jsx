@@ -15,17 +15,14 @@ const JoinCard = ({
   projectPDF,
 }) => {
   const [open, setOpen] = useState(false);
-
   const visibleMembers = members.slice(0, 4);
   const remaining = members.length - 4;
-
   return (
     <Card sx={{ borderRadius: 3, boxShadow: 3, position: "relative" , overflow: "visible",}}>
       <CardContent>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h6">{name}</Typography>
         </Box>
-
         {/* department */}
         <Box
           sx={{
@@ -42,9 +39,7 @@ const JoinCard = ({
         >
           {department}
         </Box>
-
         <Typography mt={2}>{description}</Typography>
-
         {/* members */}
         <Box mt={2} display="flex" alignItems="center" gap={1}>
           <AvatarGroup max={4}>
@@ -52,7 +47,6 @@ const JoinCard = ({
               <Avatar key={index} src={member.image} />
             ))}
           </AvatarGroup>
-
           {remaining > 0 && (
             <Box
               onClick={() => setOpen(true)}

@@ -5,6 +5,8 @@ import AiFilterLayout from "../Pages/AiFilterLayout";
 import ProjectsManagedTeams from "../Pages/ProjectsManagedTeams";
 import ProjectDetails from "../Pages/ProjectDetails";
 import JoinRequests from "../Pages/JoinRequests";
+import StudentDashboard from "../Pages/studentDashboard";
+import NotificationsPage from "../Pages/Notifications";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -42,4 +44,14 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "student-dashboard",
+    element: <StudentDashboard />,
+
+  }
+,
+{
+  path: "notifications",
+  element: <NotificationsPage />,
+}
 ]);
