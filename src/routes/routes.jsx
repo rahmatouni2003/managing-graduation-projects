@@ -7,6 +7,8 @@ import ProjectDetails from "../Pages/ProjectDetails";
 import JoinRequests from "../Pages/JoinRequests";
 import StudentDashboard from "../Pages/studentDashboard";
 import NotificationsPage from "../Pages/Notifications";
+import ProjectTypes from "../Pages/projectType";
+import UploadProjectIdea from "../Pages/UploadProjectIdea";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -41,9 +43,8 @@ export const router = createBrowserRouter([
       {
         path: "join-requests",
         element: <JoinRequests />,
-      },
-    ],
-  },
+      }
+ ,
   {
     path: "student-dashboard",
     element: <StudentDashboard />,
@@ -53,5 +54,15 @@ export const router = createBrowserRouter([
 {
   path: "notifications",
   element: <NotificationsPage />,
-}
+},
+{
+  path: "project-types",
+  element: <ProjectTypes />,
+},
+{
+  path: "Upload-Project-Idea",
+  element: <UploadProjectIdea />,
+},
+    ],
+  }
 ]);

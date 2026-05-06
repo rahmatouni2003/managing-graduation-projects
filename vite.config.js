@@ -1,8 +1,16 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react"; // vite default react plugin
-import tailwindcss from "@tailwindcss/vite"; // Tailwind plugin
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-});
+  plugins: [react()],
+  
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://fci-graduation-project.fivesolutions.net",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+  },
+})
