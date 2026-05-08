@@ -1,11 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { Toaster } from "react-hot-toast";
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-     <Toaster />
-    <App />
-  </StrictMode>,
-)
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/routes";
+import { AuthProvider } from "./context/AuthContext";
+import "./index.css";
+import App from './App.jsx'
+import { ProfileProvider } from "./context/ProfileContext";
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+      <Toaster />
+    <AuthProvider>
+      <ProfileProvider>
+        <RouterProvider router={router} />
+      </ProfileProvider>
+    </AuthProvider>
+  </React.StrictMode>,
+);
+

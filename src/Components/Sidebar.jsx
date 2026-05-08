@@ -9,11 +9,7 @@ export default function Sidebar() {
   return (
     <aside className="w-64 min-h-screen bg-[#243B56] text-white py-8">
       <nav className="flex flex-col gap-1 px-3">
-        <SidebarItem
-          to="/"
-          icon={<MdDashboard />}
-          label="Dashboard"
-        />
+        <SidebarItem to="/" icon={<MdDashboard />} label="Dashboard" />
         <SidebarItem
           to="/ai-filter"
           icon={<AiOutlineFilter />}
@@ -24,11 +20,7 @@ export default function Sidebar() {
           icon={<FaUsers />}
           label="Projects & Teams"
         />
-        <SidebarItem
-          to="/chat"
-          icon={<BsChatDots />}
-          label="Community Chat"
-        />
+        <SidebarItem to="/chat" icon={<BsChatDots />} label="Community Chat" />
         <SidebarItem
           to="/milestones"
           icon={<FaRegCalendarAlt />}
@@ -39,11 +31,7 @@ export default function Sidebar() {
           icon={<HiOutlineUserAdd />}
           label="Join Requests"
         />
-        <SidebarItem
-          to="/library"
-          icon={<FiFolder />}
-          label="Library"
-        />
+        <SidebarItem to="/library" icon={<FiFolder />} label="Library" />
       </nav>
     </aside>
   );

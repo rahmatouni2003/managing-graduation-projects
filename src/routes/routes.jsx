@@ -1,4 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
+import ForgetPassword from "../Pages/ForgetPassword";
+import VerifyOTP from "../Pages/VerifyOTP";
+import ResetPassword from "../Pages/ResetPassword";
 import Doctor from "../Pages/Doctor";
 import Tasks from "../Components/Tasks";
 import AiFilterLayout from "../Pages/AiFilterLayout";
@@ -10,24 +13,40 @@ import NotificationsPage from "../Pages/Notifications";
 import ProjectTypes from "../Pages/projectType";
 import UploadProjectIdea from "../Pages/UploadProjectIdea";
 import Login from "../Pages/auth/Login";
-import EditProfile from "../Pages/EditProfile";
+import EditStudentProfile from "../Pages/EditStudentProfile";
+import ProtectedRoute from "../Components/ProtectedRoute";
+import EditProfile from "../Pages/EditStudentProfile";
 export const router = createBrowserRouter([
+  { path: "login", element: <Login /> },
+  { path: "/forget-password", element: <ForgetPassword /> },
+  { path: "/verify-otp", element: <VerifyOTP /> },
+  { path: "/reset-password", element: <ResetPassword /> },
+
   {
-    path: "/",
-    element: <Doctor />,
+    path: "/edit-profile",
+    element: (
+      <ProtectedRoute>
+        <EditProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/doctor",
+    element: (
+      <ProtectedRoute>
+        <Doctor />
+      </ProtectedRoute>
+    ),
     children: [
-      {
-        index: true,
-        element: <Tasks />,
-      },
+      { index: true, element: <Tasks /> },
+
       {
         path: "ai-filter",
         element: <AiFilterLayout />,
         children: [
-          {
-            path: "milestones",
-            element: <div>Milestone Content</div>,
-          },
+          { index: true, element: <div></div> },
+          { path: "milestones", element: <div>Milestone Content</div> },
+          { path: "team", element: <div>Team Content</div> },
         ],
       },
       {
@@ -61,10 +80,6 @@ export const router = createBrowserRouter([
   {
     path: "Upload-Project-Idea",
     element: <UploadProjectIdea />,
-  },
-    {
-    path: "login",
-    element: <Login />,
   },
     {
     path: "/profile",
