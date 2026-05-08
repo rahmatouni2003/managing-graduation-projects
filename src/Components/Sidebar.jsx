@@ -7,7 +7,7 @@ import { HiOutlineUserAdd } from "react-icons/hi";
 import { FiFolder } from "react-icons/fi";
 export default function Sidebar() {
   return (
-    <aside className="w-54 min-h-screen bg-[#243B56] text-white py-8">
+    <aside className="w-64 min-h-screen bg-[#243B56] text-white py-8">
       <nav className="flex flex-col gap-1 px-3">
         <SidebarItem
           to="/"

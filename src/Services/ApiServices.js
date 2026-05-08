@@ -1,9 +1,12 @@
 import { settings } from "../Config/Settings";
-import { toast } from "react-hot-toast";
+
 
 const token = {
-  getUserToken: () => "mock-token",
-  clearUserTokenData: () => {}
+  getUserToken: () => localStorage.getItem("token"),
+  clearUserTokenData: () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }
 };
 
 const isDevelopment = import.meta.env.DEV;
@@ -18,16 +21,6 @@ function extractResponseData(res) {
   return res || [];
 }
 
-let toastVisible = false;
-
-const showToastOnce = (message) => {
-  if (toastVisible) return;
-  toastVisible = true;
-  toast.error(message);
-  setTimeout(() => {
-    toastVisible = false;
-  }, 3000);
-};
 
 export async function submitRequestAsync(
   endpoint,
@@ -83,21 +76,20 @@ export async function submitRequestAsync(
 
     return extractResponseData(res);
   } catch (error) {
-    let errorMsg = "";
+  let errorMsg = "";
 
-    if (error.message.includes("401")) {
-      token.clearUserTokenData();
-      errorMsg = "Session expired, please login again.";
-    } else if (
-      error.message.includes("NetworkError") ||
-      error.message.includes("Failed to fetch")
-    ) {
-      errorMsg = "Network issue! Please check your connection.";
-    } else {
-      errorMsg = error.message || "Unexpected error occurred";
-    }
-
-    showToastOnce(errorMsg);
-    throw error;
+  if (error.message.includes("401")) {
+    token.clearUserTokenData();
+    errorMsg = "Session expired, please login again.";
+  } else if (
+    error.message.includes("NetworkError") ||
+    error.message.includes("Failed to fetch")
+  ) {
+    errorMsg = "Network issue! Please check your connection.";
+  } else {
+    errorMsg = error.message || "Unexpected error occurred";
   }
+
+  throw new Error(errorMsg);
+}
 }

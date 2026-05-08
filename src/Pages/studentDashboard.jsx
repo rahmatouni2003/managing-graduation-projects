@@ -2,8 +2,9 @@ import { FaSearch } from "react-icons/fa";
 import { MdExpandMore } from "react-icons/md";
 import { useState } from "react";
 import { Navbar } from "../Components/studentNavbar";
-// Reusable Navbar
+import landing from "../assets/homee2.jpg";
 
+// Reusable Navbar
 
 // Main Page
 const Dashboard = () => {
@@ -17,21 +18,22 @@ const Dashboard = () => {
         {/* Left Content */}
         <div className="flex-1">
           {/* Hero */}
-          <div className="relative rounded-xl overflow-hidden h-56">
+          <div className="relative  overflow-hidden h-56">
             <img
-              src="https://images.unsplash.com/photo-1677442136019-21780ecad995"
+              src={landing}
               className="absolute w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/40" />
 
-            <div className="relative p-6 text-white">
-              <h2 className="text-2xl font-semibold mb-4">Welcome AI</h2>
+            <div className="relative flex flex-col items-center justify-center h-full ">
+              <h2 className="text-2xl font-semibold mb-4 text-white">Welcome AI</h2>
 
-              <div className="flex items-center bg-white rounded-full px-4 py-2 w-[400px]">
+         
+<div className="flex items-center bg-white rounded-full px-5 py-3 w-[800px] mt-6 shadow-md">
                 <FaSearch className="text-gray-400" />
                 <input
                   placeholder="Search Projects or Students"
-                  className="ml-2 w-full outline-none text-black text-sm"
+                  className="ml-3 w-full outline-none text-black text-sm bg-transparent"
                 />
               </div>
             </div>
