@@ -8,7 +8,7 @@ import Project from "../Services/Project.model";
 import { toast } from "react-hot-toast";
 import Milestones from "../Services/Milestones.model";
 import { useEffect } from "react";
-export const Navbar = () => {
+export const StudentNavbar = () => {
   const [openNotif, setOpenNotif] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [file, setFile] = useState(null);

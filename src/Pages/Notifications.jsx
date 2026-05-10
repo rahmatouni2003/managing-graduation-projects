@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navbar } from "../Components/studentNavbar";
+import {StudentNavbar} from "../Components/StudentNavbar";
 const Notifications = () => {
   const [tab, setTab] = useState("all");
 

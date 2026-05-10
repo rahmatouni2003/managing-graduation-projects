@@ -1,3 +1,4 @@
+import { FiUploadCloud, FiImage } from "react-icons/fi";
 const UploadProjectIdea = () => {
   return (
     <div className="bg-gray-100 min-h-screen p-8">
@@ -12,10 +13,6 @@ const UploadProjectIdea = () => {
           </p>
         </div>
 
-        <img
-          src="https://i.pravatar.cc/40"
-          className="w-10 h-10 rounded-full"
-        />
       </div>
 
       {/* Form Card */}
@@ -140,22 +137,39 @@ const UploadProjectIdea = () => {
             </div>
 
             <div>
+
+<div>
+
               <label className="text-sm font-medium">
                 Attach Files (if any)
               </label>
-              <div className="border border-dashed border-[#D9D9D9] rounded p-4 text-center text-sm text-gray-500 mt-1">
-                Drag & drop your file here or click to upload
-              </div>
+  <label className="block cursor-pointer">
+    <input type="file" className="hidden" />
+
+    <div className="border border-dashed border-[#D9D9D9] rounded p-6 text-center text-sm text-gray-500 mt-1 hover:bg-gray-50 transition flex flex-col items-center gap-2">
+      
+      <FiUploadCloud className="text-3xl text-gray-400" />
+
+      <span>Drag & drop your file here or click to upload</span>
+    </div>
+  </label>
+</div>
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Project Picture
-              </label>
-              <div className="border border-dashed border-[#D9D9D9] rounded p-4 text-center text-sm text-gray-500 mt-1">
-                Drag & drop picture here or click to upload
-              </div>
-            </div>
+<div>
+  <label className="text-sm font-medium">Project Picture</label>
+
+  <label className="block cursor-pointer">
+    <input type="file" accept="image/*" className="hidden" />
+
+    <div className="border border-dashed border-[#D9D9D9] rounded p-6 text-center text-sm text-gray-500 mt-1 hover:bg-gray-50 transition flex flex-col items-center gap-2">
+      
+      <FiImage className="text-3xl text-gray-400" />
+
+      <span>Drag & drop picture here or click to upload</span>
+    </div>
+  </label>
+</div>
           </div>
         </div>
 

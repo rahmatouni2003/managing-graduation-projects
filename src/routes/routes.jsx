@@ -16,6 +16,10 @@ import Login from "../Pages/auth/Login";
 import EditStudentProfile from "../Pages/EditStudentProfile";
 import ProtectedRoute from "../Components/ProtectedRoute";
 import EditProfile from "../Pages/EditStudentProfile";
+import PoliciesPage from "../Pages/PoliciesPage";
+import ReportProblem from "../Pages/ReporProblem";
+import Home from "../Pages/Home";
+import UserInfo from "../Pages/UserInfo";
 export const router = createBrowserRouter([
   { path: "login", element: <Login /> },
   { path: "/forget-password", element: <ForgetPassword /> },
@@ -66,8 +70,11 @@ export const router = createBrowserRouter([
 
   // 👇 دول برا root route
   {
-    path: "student-dashboard",
-    element: <StudentDashboard />,
+    path: "/",
+    element: <Home />,
+      children: [
+    { path: "Upload-Project-Idea", element: <UploadProjectIdea /> },
+  ],
   },
   {
     path: "notifications",
@@ -82,7 +89,12 @@ export const router = createBrowserRouter([
     element: <UploadProjectIdea />,
   },
     {
-    path: "/profile",
-    element: <EditProfile />,
-  },
+  path: "/user",
+  element: <UserInfo />,
+  children: [
+    { path: "profile", element: <EditStudentProfile /> },
+    { path: "policies", element: <PoliciesPage /> },
+    { path: "report-problem", element: <ReportProblem /> },
+  ],
+},
 ]);

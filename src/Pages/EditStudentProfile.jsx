@@ -1,6 +1,4 @@
 
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa";
@@ -53,13 +51,13 @@ export default function EditProfile() {
     navigate("/doctor");
   };
   return (
-    <div className="flex min-h-screen bg-gray-200">
+    <div className="flex  bg-gray-50">
       {/* Sidebar */}
-      <Sidebar />
+    
 
       {/* Main */}
       <div className="flex-1 flex flex-col ">
-        <Header />
+       
 
         <div className="">
           {/* Header Section */}
@@ -218,7 +216,7 @@ export default function EditProfile() {
             <div className="md:col-span-3">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-15 py-3 rounded-md hover:bg-blue-700 transition"
+                className="bg-blue-600 text-white px-16 py-4 rounded-md hover:bg-blue-700 transition"
               >
                 Save Changes
               </button>

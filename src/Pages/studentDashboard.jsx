@@ -1,8 +1,4 @@
-import { FaSearch } from "react-icons/fa";
-import { MdExpandMore } from "react-icons/md";
-import { useState } from "react";
-import { Navbar } from "../Components/studentNavbar";
-import landing from "../assets/homee2.jpg";
+
 
 // Reusable Navbar
 

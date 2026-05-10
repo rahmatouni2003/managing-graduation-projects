@@ -8,7 +8,9 @@ class Auth {
     return submitRequestAsync("profile/update", "POST", data);
   }
 
-
+  static updateProfile() {
+    return submitRequestAsync("profile/update", "POST", data);
+  }
 
 }
 
