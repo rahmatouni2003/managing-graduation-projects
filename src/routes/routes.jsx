@@ -21,6 +21,7 @@ import PoliciesPage from "../Pages/PoliciesPage";
 import ReportProblem from "../Pages/ReporProblem";
 import Home from "../Pages/Home";
 import UserInfo from "../Pages/UserInfo";
+import ProjectsPage from "../Pages/ProjectsLiberary";
 export const router = createBrowserRouter([
   { path: "login", element: <Login /> },
   { path: "/forget-password", element: <ForgetPassword /> },
@@ -108,6 +109,10 @@ export const router = createBrowserRouter([
           { path: "policies", element: <PoliciesPage /> },
           { path: "report-problem", element: <ReportProblem /> },
         ],
+      },
+         {
+        path: "/ProjectsPage",
+        element: <ProjectsPage />
       },
     ],
   },
