@@ -1,187 +1,187 @@
-import { FiUploadCloud, FiImage } from "react-icons/fi";
-const UploadProjectIdea = () => {
+import {
+  FaPaperclip,
+  FaChevronDown,
+  FaLightbulb,
+} from "react-icons/fa";
+import "./uploadProjectIdea.css";
+
+export default function UploadProjectIdea() {
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
+    <div className="upload-page">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="upload-header">
         <div>
-          <h2 className="text-xl font-semibold">
-            Upload Project Idea <span>💡</span>
-          </h2>
-          <p className="text-sm text-gray-500">
-            Start your graduation project by submitting your idea.
+          <div className="title-row">
+            <h1>Upload Project Idea</h1>
+            <FaLightbulb className="bulb-icon" />
+          </div>
+
+          <p>
+            Start your graduation project by submitting your ideas.
           </p>
         </div>
 
+
       </div>
 
-      {/* Form Card */}
-      <div className="bg-white rounded-xl p-6 shadow">
-        <div className="grid grid-cols-2 gap-6">
-          {/* Left */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">
-                Project Title <span className="text-red-500">*</span>
+      {/* Main Card */}
+      <div className="upload-card">
+        <div className="form-grid">
+
+          {/* LEFT SIDE */}
+          <div className="form-column">
+
+            <div className="field-group">
+              <label>
+                Project Title <span>*</span>
               </label>
+
               <input
+                type="text"
                 placeholder="Enter your project name"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
               />
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Project Description <span className="text-red-500">*</span>
+            <div className="field-group">
+              <label>
+                Project Description <span>*</span>
               </label>
+
               <textarea
                 placeholder="Write a short overview of your project idea and what it aims to achieve."
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-              />
+              ></textarea>
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Problem Statement <span className="text-red-500">*</span>
+            <div className="field-group">
+              <label>
+                Problem Statement <span>*</span>
               </label>
+
               <textarea
                 placeholder="Describe the main problem"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-              />
+              ></textarea>
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Department <span className="text-red-500">*</span>
+            <div className="field-group">
+              <label>
+                Department <span>*</span>
               </label>
-              <select className="w-full border border-[#D9D9D9] rounded p-2 mt-1">
-                <option>CS</option>
-                <option>IT</option>
-              </select>
+
+              <div className="select-wrapper">
+                <select>
+                  <option>CS</option>
+                  <option>IT</option>
+                  <option>IS</option>
+                </select>
+
+                <FaChevronDown className="select-icon" />
+              </div>
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Proposed Solution / Objectives{" "}
-                <span className="text-red-500">*</span>
+            <div className="field-group">
+              <label>
+                Proposed Solution / Objectives <span>*</span>
               </label>
+
               <textarea
-                placeholder="Explain how your project will solve the problem"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-              />
+                placeholder="Explain how your project will solve the problem and what objectives it will achieve."
+              ></textarea>
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Project Type <span className="text-red-500">*</span>
-              </label>
-              <select className="w-full border border-[#D9D9D9] rounded p-2 mt-1">
-                <option>Application</option>
-                <option>Research</option>
-              </select>
+            <div className="field-group">
+              <label>Project Type</label>
+
+              <div className="select-wrapper">
+                <select>
+                  <option>Application</option>
+                  <option>Website</option>
+                  <option>AI Model</option>
+                </select>
+
+                <FaChevronDown className="select-icon" />
+              </div>
             </div>
           </div>
 
-          {/* Right */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">
-                Team Name <span className="text-red-500">*</span>
+          {/* RIGHT SIDE */}
+          <div className="form-column">
+
+            <div className="field-group">
+              <label>
+                Team Leader <span>*</span>
               </label>
-              <input
-                placeholder="Team Alpha"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-              />
+
+              <div className="select-wrapper">
+                <select>
+                  <option>Student Name</option>
+                </select>
+
+                <FaChevronDown className="select-icon" />
+              </div>
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Team Leader <span className="text-red-500">*</span>
+            <div className="field-group">
+              <label>
+                Category <span>*</span>
               </label>
-              <select className="w-full border border-[#D9D9D9] rounded p-2 mt-1">
-                <option>Student Name</option>
-              </select>
-            </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Category <span className="text-red-500">*</span>
-              </label>
               <input
+                type="text"
                 value="Software Engineering"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
                 readOnly
               />
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Tools / Technologies <span className="text-red-500">*</span>
+            <div className="field-group">
+              <label>
+                Tools / Technologies <span>*</span>
               </label>
-              <div className="border border-[#D9D9D9] rounded p-2 mt-1">
-                <div className="flex gap-2 flex-wrap">
-                  {["Figma", "React", "Python", "Firebase"].map((tool) => (
-                    <span
-                      key={tool}
-                      className="bg-gray-100 px-2 py-1 rounded text-xs"
-                    >
-                      {tool}
-                    </span>
-                  ))}
+
+              <div className="tools-box">
+                <div className="tools-list">
+                  <span>Figma</span>
+                  <span>React</span>
+                  <span>Python</span>
+                  <span>Firebase</span>
                 </div>
 
-                <button className="text-xs text-blue-600 mt-2">
-                  + Add Tool
-                </button>
+                <button>+ Add Tool</button>
               </div>
             </div>
 
-            <div>
+            <div className="field-group">
+              <label>Attach Files (if any) :</label>
 
-<div>
+              <div className="upload-box">
+                <FaPaperclip />
 
-              <label className="text-sm font-medium">
-                Attach Files (if any)
-              </label>
-  <label className="block cursor-pointer">
-    <input type="file" className="hidden" />
-
-    <div className="border border-dashed border-[#D9D9D9] rounded p-6 text-center text-sm text-gray-500 mt-1 hover:bg-gray-50 transition flex flex-col items-center gap-2">
-      
-      <FiUploadCloud className="text-3xl text-gray-400" />
-
-      <span>Drag & drop your file here or click to upload</span>
-    </div>
-  </label>
-</div>
+                <span>
+                  Drag & drop your file here or click to upload
+                </span>
+              </div>
             </div>
 
-<div>
-  <label className="text-sm font-medium">Project Picture</label>
+            <div className="field-group">
+              <label>Project Picture :</label>
 
-  <label className="block cursor-pointer">
-    <input type="file" accept="image/*" className="hidden" />
+              <div className="upload-box">
+                <FaPaperclip />
 
-    <div className="border border-dashed border-[#D9D9D9] rounded p-6 text-center text-sm text-gray-500 mt-1 hover:bg-gray-50 transition flex flex-col items-center gap-2">
-      
-      <FiImage className="text-3xl text-gray-400" />
-
-      <span>Drag & drop picture here or click to upload</span>
-    </div>
-  </label>
-</div>
+                <span>
+                  Drag & drop picture here or click to upload
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Submit */}
-        <div className="flex justify-center mt-6">
-          <button className="bg-blue-600 text-white px-10 py-2 rounded-lg">
+        <div className="submit-wrapper">
+          <button className="submit-btn">
             Submit
           </button>
         </div>
       </div>
     </div>
   );
-};
-
-export default UploadProjectIdea;
+}

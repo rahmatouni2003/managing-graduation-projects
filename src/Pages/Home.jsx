@@ -2,14 +2,13 @@ import { FaSearch, FaRegFileAlt, FaBookOpen, FaUserFriends } from "react-icons/f
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { MdErrorOutline, MdExpandMore } from "react-icons/md";
 import { useState } from "react";
-import { StudentNavbar } from "../Components/StudentNavbar";
 import landing from "../assets/homee2.jpg";
 function Home() {
   const [open, setOpen] = useState(true);
 
   return (
     <div className="bg-[#E9E9E9] min-h-screen">
-      <StudentNavbar />
+   
 
       <div className="max-w-[1200px] mx-auto p-6">
         {/* Hero Section */}

@@ -7,6 +7,12 @@ class Project {
   static reportProblem(data) {
     return submitRequestAsync("reports", "POST", data);
   }
+    static getDepartments() {
+    return submitRequestAsync("departments", "GET");
+  }
+      static getFormData() {
+    return submitRequestAsync("/proposal/form-data", "GET");
+  }
 }
 
 

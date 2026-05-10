@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import Layout from "../Pages/Layouts/StudentLayout";
 import ForgetPassword from "../Pages/ForgetPassword";
 import VerifyOTP from "../Pages/VerifyOTP";
 import ResetPassword from "../Pages/ResetPassword";
@@ -69,13 +70,7 @@ export const router = createBrowserRouter([
   },
 
   // 👇 دول برا root route
-  {
-    path: "/",
-    element: <Home />,
-      children: [
-    { path: "Upload-Project-Idea", element: <UploadProjectIdea /> },
-  ],
-  },
+
   {
     path: "notifications",
     element: <NotificationsPage />,
@@ -84,17 +79,36 @@ export const router = createBrowserRouter([
     path: "project-types",
     element: <ProjectTypes />,
   },
-  {
-    path: "Upload-Project-Idea",
-    element: <UploadProjectIdea />,
-  },
     {
-  path: "/user",
-  element: <UserInfo />,
-  children: [
-    { path: "profile", element: <EditStudentProfile /> },
-    { path: "policies", element: <PoliciesPage /> },
-    { path: "report-problem", element: <ReportProblem /> },
-  ],
-},
+    path: "/",
+    element: <Layout />,
+    children: [
+      { index: true, element: <Home /> },
+
+      {
+        path: "Upload-Project-Idea",
+        element: <UploadProjectIdea />
+      },
+
+      {
+        path: "notifications",
+        element: <NotificationsPage />
+      },
+
+      {
+        path: "project-types",
+        element: <ProjectTypes />
+      },
+
+      {
+        path: "user",
+        element: <UserInfo />,
+        children: [
+          { path: "profile", element: <EditStudentProfile /> },
+          { path: "policies", element: <PoliciesPage /> },
+          { path: "report-problem", element: <ReportProblem /> },
+        ],
+      },
+    ],
+  },
 ]);
