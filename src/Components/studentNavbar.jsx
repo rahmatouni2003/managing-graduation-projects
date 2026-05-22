@@ -4,11 +4,13 @@ import logo from "../assets/logo.png";
 import NotificationsDropdown from "./NotificationsDropdown";
 import { MdExpandMore } from "react-icons/md";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Project from "../Services/Project.model";
 import { toast } from "react-hot-toast";
 import Milestones from "../Services/Milestones.model";
 import { useEffect } from "react";
 export const StudentNavbar = () => {
+    const navigate = useNavigate();
   const [openNotif, setOpenNotif] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [file, setFile] = useState(null);
@@ -99,9 +101,12 @@ console.log("CURRENT MILESTONE:", currentMilestone);
             Library
           </span>
 
-          <span className="cursor-pointer hover:text-blue-600 transition">
-            My Team
-          </span>
+       <span
+  onClick={() => navigate("/team")}
+  className="cursor-pointer hover:text-blue-600 transition"
+>
+  My Team
+</span>
 
           <span className="cursor-pointer hover:text-blue-600 transition">
             Timeline

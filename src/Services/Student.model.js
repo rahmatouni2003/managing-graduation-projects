@@ -17,6 +17,12 @@ class Student {
         static getStudents() {
     return submitRequestAsync("admin/student", "GET");
   }
+    static getAvailableStudents() {
+  return submitRequestAsync(`available/students`, "GET");
+} 
+    static getGuestHome() {
+  return submitRequestAsync(`available/students`, "GET");
+} 
 }
 
 

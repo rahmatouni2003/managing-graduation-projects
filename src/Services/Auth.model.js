@@ -8,7 +8,9 @@ class Auth {
     return submitRequestAsync("profile", "POST", data);
   }
 
-
+    static getHome() {
+  return submitRequestAsync(`home`, "GET");
+} 
 
 }
 

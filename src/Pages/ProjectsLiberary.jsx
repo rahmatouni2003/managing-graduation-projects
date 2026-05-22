@@ -1,74 +1,12 @@
 // ProjectsPage.jsx
+
 import "./projectsPage.css";
 import { FaSearch, FaHeart, FaRegHeart } from "react-icons/fa";
-
-const previousProjects = [
-  {
-    id: 1,
-    title: "Blockchain-based Certificate Verification",
-    department: "CS Department",
-    year: "2023",
-    description:
-      "A secure system built on blockchain technology to verify academic certificates and prevent fraud.",
-    tags: ["CS", "Blockchain", "Web"],
-    favorite: false,
-  },
-  {
-    id: 2,
-    title: "AI Mental Health Companion",
-    department: "CS Department",
-    year: "2024",
-    description:
-      "A mobile application that uses artificial intelligence to support mental health through personalized conversations.",
-    tags: ["AI", "Healthcare", "Mobile"],
-    favorite: false,
-  },
-  {
-    id: 3,
-    title: "IoT Smart Campus",
-    department: "AI Department",
-    year: "2023",
-    description:
-      "A smart campus system that uses IoT devices to monitor and manage energy consumption, security, and facilities.",
-    tags: ["AI", "IoT", "Embedded"],
-    favorite: false,
-  },
-];
-
-const suggestions = [
-  {
-    id: 4,
-    title: "AI-Powered Exam Proctoring",
-    department: "CS Department",
-    year: "2025",
-    description:
-      "An AI-driven system designed to monitor online exams, detect cheating behavior, and ensure exam integrity using webcam.",
-    tags: ["CS", "AI", "Security"],
-    favorite: true,
-  },
-  {
-    id: 5,
-    title: "VR Career Simulator",
-    department: "IS Department",
-    year: "2025",
-    description:
-      "A secure system built on blockchain technology to verify academic certificates and prevent fraud.",
-    tags: ["IS", "VR"],
-    favorite: false,
-  },
-  {
-    id: 6,
-    title: "AI-based Sign Language Translator",
-    department: "AI Department",
-    year: "2025",
-    description:
-      "A secure system built on blockchain technology to verify academic certificates and prevent fraud.",
-    tags: ["CS", "AI"],
-    favorite: true,
-  },
-];
-
+import { useEffect, useState } from "react";
+import Project from "../Services/Project.model";
+import { useNavigate } from "react-router-dom";
 function ProjectCard({
+  id,
   title,
   department,
   year,
@@ -76,6 +14,8 @@ function ProjectCard({
   tags,
   favorite,
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="project-card">
       <div className="card-top">
@@ -97,33 +37,57 @@ function ProjectCard({
         </button>
       </div>
 
-      <p className="card-description">{description}</p>
+      <p className="card-description">
+        {description}
+      </p>
 
       <div className="tags">
-        {tags.map((tag, index) => (
+        {tags?.map((tag, index) => (
           <span key={index}>{tag}</span>
         ))}
       </div>
 
-      <button className="details-btn">
-        View Details →
-      </button>
+<button
+  className="details-btn"
+  onClick={() =>
+    navigate(`/project-details/${id}`)
+  }
+>
+  View Details →
+</button>
     </div>
   );
 }
 
-function Section({ title, data }) {
+function Section({ title, data, type }) {
+  const navigate = useNavigate();
+
   return (
     <div className="section">
       <div className="section-header">
         <h2>{title}</h2>
 
-        <button>See all</button>
+        <button
+          onClick={() =>
+            navigate(`/projects/${type}`)
+          }
+        >
+          See all
+        </button>
       </div>
 
       <div className="cards-grid">
         {data.map((project) => (
-          <ProjectCard key={project.id} {...project} />
+          <ProjectCard
+          id={project.id}
+            key={project.id}
+            title={project.title}
+            department={project.department_name}
+            year={project.year}
+            description={project.description}
+            tags={project.technologies}
+            favorite={project.favorites > 0}
+          />
         ))}
       </div>
     </div>
@@ -131,10 +95,80 @@ function Section({ title, data }) {
 }
 
 export default function ProjectsPage() {
+  const [previousProjects, setPreviousProjects] =
+    useState([]);
+
+  const [suggestions, setSuggestions] =
+    useState([]);
+
+  const [departments, setDepartments] =
+    useState([]);
+const [academicYears, setAcademicYears] =
+  useState([]);
+  const [loading, setLoading] =
+    useState(true);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+const fetchProjects = async () => {
+  try {
+    setLoading(true);
+
+    // Previous Projects
+    const previousResponse =
+      await Project.getPreviousProjects();
+
+    setPreviousProjects(
+      previousResponse
+    );
+
+    // Suggested Projects
+    const suggestedResponse =
+      await Project.getSuggestedProjects();
+
+    setSuggestions(
+      suggestedResponse
+    );
+
+    // Departments
+    const departmentsResponse =
+      await Project.getDepartments();
+
+    setDepartments(
+      departmentsResponse
+    );
+
+    // Academic Years
+    const yearsResponse =
+      await Project.getAcademicYears();
+
+    setAcademicYears(
+      yearsResponse
+    );
+
+  } catch (error) {
+    console.log(
+      "Error fetching projects:",
+      error
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
+
   return (
     <div className="projects-page">
-      {/* Filters */}
+
+      {/* TOP BAR */}
       <div className="top-bar">
+
+        {/* SEARCH */}
         <div className="search-box">
           <FaSearch className="search-icon" />
 
@@ -144,31 +178,105 @@ export default function ProjectsPage() {
           />
         </div>
 
+        {/* FILTERS */}
         <div className="filters">
-          <select>
-            <option>Department: All</option>
-          </select>
 
-          <select>
-            <option>Year: All</option>
-          </select>
+          {/* Department */}
+          <div className="custom-select">
+            <select>
+              <option value="">
+                All
+              </option>
 
-          <select>
-            <option>Category: All</option>
-          </select>
+              {departments.map((department) => (
+                <option
+                  key={department.id}
+                  value={department.id}
+                >
+                  {department.name}
+                </option>
+              ))}
+            </select>
+
+            <span className="select-label">
+              Department:
+            </span>
+
+            <span className="select-arrow">
+              ▼
+            </span>
+          </div>
+
+{/* Year */}
+<div className="custom-select">
+  <select>
+    <option value="">
+      All
+    </option>
+
+{academicYears.map((year) => (
+  <option
+    key={year.id}
+    value={year.id}
+  >
+    {year.code}
+  </option>
+))}
+  </select>
+
+  <span className="select-label">
+    Year:
+  </span>
+
+  <span className="select-arrow">
+    ▼
+  </span>
+</div>
+
+          {/* Category */}
+          <div className="custom-select">
+            <select>
+              <option>
+                All
+              </option>
+
+              <option>
+                AI
+              </option>
+
+              <option>
+                Web
+              </option>
+
+              <option>
+                Mobile
+              </option>
+            </select>
+
+            <span className="select-label">
+              Category:
+            </span>
+
+            <span className="select-arrow">
+              ▼
+            </span>
+          </div>
+
         </div>
       </div>
 
-      {/* Sections */}
-      <Section
-        title="Previous Projects"
-        data={previousProjects}
-      />
+<Section
+  title="Previous Projects"
+  data={previousProjects}
+  type="previous"
+/>
 
-      <Section
-        title="Suggestions"
-        data={suggestions}
-      />
+<Section
+  title="Suggestions"
+  data={suggestions}
+  type="suggestions"
+/>
+
     </div>
   );
 }
