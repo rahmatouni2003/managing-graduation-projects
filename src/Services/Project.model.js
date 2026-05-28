@@ -41,6 +41,9 @@ class Project {
   static getProjectDetails(id) {
     return submitRequestAsync(`/library/previous/${id}`, "GET");
   }
+    static getMytimeline() {
+    return submitRequestAsync(`my-timeline`, "GET");
+  }
 }
 
 export default Project;

@@ -37,7 +37,7 @@ import ProtectedRoute from "../Components/ProtectedRoute";
 import EditProfile from "../Pages/EditStudentProfile";
 
 import PoliciesPage from "../Pages/PoliciesPage";
-
+import TimelinePage from "../Pages/TimelinePage";
 import ReportProblem from "../Pages/ReporProblem";
 import GuestHomePage from "../Pages/GuestHomePage";
 import Home from "../Pages/Home";
@@ -245,6 +245,10 @@ export const router = createBrowserRouter([
 
         element: <PreviousProjectDetails />,
       },
+      {
+  path: "timeline",
+  element: <TimelinePage />,
+},
     ],
   },
 ]);

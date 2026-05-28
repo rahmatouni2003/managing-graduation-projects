@@ -170,10 +170,18 @@
   font-weight: 500;
 }
 
+.status {
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
 .accepted {
-  color: #19b44b;
+  background-color: #e6f9ed;
+  color: #16a34a;
 }
 
 .declined {
-  color: #e53935;
+  background-color: #ffe5e5;
+  color: #dc2626;
 }

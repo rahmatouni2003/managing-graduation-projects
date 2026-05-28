@@ -1,60 +1,46 @@
 import "./SentRequestsPage.css";
 
+import { useEffect, useState } from "react";
+
 import { IoArrowBack } from "react-icons/io5";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
+
 import { useNavigate } from "react-router-dom";
-const sentRequests = [
-  {
-    id: 1,
-    name: "Dennisa Nedry",
-    role: "UI/UX",
-    image: "https://i.pravatar.cc/150?img=11",
-    status: "Accepted",
-  },
-  {
-    id: 2,
-    name: "Dennisa Nedry",
-    role: "UI/UX",
-    image: "https://i.pravatar.cc/150?img=12",
-    status: "",
-  },
-  {
-    id: 3,
-    name: "Dennisa Nedry",
-    role: "UI/UX",
-    image: "https://i.pravatar.cc/150?img=13",
-    status: "Declined",
-  },
-  {
-    id: 4,
-    name: "Dennisa Nedry",
-    role: "UI/UX",
-    image: "https://i.pravatar.cc/150?img=14",
-    status: "Declined",
-  },
-  {
-    id: 5,
-    name: "Dennisa Nedry",
-    role: "UI/UX",
-    image: "https://i.pravatar.cc/150?img=15",
-    status: "",
-  },
-  {
-    id: 6,
-    name: "Dennisa Nedry",
-    role: "UI/UX",
-    image: "https://i.pravatar.cc/150?img=16",
-    status: "Accepted",
-  },
-];
+
+import Requests from "../Services/Requests.model";
 
 function SentRequestsPage() {
-const navigate = useNavigate();
-const activeTab = "sent";
+  const navigate = useNavigate();
+
+  const activeTab = "sent";
+
+  const [sentRequests, setSentRequests] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSentRequests();
+  }, []);
+
+  const fetchSentRequests = async () => {
+    try {
+      setLoading(true);
+
+      const response =
+        await Requests.getSentRequests();
+
+      setSentRequests(
+        response.data
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-
     <div className="sent-page">
 
       {/* HEADER */}
@@ -87,9 +73,9 @@ const activeTab = "sent";
               ? "sent-tab active-tab"
               : "sent-tab"
           }
-onClick={() =>
-  navigate("/received")
-}
+          onClick={() =>
+            navigate("/received")
+          }
         >
           Received
         </button>
@@ -100,9 +86,9 @@ onClick={() =>
               ? "sent-tab active-tab"
               : "sent-tab"
           }
-onClick={() =>
-  navigate("/sent-requests")
-}
+          onClick={() =>
+            navigate("/sent-requests")
+          }
         >
           Sent
         </button>
@@ -140,48 +126,68 @@ onClick={() =>
 
         <div className="sent-list">
 
-          {sentRequests.map((item) => (
+          {loading ? (
+            <p>
+              Loading...
+            </p>
+          ) : (
+            sentRequests.map((item) => (
 
-            <div
-              className="sent-item"
-              key={item.id}
-            >
+              <div
+                className="sent-item"
+                key={item.id}
+              >
 
-              <div className="sent-user">
+                <div className="sent-user">
 
-                <img
-                  src={item.image}
-                  alt=""
-                />
+                  <img
+                    src={
+                      item.to_user
+                        .profile_image ||
+                      "https://i.pravatar.cc/150"
+                    }
+                    alt=""
+                  />
 
-                <div>
+                  <div>
 
-                  <h4>
-                    {item.name}
-                  </h4>
+                    <h4>
+                      {item.to_user.name}
+                    </h4>
 
-                  <p>
-                    {item.role}
-                  </p>
+                    <p>
+                      {item.to_user.track}
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div
+                  className={
+                    item.status ===
+                    "accepted"
+                      ? "status accepted"
+                      : item.status ===
+                        "rejected"
+                      ? "status declined"
+                      : "status"
+                  }
+                >
+
+                  {item.status ===
+                  "accepted"
+                    ? "Accepted"
+                    : item.status ===
+                      "rejected"
+                    ? "Declined"
+                    : "Pending"}
 
                 </div>
 
               </div>
-
-              <div
-                className={
-                  item.status === "Accepted"
-                    ? "status accepted"
-                    : item.status === "Declined"
-                    ? "status declined"
-                    : "status"
-                }
-              >
-                {item.status}
-              </div>
-
-            </div>
-          ))}
+            ))
+          )}
 
         </div>
 

@@ -108,9 +108,12 @@ console.log("CURRENT MILESTONE:", currentMilestone);
   My Team
 </span>
 
-          <span className="cursor-pointer hover:text-blue-600 transition">
-            Timeline
-          </span>
+   <span
+  onClick={() => navigate("/timeline")}
+  className="cursor-pointer hover:text-blue-600 transition"
+>
+  Timeline
+</span>
         </div>
       </div>
 
