@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import Layout from "../Pages/Layouts/StudentLayout";
-
+import NoTeamRoute from "../Components/NoTeamRoute";
 import ForgetPassword from "../Pages/ForgetPassword";
 import VerifyOTP from "../Pages/VerifyOTP";
 import ResetPassword from "../Pages/ResetPassword";
@@ -11,7 +11,7 @@ import Doctor from "../Pages/Doctor";
 import Tasks from "../Components/Tasks";
 
 import AiFilterLayout from "../Pages/AiFilterLayout";
-
+import MilestoneDetails from "../pages/MilestoneDetails";
 import ProjectsManagedTeams from "../Pages/ProjectsManagedTeams";
 
 import ProjectDetails from "../Pages/ProjectDetails";
@@ -35,7 +35,7 @@ import EditStudentProfile from "../Pages/EditStudentProfile";
 import ProtectedRoute from "../Components/ProtectedRoute";
 
 import EditProfile from "../Pages/EditStudentProfile";
-
+import RequestsPageNotInTeam from "../Pages/RequestsPageNotInTeam";
 import PoliciesPage from "../Pages/PoliciesPage";
 import TimelinePage from "../Pages/TimelinePage";
 import ReportProblem from "../Pages/ReporProblem";
@@ -248,6 +248,18 @@ export const router = createBrowserRouter([
       {
   path: "timeline",
   element: <TimelinePage />,
+},
+      {
+  path: "/milestones/:id",
+  element: <MilestoneDetails />,
+},
+{
+  path: "receivedNotInTeam",
+  element: (
+    <NoTeamRoute>
+      <RequestsPageNotInTeam />
+    </NoTeamRoute>
+  ),
 },
     ],
   },

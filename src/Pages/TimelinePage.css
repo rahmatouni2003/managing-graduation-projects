@@ -153,3 +153,43 @@
   justify-content: space-between;
   flex-wrap: wrap;
 }
+.guest-card {
+  width: 420px;
+  cursor: default;
+}
+
+.guest-card:hover {
+  transform: none;
+}
+
+.timeline-wrapper {
+  position: relative;
+  max-width: 700px;
+  margin: auto;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 25px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e5e5e5;
+}
+
+.timeline-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #2f80ed;
+  position: absolute;
+  left: 18px;
+  top: 50px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 70px;
+  margin-bottom: 28px;
+}

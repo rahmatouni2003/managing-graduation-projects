@@ -44,6 +44,12 @@ class Project {
     static getMytimeline() {
     return submitRequestAsync(`my-timeline`, "GET");
   }
+      static getMyMilestones(id) {
+    return submitRequestAsync(`my-timeline/milestones/${id}`, "GET");
+  }
+        static getMyGuestMilestones() {
+    return submitRequestAsync(`milestones`, "GET");
+  }
 }
 
 export default Project;

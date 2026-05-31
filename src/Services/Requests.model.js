@@ -24,8 +24,6 @@ class Requests {
     );
   }
 
-
-
   static requestRespond(id, status) {
 
     return submitRequestAsync(
@@ -36,6 +34,20 @@ class Requests {
       }
     );
   }
+    static getReceivedRequestsFromTeams() {
+    return submitRequestAsync(
+      `requests/received?type=teams`,
+      "GET"
+    );
+  }
+
+      static getReceivedRequestsFromStudents() {
+    return submitRequestAsync(
+      `requests/received?type=students`,
+      "GET"
+    );
+  }
 }
+
 
 export default Requests;

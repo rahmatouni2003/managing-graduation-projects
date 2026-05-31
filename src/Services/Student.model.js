@@ -20,8 +20,8 @@ class Student {
     static getAvailableStudents() {
   return submitRequestAsync(`available/students`, "GET");
 } 
-    static getGuestHome() {
-  return submitRequestAsync(`available/students`, "GET");
+    static getHome() {
+  return submitRequestAsync(`home`, "GET");
 } 
 }
 

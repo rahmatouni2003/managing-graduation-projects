@@ -22,9 +22,13 @@ import {
 } from "react-icons/hi2";
 
 import Project from "../Services/Project.model";
+import { useNavigate } from "react-router-dom";
 
+import GuestTimelinePage from "./GuestTimelinePage";
 function TimelinePage() {
 
+  
+const navigate = useNavigate();
   const [timeline, setTimeline] =
     useState([]);
 
@@ -91,7 +95,11 @@ function TimelinePage() {
         return "Pending";
     }
   };
+  const token = localStorage.getItem("token");
 
+  if (!token) {
+    return <GuestTimelinePage />;
+  }
   return (
 
     <div className="timeline-page">
@@ -137,7 +145,12 @@ function TimelinePage() {
 
                     <div className="timeline-dot"></div>
 
-                    <div className="timeline-card">
+                   <div
+  className="timeline-card"
+  onClick={() =>
+    navigate(`/milestones/${item.id}`)
+  }
+>
 
                       <div className="timeline-top">
 
