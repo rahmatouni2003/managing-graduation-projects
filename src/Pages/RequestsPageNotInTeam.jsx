@@ -9,35 +9,25 @@ export default function RequestsPageNotInTeam() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const fetchRequests = async () => {
-    try {
-      setLoading(true);
+const fetchRequests = async () => {
+  try {
+    setLoading(true);
 
-      let response;
+    let response;
 
-      if (activeTab === "sent") {
-        response = await Requests.getSentRequests();
-      } else {
-        switch (filterType) {
-          case "teams":
-            response = await Requests.getReceivedRequestsFromTeams();
-            break;
-          case "students":
-            response = await Requests.getReceivedRequestsFromStudents();
-            break;
-          default:
-            response = await Requests.getReceivedRequests();
-        }
-      }
-
-      console.log(response);
-      setRequests(response?.data || []);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    if (activeTab === "sent") {
+      response = await Requests.getSentRequests();
+    } else {
+      response = await Requests.getReceivedRequests();
     }
-  };
+
+    setRequests(response?.data|| []);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchRequests();
@@ -60,17 +50,35 @@ export default function RequestsPageNotInTeam() {
       "";
     return name.toLowerCase().includes(searchTerm.toLowerCase());
   });
+const displayedRequests = filteredRequests.filter((request) => {
+  if (filterType === "students") {
+    return request.request_type === "team_form";
+  }
 
-  const isTeamRequest = (request) =>
-    request.request_type === "team_invite" ||
-    (request.team && request.team.members?.length > 0);
+  if (filterType === "teams") {
+    return request.request_type === "team_join";
+  }
 
-  const getMembers = (request) => {
-    if (isTeamRequest(request) && request.team?.members?.length > 0) {
-      return request.team.members;
-    }
-    return request.from_user ? [request.from_user] : [];
-  };
+  return true;
+});
+const isTeamRequest = (request) =>
+  request?.request_type === "team_join";
+
+const getMembers = (request) => {
+  if (request.team?.members?.length > 0) {
+    return request.team.members;
+  }
+
+  if (request.to_user) {
+    return [request.to_user];
+  }
+
+  if (request.from_user) {
+    return [request.from_user];
+  }
+
+  return [];
+};
 
   return (
     <div className="requests-page">
@@ -151,7 +159,7 @@ export default function RequestsPageNotInTeam() {
         {loading ? (
           <p className="loading-text">Loading...</p>
         ) : (
-          filteredRequests.map((request) => {
+         displayedRequests.map((request) => {
             const isTeam = isTeamRequest(request);
             const members = getMembers(request);
 
@@ -200,16 +208,33 @@ export default function RequestsPageNotInTeam() {
                 </div>
 
                 {/* Actions */}
-                {activeTab === "received" && request.status === "pending" && (
-                  <div className="actions">
-                    <button className="accept" onClick={() => handleAccept(request.id)}>
-                      Accept
-                    </button>
-                    <button className="reject" onClick={() => handleReject(request.id)}>
-                      Reject
-                    </button>
-                  </div>
-                )}
+{activeTab === "received" ? (
+  request.status === "pending" && (
+    <div className="actions">
+      <button
+        className="accept"
+        onClick={() => handleAccept(request.id)}
+      >
+        Accept
+      </button>
+
+      <button
+        className="reject"
+        onClick={() => handleReject(request.id)}
+      >
+        Reject
+      </button>
+    </div>
+  )
+) : (
+  <div className={`sent-status ${request.status}`}>
+    {request.status === "accepted"
+      ? "Accepted"
+      : request.status === "rejected"
+      ? "Declined"
+      : "Pending"}
+  </div>
+)}
 
               </div>
             );

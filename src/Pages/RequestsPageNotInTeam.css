@@ -289,3 +289,22 @@
   color: #999;
   font-size: 14px;
 }
+.sent-status {
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sent-status.accepted {
+  color: #2e7d32;
+}
+
+.sent-status.rejected {
+  color: #d32f2f;
+}
+
+.sent-status.pending {
+  color: #888;
+}
