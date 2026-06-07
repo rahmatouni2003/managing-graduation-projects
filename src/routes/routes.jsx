@@ -48,6 +48,7 @@ import ProjectsPage from "../Pages/ProjectsLiberary";
 import ReceivedRequests from "../pages/ReceivedRequests";
 import AllProjectsPage from "../Pages/AllProjectsPage";
 import TeamPage from "../Pages/TeamPage";
+import StudentsManagement from "../Pages/StudentsManagement";
 export const router = createBrowserRouter([
   // ================= AUTH =================
 
@@ -55,7 +56,10 @@ export const router = createBrowserRouter([
     path: "login",
     element: <Login />,
   },
-
+  {
+    path: "/StudentsManagement",
+    element: <StudentsManagement />,
+  },
   {
     path: "/forget-password",
     element: <ForgetPassword />,
@@ -261,6 +265,7 @@ export const router = createBrowserRouter([
     </NoTeamRoute>
   ),
 },
+
     ],
   },
 ]);
