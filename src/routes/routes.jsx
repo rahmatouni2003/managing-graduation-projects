@@ -16,6 +16,7 @@ import ProjectsManagedTeams from "../Pages/ProjectsManagedTeams";
 
 import ProjectDetails from "../Pages/ProjectDetails";
 
+import FinalDiscussion from "../pages/FinalDiscussion";
 import PreviousProjectDetails from "../Pages/PreviuosProjectDetails";
 
 import JoinRequests from "../Pages/JoinRequests";
@@ -34,7 +35,7 @@ import EditStudentProfile from "../Pages/EditStudentProfile";
 
 import ProtectedRoute from "../Components/ProtectedRoute";
 
-import EditProfile from "../Pages/EditStudentProfile";
+import AllDiscussion from "../pages/AllDiscussion";
 import RequestsPageNotInTeam from "../Pages/RequestsPageNotInTeam";
 import PoliciesPage from "../Pages/PoliciesPage";
 import TimelinePage from "../Pages/TimelinePage";
@@ -49,6 +50,10 @@ import ReceivedRequests from "../pages/ReceivedRequests";
 import AllProjectsPage from "../Pages/AllProjectsPage";
 import TeamPage from "../Pages/TeamPage";
 import StudentsManagement from "../Pages/StudentsManagement";
+import SuggestedProjects from "../Pages/SuggestedProjects";
+import FinalDiscussionDetails from "../pages/FinalDiscussionDetails";
+import AllMilestoneCommittees from "../Pages/AllMilestoneCommittees";
+import MilestoneCommittee from "../Pages/MilestoneCommittee";
 export const router = createBrowserRouter([
   // ================= AUTH =================
 
@@ -56,6 +61,34 @@ export const router = createBrowserRouter([
     path: "login",
     element: <Login />,
   },
+{
+  path: "/discussion-details/:id",
+  element: <FinalDiscussionDetails />,
+},
+{
+  path: "/milestone-committee",
+  element: <MilestoneCommittee />,
+},
+{
+  path: "/all-milestone-committees",
+  element: <AllMilestoneCommittees />,
+},
+{
+  path: "/all-milestone-committees-details/:id",
+  element: <FinalDiscussionDetails />,
+},
+{
+  path: "/suggested-projects",
+  element: <SuggestedProjects />,
+},
+{
+  path: "/final-discussions",
+  element: <FinalDiscussion />,
+},
+{
+  path: "/all-discussions",
+  element: <AllDiscussion />,
+},
   {
     path: "/StudentsManagement",
     element: <StudentsManagement />,
@@ -77,15 +110,6 @@ export const router = createBrowserRouter([
 
   // ================= PROFILE =================
 
-  {
-    path: "/edit-profile",
-
-    element: (
-      <ProtectedRoute>
-        <EditProfile />
-      </ProtectedRoute>
-    ),
-  },
 
   // ================= DOCTOR =================
 
@@ -260,9 +284,8 @@ export const router = createBrowserRouter([
 {
   path: "receivedNotInTeam",
   element: (
-    <NoTeamRoute>
       <RequestsPageNotInTeam />
-    </NoTeamRoute>
+
   ),
 },
 

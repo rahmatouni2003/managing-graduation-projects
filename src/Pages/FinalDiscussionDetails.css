@@ -1,0 +1,72 @@
+.discussion-details-page {
+  padding: 20px;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+.details-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.project-card {
+  flex: 1;
+  padding: 20px;
+  border-radius: 4px !important;
+}
+
+.project-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  margin: 20px 0;
+}
+
+.project-description {
+  color: #555;
+  line-height: 1.7;
+}
+
+.problem-section {
+  margin-top: 25px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.side-section {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.side-card {
+  padding: 15px;
+  border-radius: 4px !important;
+}
+
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.member-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.supervisor-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.tech-item {
+  margin-bottom: 8px;
+  color: #444;
+}

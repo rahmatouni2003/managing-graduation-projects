@@ -1,0 +1,47 @@
+.discussion-page {
+  padding: 25px;
+  background: #f5f6f8;
+  min-height: 100vh;
+}
+
+.discussion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.discussion-table {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.MuiDataGrid-root {
+  border: none !important;
+}
+
+.MuiDataGrid-columnHeaders {
+  background: #f8f9fb;
+  font-weight: 700;
+}
+
+.MuiDataGrid-cell {
+  font-size: 14px;
+}
+
+.MuiDataGrid-row:hover {
+  background: #f7f9fc;
+}
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.edit-btn {
+  color: #1976d2 !important;
+}
+
+.delete-btn {
+  color: #d32f2f !important;
+}

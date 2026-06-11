@@ -1,4 +1,5 @@
 import "./adminSidebar.css";
+import { NavLink } from "react-router-dom";
 import {
   FaUsers,
   FaClipboardList,
@@ -7,53 +8,92 @@ import {
   FaLightbulb,
   FaUserFriends,
   FaFileAlt,
-  FaUserTie
+  FaUserTie,
 } from "react-icons/fa";
 
 const Sidebar = () => {
   return (
     <aside className="sidebar">
-
       <nav>
-        <a className="active">
+        <NavLink
+          to="/management"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
           <FaUsers />
           <span>Management</span>
-        </a>
+        </NavLink>
 
-        <a>
+        <NavLink
+          to="/rules"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
           <FaClipboardList />
           <span>Rules</span>
-        </a>
+        </NavLink>
 
-        <a>
+        <NavLink
+          to="/ai-filter"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
           <FaFilter />
           <span>AI Filter</span>
-        </a>
+        </NavLink>
 
-        <a>
+        <NavLink
+          to="/milestones"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
           <FaFlag />
           <span>Milestones Setup</span>
-        </a>
+        </NavLink>
 
-        <a>
+        <NavLink
+          to="/suggested-projects"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
           <FaLightbulb />
           <span>Suggestions Projects</span>
-        </a>
+        </NavLink>
 
-        <a>
+        <NavLink
+          to="/teams"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
           <FaUserFriends />
           <span>Teams</span>
-        </a>
+        </NavLink>
 
-        <a>
+        <NavLink
+          to="/final-discussions"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
           <FaFileAlt />
           <span>Final discussions</span>
-        </a>
+        </NavLink>
 
-        <a>
+        <NavLink
+          to="/milestone-committee"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
           <FaUserTie />
           <span>Milestone Committee</span>
-        </a>
+        </NavLink>
       </nav>
     </aside>
   );

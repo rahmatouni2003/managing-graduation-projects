@@ -1,6 +1,6 @@
 import "./adminHeader.css";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import Admin from "../services/Admin.model";
 import {
   FaSearch,
   FaBell,
@@ -11,22 +11,55 @@ import {
 import logo from "../assets/logo2.png";
 
 const Header = () => {
-  const [academicYear, setAcademicYear] = useState("2025-2026");
+const [academicYear, setAcademicYear] = useState("");
+const [academicYears, setAcademicYears] = useState([]);
+const [selectedYearId, setSelectedYearId] = useState("");
   const [showYearModal, setShowYearModal] = useState(false);
-  const [startYear, setStartYear] = useState("2025");
 
-  const handleSave = () => {
-    setAcademicYear(
-      `${startYear}-${Number(startYear) + 1}`
+const loadAcademicYears = async () => {
+  try {
+    const response = await Admin.getAcademicYears();
+
+    console.log("Academic Years =>", response);
+
+    setAcademicYears(response);
+
+    const activeYear = response.find(
+      (year) => year.is_active === 1
     );
 
-    setShowYearModal(false);
+    if (activeYear) {
+      setAcademicYear(activeYear.code);
+      setSelectedYearId(activeYear.id);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+useEffect(() => {
+  const fetchData = async () => {
+    await loadAcademicYears();
   };
 
+  fetchData();
+}, []);
+
+
+const handleSave = () => {
+  const selectedYear = academicYears.find(
+    (year) => year.id === Number(selectedYearId)
+  );
+
+  if (selectedYear) {
+    setAcademicYear(selectedYear.code);
+  }
+
+  setShowYearModal(false);
+};
   return (
     <>
       <header className="header">
-        <div className="header-left">
+        <div className="headerr-left">
           <img
             src={logo}
             alt="logo"
@@ -93,28 +126,32 @@ const Header = () => {
 
             <div className="modal-body">
               <label>Start Year</label>
+<select
+  value={selectedYearId}
+  onChange={(e) =>
+    setSelectedYearId(e.target.value)
+  }
+>
+  {academicYears.map((year) => (
+    <option
+      key={year.id}
+      value={year.id}
+    >
+      {year.code}
+    </option>
+  ))}
+</select>
 
-              <select
-                value={startYear}
-                onChange={(e) =>
-                  setStartYear(e.target.value)
-                }
-              >
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-                <option value="2027">2027</option>
-                <option value="2028">2028</option>
-                <option value="2029">2029</option>
-              </select>
-
-              <p className="year-note">
-                End Year :{" "}
-                <strong>
-                  {Number(startYear) + 1}
-                </strong>
-                {" "}
-                ( Start Year + 1 )
-              </p>
+<p className="year-note">
+  Selected Academic Year :
+  <strong>
+    {
+      academicYears.find(
+        (year) => year.id === Number(selectedYearId)
+      )?.code
+    }
+  </strong>
+</p>
             </div>
 
             <div className="modal-footer">
