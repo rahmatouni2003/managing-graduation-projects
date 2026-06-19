@@ -13,53 +13,71 @@ function ProjectCard({
   description,
   tags,
   favorite,
+  type,
+  onFavoriteClick,
 }) {
   const navigate = useNavigate();
 
   return (
-    <div className="project-card">
-      <div className="card-top">
-        <div>
-          <h3>{title}</h3>
+<div className="project-card">
 
-          <div className="card-meta">
-            <span>{department}</span>
-            <span>{year}</span>
-          </div>
-        </div>
+  <div className="card-top">
 
-        <button className="favorite-btn">
-          {favorite ? (
-            <FaHeart className="heart-filled" />
-          ) : (
-            <FaRegHeart className="heart-outline" />
-          )}
-        </button>
+    <div className="card-info">
+      <h3>{title}</h3>
+
+      <div className="card-meta">
+        <span>{department}</span>
+        <span>{year}</span>
       </div>
-
-      <p className="card-description">
-        {description}
-      </p>
-
-      <div className="tags">
-        {tags?.map((tag, index) => (
-          <span key={index}>{tag}</span>
-        ))}
-      </div>
-
-<button
-  className="details-btn"
-  onClick={() =>
-    navigate(`/project-details/${id}`)
-  }
->
-  View Details →
-</button>
     </div>
+
+    <button
+      className="favorite-btn"
+      onClick={() => onFavoriteClick(id)}
+    >
+      {favorite ? (
+        <FaHeart className="heart-filled" />
+      ) : (
+        <FaRegHeart className="heart-outline" />
+      )}
+    </button>
+
+  </div>
+
+  <p className="card-description">
+    {description}
+  </p>
+
+  <div className="tags">
+    {tags?.map((tag, index) => (
+      <span key={index}>{tag}</span>
+    ))}
+  </div>
+
+  <button
+    className="details-btn"
+    onClick={() =>
+      navigate(
+        type === "suggested"
+          ? `/projectsLiberary/suggested-project-details/${id}`
+          : `/projectsLiberary/project-details/${id}`
+      )
+    }
+  >
+    View Details →
+  </button>
+
+</div>
   );
 }
 
-function Section({ title, data, type }) {
+function Section({
+  title,
+  data,
+  type,
+  onFavoriteClick,
+}) {
   const navigate = useNavigate();
 
   return (
@@ -69,7 +87,7 @@ function Section({ title, data, type }) {
 
         <button
           onClick={() =>
-            navigate(`/projects/${type}`)
+            navigate(`/projectsLiberary/projects/${type}`)
           }
         >
           See all
@@ -78,23 +96,97 @@ function Section({ title, data, type }) {
 
       <div className="cards-grid">
         {data.map((project) => (
-          <ProjectCard
-          id={project.id}
-            key={project.id}
-            title={project.title}
-            department={project.department_name}
-            year={project.year}
-            description={project.description}
-            tags={project.technologies}
-            favorite={project.favorites > 0}
-          />
+<ProjectCard
+  key={project.id}
+  id={project.id}
+  title={project.title}
+  department={project.department_name}
+  year={project.year}
+  description={project.description}
+  tags={project.technologies}
+  favorite={project.favorite}
+  type={type}
+  onFavoriteClick={(id) =>
+    onFavoriteClick(id, type)
+  }
+/>
         ))}
       </div>
     </div>
   );
 }
 
-export default function ProjectsPage() {
+export default function ProjectsLiberary() {
+  const saveFavorite = (id, type) => {
+  const key = `${type}-favorites`;
+
+  const favorites = JSON.parse(
+    localStorage.getItem(key) || "[]"
+  );
+
+  if (favorites.includes(id)) {
+    const updated = favorites.filter(
+      favId => favId !== id
+    );
+
+    localStorage.setItem(
+      key,
+      JSON.stringify(updated)
+    );
+  } else {
+    localStorage.setItem(
+      key,
+      JSON.stringify([...favorites, id])
+    );
+  }
+};
+  const handleFavorite = async (
+  projectId,
+  type
+) => {
+  try {
+if (type === "previous") {
+  await Project.addPreviousFavorite(projectId);
+
+  saveFavorite(projectId, "previous");
+
+  setPreviousProjects(prev =>
+    prev.map(project =>
+      project.id === projectId
+        ? {
+            ...project,
+            favorite: !project.favorite,
+          }
+        : project
+    )
+  );
+}
+
+if (type === "suggested") {
+  await Project.addSuggestedFavorite(
+    projectId
+  );
+
+  saveFavorite(projectId, type);
+
+  setSuggestions(prev =>
+    prev.map(project =>
+      project.id === projectId
+        ? {
+            ...project,
+            favorite: !project.favorite,
+          }
+        : project
+    )
+  );
+}
+  } catch (error) {
+    console.log(
+      "Error adding favorite:",
+      error
+    );
+  }
+};
   const [previousProjects, setPreviousProjects] =
     useState([]);
 
@@ -119,18 +211,42 @@ const fetchProjects = async () => {
     // Previous Projects
     const previousResponse =
       await Project.getPreviousProjects();
-
-    setPreviousProjects(
-      previousResponse
-    );
+const previousFavorites =
+  JSON.parse(
+    localStorage.getItem(
+      "previous-favorites"
+    ) || "[]"
+  );
+ setPreviousProjects(
+  previousResponse.map(project => ({
+    ...project,
+     favorite:
+      previousFavorites.includes(
+        project.id
+      ),
+  }))
+);
 
     // Suggested Projects
     const suggestedResponse =
       await Project.getSuggestedProjects();
 
-    setSuggestions(
-      suggestedResponse
-    );
+const suggestedFavorites =
+  JSON.parse(
+    localStorage.getItem(
+      "suggested-favorites"
+    ) || "[]"
+  );
+
+setSuggestions(
+  suggestedResponse.map(project => ({
+    ...project,
+    favorite:
+      suggestedFavorites.includes(
+        project.id
+      ),
+  }))
+);
 
     // Departments
     const departmentsResponse =
@@ -169,8 +285,8 @@ const fetchProjects = async () => {
       <div className="top-bar">
 
         {/* SEARCH */}
-        <div className="search-box">
-          <FaSearch className="search-icon" />
+        <div className="search-boxx">
+          <FaSearch className="search-iconn" />
 
           <input
             type="text"
@@ -269,14 +385,14 @@ const fetchProjects = async () => {
   title="Previous Projects"
   data={previousProjects}
   type="previous"
+  onFavoriteClick={handleFavorite}
 />
-
 <Section
-  title="Suggestions"
+  title="Suggested Projects"
   data={suggestions}
-  type="suggestions"
+  type="suggested"
+  onFavoriteClick={handleFavorite}
 />
-
     </div>
   );
 }

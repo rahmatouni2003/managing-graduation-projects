@@ -4,17 +4,24 @@
 
 .report-wrapper {
   min-height: 100vh;
-  background: #eaeaea;
+  /* background: #eaeaea; */
   padding: 20px;
   display: flex;
+  margin-top:50px;
   justify-content: center;
   font-family: Inter, sans-serif;
 }
 
+
+
+.sidebar-wrapper {
+  width: 220px;
+  flex-shrink: 0;
+}
 .report-container {
   width: 100%;
   max-width: 1180px;
-  background: #F3F4F6;
+  /* background: #F3F4F6; */
   border-radius: 8px;
   padding: 20px;
 }
@@ -168,8 +175,8 @@
 }
 
 .cancel-btn,
-.submit-btn {
-  height: 42px;
+.submit-btnn {
+  height: 52px;
   border-radius: 5px;
   font-size: 12\.5px;
   cursor: pointer;
@@ -181,9 +188,10 @@
   border: 1px solid #d1d5db;
 }
 
-.submit-btn {
-  width: 145px;
+.submit-btnn {
+  width: 175px;
   border: none;
+    padding: 20px;
   background: #2563EB;
   color: white;
   display: flex;

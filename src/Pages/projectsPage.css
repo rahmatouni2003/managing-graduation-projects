@@ -9,6 +9,7 @@
   background: #f4f4f4;
   padding: 30px;
   font-family: Arial, sans-serif;
+    margin-top: 50px;
 }
 
 /* TOP BAR */
@@ -21,7 +22,7 @@
   flex-wrap: wrap;
 }
 
-.search-box {
+.search-boxx {
   flex: 1;
   min-width: 320px;
   background: white;
@@ -32,7 +33,7 @@
   padding: 0 14px;
 }
 
-.search-icon {
+.search-iconn {
   color: #9ca3af;
   font-size: 14px;
 }
@@ -50,9 +51,11 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+ margin-top: 20px;
 }
 
 .custom-select {
+  
   position: relative;
   background: white;
   border-radius: 8px;
@@ -123,14 +126,20 @@
 }
 
 /* GRID */
-
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 374px)
+  );
   gap: 22px;
 }
 
 /* CARD */
+.card-info {
+  flex: 1;
+}
+
 
 .project-card {
   background: white;
@@ -149,6 +158,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 12px;
+  width: 100%;
 }
 
 .card-top h3 {
@@ -166,9 +177,15 @@
 }
 
 .favorite-btn {
+  flex-shrink: 0;
   border: none;
   background: transparent;
   cursor: pointer;
+  font-size: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .heart-filled {

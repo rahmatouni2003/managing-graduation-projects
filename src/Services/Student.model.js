@@ -23,6 +23,9 @@ class Student {
     static getHome() {
   return submitRequestAsync(`home`, "GET");
 } 
+    static getMilestonesActive() {
+  return submitRequestAsync(`home`, "GET");
+} 
 }
 
 

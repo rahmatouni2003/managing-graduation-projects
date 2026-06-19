@@ -1,11 +1,18 @@
 .sidebar {
   width: 220px;
-  min-height: 100vh;
+  height: calc(100vh - 70px);
+
+  position: fixed !important;
+  top: 70px;
+  left: 0;
+
   background-color: #173458;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  overflow-y: auto;
 }
 
 .sidebar-header {

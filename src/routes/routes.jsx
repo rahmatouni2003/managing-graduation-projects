@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Layout from "../Pages/Layouts/StudentLayout";
 import NoTeamRoute from "../Components/NoTeamRoute";
+import { Outlet } from "react-router-dom";
+import AdminRoute from "../context/AdminRoute.jsx";
 import ForgetPassword from "../Pages/ForgetPassword";
 import VerifyOTP from "../Pages/VerifyOTP";
 import ResetPassword from "../Pages/ResetPassword";
@@ -13,6 +15,7 @@ import Tasks from "../Components/Tasks";
 import AiFilterLayout from "../Pages/AiFilterLayout";
 import MilestoneDetails from "../pages/MilestoneDetails";
 import ProjectsManagedTeams from "../Pages/ProjectsManagedTeams";
+import FavoritesPage from "../Pages/FavoritesPage";
 
 import ProjectDetails from "../Pages/ProjectDetails";
 
@@ -31,68 +34,116 @@ import UploadProjectIdea from "../Pages/UploadProjectIdea";
 
 import Login from "../Pages/auth/Login";
 
-import EditStudentProfile from "../Pages/EditStudentProfile";
-
+import EditStudentProfile from "../Pages/EditStudentProfile.jsx";
+import StudentsSuggestedProjectDetails from "../Pages/StudentsSuggestedProjectDetails";
 import ProtectedRoute from "../Components/ProtectedRoute";
-
+import AddMilestone from "../Pages/AddMilestone";
 import AllDiscussion from "../pages/AllDiscussion";
 import RequestsPageNotInTeam from "../Pages/RequestsPageNotInTeam";
 import PoliciesPage from "../Pages/PoliciesPage";
 import TimelinePage from "../Pages/TimelinePage";
-import ReportProblem from "../Pages/ReporProblem";
+import ReportProblemPage from "../Pages/ReportProblemPage.jsx";
 import GuestHomePage from "../Pages/GuestHomePage";
 import Home from "../Pages/Home";
 import NewRequestPage from "../Pages/NewRequestPage";
-import UserInfo from "../Pages/UserInfo";
+
 import SentRequestsPage from "../pages/SentRequestsPage";
-import ProjectsPage from "../Pages/ProjectsLiberary";
+import ProjectsLiberary from "../Pages/ProjectsLiberary";
 import ReceivedRequests from "../pages/ReceivedRequests";
 import AllProjectsPage from "../Pages/AllProjectsPage";
 import TeamPage from "../Pages/TeamPage";
-import StudentsManagement from "../Pages/StudentsManagement";
+import Management from "../Pages/Management.jsx";
 import SuggestedProjects from "../Pages/SuggestedProjects";
 import FinalDiscussionDetails from "../pages/FinalDiscussionDetails";
 import AllMilestoneCommittees from "../Pages/AllMilestoneCommittees";
 import MilestoneCommittee from "../Pages/MilestoneCommittee";
+import AllTeams from "../pages/AllTeams";
+import TeamDetails from "../Pages/TeamDetails";
+import MilestonesSetup from "../Pages/Milestonessetup";
+import MyReports from "../Pages/MyReports";
+import EditMilestone from "../Pages/EditMilestone";
+import Rules from "../Pages/Rules.jsx";
 export const router = createBrowserRouter([
   // ================= AUTH =================
-
+    {
+  path: "admin",
+  element: (
+    <AdminRoute>
+      <Outlet />
+    </AdminRoute>
+  ),
+  children: [
+    {
+      path: "rules",
+      element: <Rules />,
+    },
+    {
+      path: "discussion-details/:id",
+      element: <FinalDiscussionDetails />,
+    },
+    {
+      path: "all-teams",
+      element: <AllTeams />,
+    },
+    {
+      path: "milestone-committee",
+      element: <MilestoneCommittee />,
+    },
+    {
+      path: "all-milestone-committees",
+      element: <AllMilestoneCommittees />,
+    },
+    {
+      path: "all-milestone-committees-details/:id",
+      element: <AllMilestoneCommittees />,
+    },
+    {
+      path: "suggested-projects",
+      element: <SuggestedProjects />,
+    },
+    {
+      path: "milestones-setup",
+      element: <MilestonesSetup />,
+    },
+    {
+      path: "/admin/milestones/add",
+      element: <AddMilestone />,
+    },
+    {
+      path: "my-reports",
+      element: <MyReports />,
+    },
+    {
+      path: "final-discussions",
+      element: <FinalDiscussion />,
+    },
+    {
+      path: "all-discussions",
+      element: <AllDiscussion />,
+    },
+    {
+      path: "milestones/edit/:id",
+      element: <EditMilestone />,
+    },
+    {
+      path: "management",
+      element: <Management />,
+    },
+  ],
+},
+{
+  path: "/team-details/:id",
+  element: (
+    <AdminRoute>
+      <TeamDetails />
+    </AdminRoute>
+  ),
+},
   {
     path: "login",
     element: <Login />,
   },
-{
-  path: "/discussion-details/:id",
-  element: <FinalDiscussionDetails />,
-},
-{
-  path: "/milestone-committee",
-  element: <MilestoneCommittee />,
-},
-{
-  path: "/all-milestone-committees",
-  element: <AllMilestoneCommittees />,
-},
-{
-  path: "/all-milestone-committees-details/:id",
-  element: <FinalDiscussionDetails />,
-},
-{
-  path: "/suggested-projects",
-  element: <SuggestedProjects />,
-},
-{
-  path: "/final-discussions",
-  element: <FinalDiscussion />,
-},
-{
-  path: "/all-discussions",
-  element: <AllDiscussion />,
-},
-  {
-    path: "/StudentsManagement",
-    element: <StudentsManagement />,
-  },
+
   {
     path: "/forget-password",
     element: <ForgetPassword />,
@@ -213,12 +264,11 @@ export const router = createBrowserRouter([
       },
 
       // User
-      {
-        path: "user",
+ 
+      
 
-        element: <UserInfo />,
-
-        children: [
+   
+      
           {
             path: "profile",
             element: <EditStudentProfile />,
@@ -231,63 +281,76 @@ export const router = createBrowserRouter([
 
           {
             path: "report-problem",
-            element: <ReportProblem />,
+            element: <ReportProblemPage />,
           },
-        ],
-      },
+
+          
+
+        
 
       // Projects Main Page
       {
-        path: "ProjectsPage",
-        element: <ProjectsPage />,
+        path: "projectsLiberary",
+        element: <ProjectsLiberary />,
       },
 
       // All Projects
       {
-        path: "projects/:type",
+        path: "projectsLiberary/projects/:type",
         element: <AllProjectsPage />,
       },
       {
         path: "team",
         element: <TeamPage />,
-      },    {
+      }, {
         path: "received",
         element: <ReceivedRequests />,
       },
-       {
+      {
         path: "sent-requests",
         element: <SentRequestsPage />,
       },
-             {
+      {
         path: "/new-request",
         element: <NewRequestPage />,
       },
-                   {
+      {
         path: "/guestHomePage",
         element: <GuestHomePage />,
       },
       // ================= PROJECT DETAILS =================
 
       {
-        path: "project-details/:id",
+        path: "/projectsLiberary/project-details/:id",
 
         element: <PreviousProjectDetails />,
       },
-      {
-  path: "timeline",
-  element: <TimelinePage />,
-},
-      {
-  path: "/milestones/:id",
-  element: <MilestoneDetails />,
-},
-{
-  path: "receivedNotInTeam",
-  element: (
-      <RequestsPageNotInTeam />
+            {
+        path: "projectsLiberary/suggested-project-details/:id",
 
-  ),
-},
+        element: <StudentsSuggestedProjectDetails />,
+      },
+                  {
+        path: "/projectsLiberary/favorites",
+
+        element: <FavoritesPage /> ,
+      },
+
+      {
+        path: "timeline",
+        element: <TimelinePage />,
+      },
+      {
+        path: "/milestones/:id",
+        element: <MilestoneDetails />,
+      },
+      {
+        path: "receivedNotInTeam",
+        element: (
+          <RequestsPageNotInTeam />
+
+        ),
+      },
 
     ],
   },

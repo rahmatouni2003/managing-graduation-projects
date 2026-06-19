@@ -16,12 +16,11 @@ function getBaseUrl() {
 }
 
 function extractResponseData(res) {
-  if (res && typeof res === "object" && "data" in res) return res.data;
+  if (!res || typeof res !== "object") return res || [];
+  if ("data" in res) return res.data;
   if (Array.isArray(res)) return res;
   return res || [];
 }
-
-
 export async function submitRequestAsync(
   endpoint,
   method = "GET",

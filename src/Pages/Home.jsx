@@ -44,15 +44,19 @@ useEffect(() => {
 
   if (!homeData) return null;
 
-  const {
-    user,
-    project_guidelines,
-    next_deadline,
-    last_feedback,
-    important_notes,
-    supervisors,
-    milestone_committee,
-  } = homeData;
+const {
+  user,
+  project_rules,
+  project_guidelines,
+  project,
+  next_deadline,
+  last_feedback,
+  important_notes,
+  supervisors,
+  milestone_committee,
+  team_size_info,
+  user_status,
+} = homeData;
 
   return (
     <div className="home-page">
@@ -78,11 +82,10 @@ useEffect(() => {
         {/* Project */}
         <div className="project-section">
           <h3>Project</h3>
-
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore.
-          </p>
+<p>
+  {project?.description ||
+    "No project description available yet."}
+</p>
 
           {/* Guidelines */}
           <div className="guidelines-card">
@@ -157,7 +160,7 @@ useEffect(() => {
           </div>
 
           {/* Bottom Cards */}
-          <div className="cards-grid">
+          <div className="cards-gridd">
             {/* Feedback */}
 
             <div className="info-card">

@@ -91,25 +91,33 @@
   align-items: center;
   gap: 6px;
 }
-
 .delete-btn {
-  width: 42px;
-  height: 38px;
-
-  border: 1px solid #dc3545;
-  background: white;
-  color: #dc3545;
-
-  border-radius: 4px;
+  background: #ffffff;
+  color: #dc2626;
+  border: 1.5px solid #dc2626;
+  padding: 8px 10px;
+  border-radius: 6px;
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: 0.2s ease;
 }
+
+
+.delete-btn svg {
+  color: #dc2626;
+  transition: 0.2s ease;
+}
+
+
 .delete-btn:hover {
-  background: #dc3545;
-  color: white;
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.delete-btn:hover svg {
+  color: #ffffff;
 }
 
 .loading {
@@ -301,7 +309,7 @@
 
 .save-btn {
   width: 110px;
-  height: 40px;
+  height: 60px;
 
   border: none;
   border-radius: 6px;
@@ -312,10 +320,28 @@
 
 .cancel-btn {
   width: 110px;
-  height: 40px;
+  height: 60px;
 
   border: 1px solid #ccc;
   border-radius: 6px;
 
   background: white;
+}
+.delete-confirm-btn {
+  background: #ffffff;
+  color: #dc2626;
+  border: 1.5px solid #dc2626;
+  padding: 10px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: 0.2s ease;
+  min-width: 110px; /* نفس حجم زر cancel تقريبًا */
+}
+
+/* hover: العكس */
+.delete-confirm-btn:hover {
+  background: #dc2626;
+  color: #ffffff;
 }

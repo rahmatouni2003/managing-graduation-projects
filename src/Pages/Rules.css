@@ -1,0 +1,240 @@
+.page-content {
+  padding: 40px;
+  background: #eef2f5;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-title {
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  margin-bottom: 30px !important;
+  color: #111111;
+}
+
+.rules-card {
+  padding: 30px;
+  border-radius: 16px !important;
+  margin-bottom: 30px;
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid #eef0f3;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.header-icon {
+  color: #245a94;
+  font-size: 28px !important;
+}
+
+.card-header-title {
+  font-weight: 700 !important;
+  color: #1a2d42;
+  font-size: 18px !important;
+}
+
+.card-divider {
+  margin-bottom: 20px !important;
+  border-color: #f0f2f5 !important;
+}
+
+
+.field-label {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #444;
+  margin-bottom: 8px !important;
+}
+
+.bold-label {
+  font-weight: 700 !important;
+  color: #111;
+  margin-bottom: 4px !important;
+}
+
+.field-sublabel {
+  font-size: 12px !important;
+  color: #888;
+  margin-bottom: 12px !important;
+  line-height: 1.4;
+}
+
+.section-title {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #111;
+  margin-bottom: 15px !important;
+}
+
+
+.counter-box {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  width: fit-content;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.counter-box .MuiTextField-root {
+  width: 55px;
+}
+
+.counter-box .MuiOutlinedInput-notchedOutline {
+  border: none !important; 
+}
+
+.counter-box input {
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+  padding: 8px 0 !important;
+}
+
+.counter-btn {
+  padding: 6px !important;
+  border-radius: 4px !important;
+  background-color: #f4f5f7 !important;
+  color: #555 !important;
+  margin: 0 2px !important;
+}
+
+.counter-btn:hover {
+  background-color: #e4e7ed !important;
+}
+
+
+.date-field {
+  background: #ffffff;
+  width: 170px;
+}
+.date-field .MuiOutlinedInput-root {
+  border-radius: 6px;
+}
+.date-field input {
+  padding: 9px 12px !important;
+  font-size: 14px;
+  color: #333;
+}
+
+
+.card-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.rule-note {
+  color: #777;
+  font-size: 13px !important;
+}
+
+.btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
+}
+
+.save-btn {
+  background: #1976d2 !important;
+  text-transform: none !important;
+  padding: 20px 10px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  width: 170px !important;
+}
+
+.save-btn:hover {
+  background: #1565c0 !important;
+}
+
+
+.info-box {
+  margin-top: 25px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #eef7ff;
+  border: 1px solid #d0e7ff;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.info-icon {
+  color: #1976d2;
+  font-size: 22px !important;
+  margin-top: 2px;
+}
+
+.info-text {
+  color: #3b6895 !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+.info-subtext {
+  display: block;
+  margin-top: 4px;
+  color: #3b6895;
+}
+
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.checkbox-group .MuiFormControlLabel-label {
+  font-size: 14px;
+  color: #333;
+}
+
+.textarea-field .MuiOutlinedInput-root {
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.textarea-field textarea {
+  font-size: 13.5px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.rules-list {
+  margin-top: 0;
+  padding-left: 18px;
+  color: #333;
+}
+
+.rules-list li {
+  font-size: 13.5px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  position: relative;
+  list-style-type: none; 
+  padding-left: 5px;
+}
+
+.rules-list li::before {
+  content: "•";
+  color: #1976d2;
+  font-weight: bold;
+  display: inline-block; 
+  width: 1em;
+  margin-left: -1em;
+}
+
+.mt {
+  margin-top: 25px !important;
+}

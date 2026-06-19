@@ -1,248 +1,242 @@
-
-import { useState,useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaCamera } from "react-icons/fa";
-import { useProfile } from "../context/ProfileContext";
-import { FaUserCircle } from "react-icons/fa";
-import Auth from "../Services/Auth.model";
-import Project from "../Services/Project.model";
+import { useState, useEffect, useRef } from "react";
+import "./EditProfile.css";
+import { FaCamera, FaEye, FaEyeSlash } from "react-icons/fa";
+import StudentSidebar from '../Components/StudentSidebar';
+import Auth from "../Services/Auth.model"; 
+import Project from "../Services/Project.model"; 
+import toast from "react-hot-toast";
 export default function EditProfile() {
-  const navigate = useNavigate();
-const [departments, setDepartments] = useState([]);
-  const { profileImage, saveProfileImage } = useProfile();
+  const [showPassword, setShowPassword] = useState(false);
+  const fileInputRef = useRef(null); 
 
-  const [previewImage, setPreviewImage] = useState(profileImage);
-const [profileImageFile, setProfileImageFile] = useState(null);
-const [formData, setFormData] = useState({
-  full_name: "",
-  track_name: "AI",
-  department_id: "",
-  gpa: "",
-  phone: "",
-  email: "",
-});
+  const [departments, setDepartments] = useState([]);
+  const [formData, setFormData] = useState({
+    full_name: "",
+    track_name: "",
+    department_id: "",
+    email: "",
+    phone: "",
+    password: "",
+    profile_image_url: null,
+  });
 
-  useEffect(() => {
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+
   const fetchDepartments = async () => {
     try {
       const response = await Project.getDepartments();
-      console.log("Departments:", response);
-      setDepartments(response);
+      setDepartments(response || []);
     } catch (error) {
-      console.log("Failed to fetch departments", error);
+      console.error(error);
     }
   };
 
-  fetchDepartments();
-}, []);
+  const fetchProfile = async () => {
+    try {
+      const response = await Auth.getProfileData();
+      if (response?.status && response?.data) {
+        const user = response.data;
+        setFormData({
+          full_name: user.full_name || "",
+          track_name: user.track_name || "",
+          department_id: user.department_id || "", // تم تعديلها لتتوافق مع الموديل
+          email: user.email || "",
+          phone: user.phone || "",
+          password: "●●●●●●●●",
+          profile_image_url: user.profile_image_url || "https://via.placeholder.com/150",
+          imageFile: null,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+    fetchDepartments();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
   };
 
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
+  const handleCameraClick = () => {
+    fileInputRef.current.click(); 
+  };
 
-  if (file) {
-    setProfileImageFile(file);
-
-    const url = URL.createObjectURL(file);
-    setPreviewImage(url);
-  }
-};
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        imageFile: file,
+        profile_image_url: URL.createObjectURL(file) 
+      }));
+    }
+  };
 
 const handleSubmit = async (e) => {
   e.preventDefault();
 
+  const loadingToast = toast.loading("Saving...");
+
   try {
-    const data = new FormData();
+    const updatedData = {
+      full_name: formData.full_name,
+      track_name: formData.track_name,
+      department_id: formData.department_id,
+      email: formData.email,
+      phone: formData.phone,
+    };
 
-    data.append("full_name", formData.full_name);
-    data.append("email", formData.email);
-    data.append("phone", formData.phone);
-    data.append("track_name", formData.track_name);
-    data.append("department_id", formData.department_id);
-    data.append("gpa", formData.gpa);
+const response = await Auth.updateProfile(updatedData);
 
-    if (profileImageFile) {
-      data.append("profile_image_url", profileImageFile);
-    }
+console.log("UPDATE RESPONSE:", response);
 
-    await Auth.updateProfile(data);
-
-    saveProfileImage(previewImage);
-
-    alert("Profile updated successfully");
-
-    navigate("/doctor");
+if (response?.id) {
+  toast.success(response?.message || "Profile updated successfully 🎉", {
+    id: loadingToast,
+  });
+} else {
+  toast.error("Failed to update profile ❌", {
+    id: loadingToast,
+  });
+}
   } catch (error) {
-    console.log(error);
-
-    alert("Failed to update profile");
+    console.error(error);
+    toast.error("Something went wrong ❌", {
+      id: loadingToast,
+    });
   }
 };
+
+  if (loading) {
+    return <div className="loading">Loading Profile Data...</div>;
+  }
+
   return (
-    <div className="flex  bg-gray-50">
-      {/* Sidebar */}
-    
+    <div className="edit-profile-container">
+      <StudentSidebar />
+      
+      <div className="edit-profile-content">
+        <div className="profile-header">
+          <div className="avatar-container" style={{ position: 'relative' }}>
+            <img 
+              src={formData.profile_image_url} 
+              className="profile-avatar" 
+              style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover' }}
+            />
+            <div className="camera-btn" onClick={handleCameraClick} style={{ cursor: 'pointer' }}>
+              <FaCamera />
+            </div>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleImageChange} 
+              accept="image/*" 
+              style={{ display: 'none' }} 
+            />
+          </div>
+          <h1>Edit Profile</h1>
+        </div>
 
-      {/* Main */}
-      <div className="flex-1 flex flex-col ">
-       
+   
 
-        <div className="">
-          {/* Header Section */}
-          <div className=" p-3 mb-1 flex items-center gap-6">
-            {/* Profile Image */}
-            <label className="relative cursor-pointer">
-              {previewImage ? (
-                <img
-                  src={previewImage}
-                  className="w-32 h-32 rounded-full object-cover "
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-full bg-black  flex items-center justify-center">
-                  <FaUserCircle className="text-white text-5xl" />
-                </div>
-              )}
-
-              <div className="absolute bottom-0 right-0 bg-gray-200 p-2 rounded-full">
-                <FaCamera />
-              </div>
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </label>
-
-            {/* Title */}
-            <h1 className="text-3xl font-bold text-blue-600">Edit Profile</h1>
+        <form className="profile-form" onSubmit={handleSubmit}>
+          
+          {/* الحقل 1: الاسم الكامل (تمت إضافته بناءً على الـ State) */}
+          <div className="form-group">
+            <label>Full Name</label>
+            <input 
+              type="text" 
+              name="full_name" 
+              value={formData.full_name} 
+              onChange={handleChange} 
+            />
           </div>
 
-          {/* Form */}
-<form onSubmit={handleSubmit} className="p-6">
-  
-  {/* Fields Grid */}
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Name */}
-            <div>
-              <label className="block  mb-2 font-medium">Name</label>
+          {/* الحقل 2: القسم */}
+          <div className="form-group">
+            <label>Department</label>
+            <select
+              name="department_id"
+              value={formData.department_id}
+              onChange={handleChange}
+            >
+              <option value="">Select Department</option>
+              {departments.map((department) => (
+                <option key={department.id} value={department.id}>
+                  {department.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* الحقل 3: المسار */}
+          <div className="form-group">
+            <label>Track</label>
+            <input 
+              type="text" 
+              name="track_name" 
+              value={formData.track_name} 
+              onChange={handleChange} 
+            />
+          </div>
+
+          {/* الحقل 4: الإيميل الجامعي */}
+          <div className="form-group">
+            <label>University Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* الحقل 5: رقم الهاتف */}
+          <div className="form-group">
+            <label>Phone Number</label>
+            <input 
+              type="text" 
+              name="phone" 
+              value={formData.phone} 
+              onChange={handleChange} 
+            />
+          </div>
+
+          {/* الحقل 6: كلمة المرور */}
+          <div className="form-group password-group">
+            <label>Password</label>
+            <div className="password-input">
               <input
-                name="full_name"
-  value={formData.full_name}
-                onChange={handleChange}
-                className="w-full  bg-white  rounded-md px-4 py-2"
-              />
-            </div>
-
-
-            {/* Track */}
-            <div>
-              <label className="block mb-2 font-medium">Track</label>
-              <select
-               name="track_name"
-  value={formData.track_name}
-                onChange={handleChange}
-                className="w-full  border-0  rounded-md px-4 py-2"
-              >
-                <option>AI</option>
-                <option>Data Science</option>
-                <option>Software Engineering</option>
-              </select>
-            </div>
-
-            {/* Department */}
-            <div>
-              <label className="block mb-2 font-medium">Department</label>
-<select
-  name="department_id"
-  value={formData.department_id}
-  onChange={handleChange}
-  className="w-full border-0 rounded-md px-4 py-2"
->
-  <option value="">Select Department</option>
-
-  {Array.isArray(departments) &&
-    departments.map((dept) => (
-      <option key={dept.id} value={dept.id}>
-        {dept.name}
-      </option>
-    ))}
-</select>
-            </div>
-
-            {/*  GPA */}
-            <div>
-              <label className="block mb-2 font-medium">GPA</label>
-<input
-  type="number"
-  name="gpa"
-  value={formData.gpa}
-  onChange={handleChange}
-  className="w-full border-0 rounded-md px-4 py-2"
-/>
-            </div>
-
-            {/* City */}
-
-
-            {/* Phone */}
-            <div>
-              <label className="block mb-2 font-medium">Phone Number</label>
-              <input
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full border-0 bg-white  rounded-md px-4 py-2"
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block mb-2 font-medium">Email</label>
-              <input
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full  bg-white  rounded-md px-4 py-2"
-              />
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="block mb-2 font-medium">Password</label>
-              <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full border-0  bg-white rounded-md px-4 py-2"
               />
+              <button
+                type="button"
+                className="eye-btn"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
-  </div>
+          </div>
 
-  {/* Submit Button */}
-  <div className="mt-8 flex justify-center">
-    <button
-      type="submit"
-      className="bg-blue-600 text-white px-16 py-4 rounded-md hover:bg-blue-700 transition"
-    >
-      Save Changes
-    </button>
-  </div>
-
-
-          </form>
-        </div>
+          {/* زر الحفظ ممتد في الأسفل لوحده */}
+          <button type="submit" className="save-btn">Save Changes</button>
+        </form>
       </div>
     </div>
   );
-
 }

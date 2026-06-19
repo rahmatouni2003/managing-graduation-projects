@@ -12,7 +12,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-
+import toast from "react-hot-toast";
 import Header from "../components/adminHeader";
 import Sidebar from "../components/adminSidebar";
 import Admin from "../services/Admin.model";
@@ -92,12 +92,41 @@ const navigate = useNavigate();
     }));
   };
 
-  const handleSubmit = () => {
-    console.log({
-      team_id: selectedTeam,
-      ...formData,
-    });
+const handleSubmit = async () => {
+  const payload = {
+    team_id: selectedTeam,
+    doctor_ids: [
+      formData.doctor1,
+      formData.doctor2,
+      formData.doctor3,
+    ],
+    ta_ids: [
+      formData.ta1,
+      formData.ta2,
+      formData.ta3,
+    ],
   };
+
+  try {
+    const res =
+      await Admin.scheduleMilestoneCommittee(
+        payload
+      );
+
+    toast.success(
+      "Committee scheduled successfully"
+    );
+
+    console.log(res);
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message ||
+      "Failed to schedule committee"
+    );
+
+    console.log(error);
+  }
+};
 
   return (
 <div className="admin-layout">

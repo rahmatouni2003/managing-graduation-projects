@@ -2,7 +2,7 @@ import { submitRequestAsync } from "./ApiServices";
 
 class Milestones {
   static getOpenMilestones() {
-    return submitRequestAsync("milestones", "GET");
+    return submitRequestAsync("milestone/active", "GET");
   }
 
 

@@ -1,0 +1,20 @@
+.favorite-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #2563eb;
+  color: white;
+
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.favorite-nav-btn:hover {
+  opacity: 0.9;
+}

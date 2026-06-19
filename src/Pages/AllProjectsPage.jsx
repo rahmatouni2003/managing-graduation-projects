@@ -76,7 +76,7 @@ export default function AllProjectsPage() {
         setProjects(response);
       }
 
-      if (type === "suggestions") {
+      if (type === "suggested") {
         const response =
           await Project.getSuggestedProjects();
 
@@ -117,7 +117,7 @@ useEffect(() => {
             year={project.year}
             description={project.description}
             tags={project.technologies}
-            favorite={project.favorites > 0}
+            
           />
         ))}
       </div>

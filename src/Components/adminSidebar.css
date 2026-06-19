@@ -1,6 +1,6 @@
 .sidebar {
   position: fixed;
-
+index: 1000;
   top: 70px; /* نفس ارتفاع الهيدر */
   left: 0;
 padding-top: 20px;

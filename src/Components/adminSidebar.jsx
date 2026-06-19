@@ -16,7 +16,7 @@ const Sidebar = () => {
     <aside className="sidebar">
       <nav>
         <NavLink
-          to="/management"
+          to="/admin/management"
           className={({ isActive }) =>
             isActive ? "sidebar-item active" : "sidebar-item"
           }
@@ -26,7 +26,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/rules"
+          to="/admin/rules"
           className={({ isActive }) =>
             isActive ? "sidebar-item active" : "sidebar-item"
           }
@@ -36,7 +36,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/ai-filter"
+          to="/admin/ai-filter"
           className={({ isActive }) =>
             isActive ? "sidebar-item active" : "sidebar-item"
           }
@@ -46,7 +46,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/milestones"
+          to="/admin/milestones-setup"
           className={({ isActive }) =>
             isActive ? "sidebar-item active" : "sidebar-item"
           }
@@ -56,7 +56,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/suggested-projects"
+          to="/admin/suggested-projects"
           className={({ isActive }) =>
             isActive ? "sidebar-item active" : "sidebar-item"
           }
@@ -66,7 +66,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/teams"
+          to="/admin/all-teams"
           className={({ isActive }) =>
             isActive ? "sidebar-item active" : "sidebar-item"
           }
@@ -76,7 +76,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/final-discussions"
+          to="/admin/final-discussions"
           className={({ isActive }) =>
             isActive ? "sidebar-item active" : "sidebar-item"
           }
@@ -86,13 +86,23 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/milestone-committee"
+          to="/admin/milestone-committee"
           className={({ isActive }) =>
             isActive ? "sidebar-item active" : "sidebar-item"
           }
         >
           <FaUserTie />
           <span>Milestone Committee</span>
+        </NavLink>
+        
+        <NavLink
+          to="/admin/my-reports"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
+          <FaClipboardList />
+          <span>Reports</span>
         </NavLink>
       </nav>
     </aside>

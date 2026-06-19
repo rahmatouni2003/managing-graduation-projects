@@ -9,7 +9,7 @@ import {
   FaPaperPlane,
 } from "react-icons/fa";
 import "./reportProblem.css";
-
+import StudentSidebar from '../Components/StudentSidebar';
 export default function ReportProblemPage() {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
@@ -45,6 +45,9 @@ export default function ReportProblemPage() {
 
   return (
     <div className="report-wrapper">
+       <div className="sidebar-wrapper">
+    <StudentSidebar />
+  </div>
       <div className="report-container">
         <div className="report-header">
           <div>
@@ -127,7 +130,7 @@ export default function ReportProblemPage() {
               </button>
 
               <button
-                className="submit-btn"
+                className="submit-btnn"
                 onClick={handleSubmit}
                 disabled={loading}
               >

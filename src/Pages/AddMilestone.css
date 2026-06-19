@@ -1,0 +1,152 @@
+.add-milestone-page {
+  background: #f5f5f5;
+  min-height: calc(100vh - 70px);
+  padding: 30px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h4 {
+  font-weight: 700;
+  color: #252525;
+}
+
+.capstone-switch {
+  display: flex;
+  gap: 12px;
+}
+
+.capstone-switch button {
+  min-width: 140px;
+  height: 44px;
+  border-radius: 10px;
+  text-transform: none;
+}
+
+.milestone-form-card {
+  padding: 24px !important;
+  border-radius: 16px !important;
+  max-width: 1050px;
+  margin: auto;
+  box-shadow: none !important;
+}
+
+.order-section {
+  background: #faf7fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.order-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.phase-text {
+  margin-top: 15px !important;
+  font-size: 15px;
+}
+
+.phase-badge {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  margin-left: 10px;
+  border: 2px solid #1c75d8;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 28px;
+}
+
+.label {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #2d2d2d;
+}
+
+.form-group .MuiTextField-root {
+  width: 100%;
+}
+
+.form-group .MuiOutlinedInput-root {
+  background: #faf7fa;
+  border-radius: 10px;
+  min-height: 56px;
+}
+
+.requirement-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.requirement-item .MuiOutlinedInput-root {
+  background: #faf7fa;
+}
+
+.add-req-btn {
+  width: 100%;
+  height: 46px;
+  justify-content: flex-start !important;
+  background: #f3f3f3 !important;
+  color: #1c75d8 !important;
+  border-radius: 10px !important;
+  margin-top: 8px !important;
+  text-transform: none !important;
+}
+
+.dates-row {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 40px;
+  margin-top: 35px;
+}
+
+.date-divider {
+  background: #d8d8d8;
+}
+
+.date-column {
+  padding: 0 20px;
+}
+
+.date-column h6 {
+  font-size: 28px;
+  margin-bottom: 18px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 35px;
+}
+
+.action-buttons button:first-child {
+  width: 170px;
+  height: 50px;
+  border-radius: 8px;
+  text-transform: none;
+}
+
+.action-buttons button:last-child {
+  width: 170px;
+  height: 50px;
+  border-radius: 8px;
+  text-transform: none;
+}

@@ -50,6 +50,24 @@ class Project {
         static getMyGuestMilestones() {
     return submitRequestAsync(`milestones`, "GET");
   }
+   static deleteSuggestedProjects(id){
+    return submitRequestAsync(`/admin/suggested_project/${id}/delete`, "DELETE");
+   }  
+    static updateSuggestedProjects(id,data){
+    return submitRequestAsync(`/admin/suggested_project/${id}/update`, "PUT" ,data);
+   }
+     static addPreviousFavorite(id){
+       return submitRequestAsync(`/library/previous/${id}/favorite` , "POST")
+     }
+          static addSuggestedFavorite(id){
+       return submitRequestAsync(`/library/suggested/${id}/favorite` , "POST")
+     }
+       static getSuggestedProjectDetails(id) {
+    return submitRequestAsync(`/library/suggested/${id}`, "GET");
+  }
+         static getLibraryFavorites() {
+    return submitRequestAsync(`library/favorites`, "GET");
+  }
 }
 
 export default Project;
