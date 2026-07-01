@@ -50,6 +50,10 @@ class Requests {
       static getAvailableSupervisors() {
   return submitRequestAsync(`available/supervisors`, "GET");
 } 
+      static getAvailableTeams() {
+  return submitRequestAsync(`/available/teams`, "GET");
+} 
+
     static sendsupervisionrequests(data) {
   return submitRequestAsync(`supervision-requests`, "POST" , data);
 } 

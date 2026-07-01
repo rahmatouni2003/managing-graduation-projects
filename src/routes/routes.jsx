@@ -384,7 +384,7 @@ import UploadProjectIdea from "../Pages/UploadProjectIdea";
 import Login from "../Pages/auth/Login";
 import HomeRoute from "../context/HomeRoute.jsx";
 import GuestRoute from "../context/GuestRoute.jsx";
-
+import NotInTeamRequests from "../Pages/NotInTeamRequests.jsx";
 import EditStudentProfile from "../Pages/EditStudentProfile.jsx";
 import StudentsSuggestedProjectDetails from "../Pages/StudentsSuggestedProjectDetails";
 import ProtectedRoute from "../Components/ProtectedRoute";
@@ -664,6 +664,11 @@ export const router = createBrowserRouter([
         path: "student/notinteam/notinteam",
 
         element: <NotInTeam />,
+      },
+                        {
+        path: "student/notinteam/notInTeamRequests",
+
+        element: <NotInTeamRequests />,
       },
       {
         path: "/guestHomePage",
