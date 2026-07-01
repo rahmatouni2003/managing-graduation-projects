@@ -2,24 +2,38 @@
   padding: 30px;
   background: #f5f5f5;
   min-height: 100vh;
+  margin-top:70px
 }
 
-.new-header {
+.new-requests-page .new-header {
   display: flex;
+  justify-content: space-between; 
   align-items: center;
   margin-bottom: 25px;
 }
 
-.header-left {
+.new-requests-page .header-left {
   display: flex;
+  flex-direction: row;        /* ← أضف دي صريح */
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
-.back-icon {
-  font-size: 24px;
-  cursor: pointer;
+.new-requests-page .new-header h2 {
+  font-size: 38px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;              
+  line-height: 1;
 }
+
+.new-requests-page .back-icon {
+  font-size: 23px;
+  cursor: pointer;
+  display: block;         
+  flex-shrink: 0;
+}
+
 
 .new-card {
   background: white;
@@ -27,37 +41,59 @@
   padding: 25px;
 }
 
+/* ================= SEARCH ================= */
+
 .search-row {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;           /* كان 15px */
   margin-bottom: 30px;
 }
 
-.search-box {
+.new-requests-page .search-boxe {
   flex: 1;
-  height: 45px;
-  background: #f2f2f2;
-  border-radius: 10px;
+  min-width: 0;
+  height: 52px;        /* نفس الـ sent */
+  background: #f4f4f4;
+  border-radius: 8px;  /* كان 8px — تمام */
   display: flex;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 8px;
+  gap: 12px;
+  overflow: hidden;
+  position: relative;
 }
 
-.search-icon {
-  color: gray;
-  font-size: 20px;
-}
-
-.search-box input {
+.search-boxe input {
   border: none;
   outline: none;
   background: transparent;
-  margin-left: 10px;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+}
+
+.search-icon {
+  color: #777;         
+  font-size: 18px;
+  flex-shrink: 0;   
 }
 
 .filter-btn {
+  width: 52px;     
+  height: 52px;    
+  border: none;
+  border-radius: 8px;  
+  background: #1665d8; 
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+.search-boxe input::placeholder {
+  padding-left: 50px;
+}
+
+/* .filter-btn {
   width: 45px;
   height: 45px;
   border: none;
@@ -66,7 +102,7 @@
   color: white;
   font-size: 22px;
   cursor: pointer;
-}
+} */
 
 .users-list {
   display: flex;
@@ -139,4 +175,34 @@
 .pending-btn:hover {
   background: #15803d !important;
   transform: scale(1.03);
+}
+/* ================= TABS ================= */
+.tabs-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tab-btn {
+  padding: 6px 20px;
+  border-radius: 6px;
+  border: 1.5px solid #d0d5dd;
+  background: transparent;
+  color: #667085;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  border-color: #1e40af;
+  color: #1e40af;
+  font-weight: 600;
+  background: transparent;
+}
+
+.tab-btn:hover:not(.active) {
+  border-color: #98a2b3;
+  color: #344054;
 }

@@ -1,0 +1,101 @@
+.not-in-team-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f6fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.not-in-team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 32px 44px;
+  max-width: 440px;
+  width: 100%;
+}
+
+.not-in-team-illustration-wrapper {
+  width: 280px;
+  margin-bottom: 28px;
+}
+
+.illustration {
+  width: 100%;
+  height: auto;
+}
+
+.not-in-team-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #1a1d23;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+.not-in-team-subtitle {
+  font-size: 0.92rem;
+  color: #6b7280;
+  margin: 0 0 32px;
+  line-height: 1.5;
+}
+
+/* ── الأزرار (تعديل كلاس الحاوية والـ wrap) ── */
+.nth-actions {
+  display: flex !important;
+  flex-direction: row;      
+  flex-wrap: nowrap !important; /* يضمن بقاء الأزرار في صف واحد */
+  gap: 16px;
+  justify-content: flex-start; 
+  width: 100%;
+  margin-top: 5px;
+}
+
+.nth-btn-outline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 24px;              /* تقليل البادنج قليلاً من 32 ليتناسب مع المساحة المتاحة كالصورة */
+  height: 50px;
+  border: 1px solid #c2cfe0; 
+  background: #eef2f9; 
+  color: #0c4cb4; 
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap !important; /* 🌟 منع الكلمات من الالتفاف نهائياً */
+  flex-shrink: 0;                /* يمنع المتصفح من كبس أو ضغط الزر */
+}
+
+.nth-btn-outline:hover {
+  background: #e2eaf5;
+}
+
+.nth-btn-filled {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 24px;             
+  height: 50px;
+  border: none;
+  background: #0c59cf; 
+  color: #ffffff;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  white-space: nowrap !important; 
+  flex-shrink: 0;               
+}
+
+.nth-btn-filled:hover {
+  background: #0a4ab3;
+}
+

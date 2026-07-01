@@ -19,49 +19,24 @@ import MarkEmailUnreadOutlinedIcon from "@mui/icons-material/MarkEmailUnreadOutl
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Header from "../components/adminHeader";
 import Sidebar from "../components/adminSidebar";
-
+import { useEffect, useState } from "react";
+import Admin from "../Services/Admin.model";
 import "./MyReports.css";
 
-const reports = [
-    {
-        id: 221247,
-        user: "Aliya Othman",
-        subject: "Unable to upload File",
-        status: "Pending",
-        date: "2 hours ago",
-    },
-    {
-        id: 221247,
-        user: "Aliya Othman",
-        subject: "Unable to upload File",
-        status: "Unopened",
-        date: "1 day ago",
-    },
-    {
-        id: 221247,
-        user: "Aliya Othman",
-        subject: "Unable to upload File",
-        status: "Resolved",
-        date: "May 30",
-    },
-    {
-        id: 221247,
-        user: "Aliya Othman",
-        subject: "Unable to upload File",
-        status: "Pending",
-        date: "May 25",
-    },
-];
+import { useNavigate } from "react-router-dom";
+
+
+
 
 const getStatusColor = (status) => {
     switch (status) {
-        case "Pending":
+        case "pending":
             return "#f9a825";
 
-        case "Resolved":
+        case "resolved":
             return "#4caf50";
 
-        case "Unopened":
+        case "unopened":
             return "#9e9e9e";
 
         default:
@@ -70,6 +45,43 @@ const getStatusColor = (status) => {
 };
 
 export default function MyReports() {
+    const navigate = useNavigate();
+    const [reports, setReports] = useState([]);
+    const [pagination, setPagination] = useState({
+        total: 0,
+        current_page: 1,
+        last_page: 1,
+    });
+
+    const [statistics, setStatistics] = useState({
+        total: 0,
+        pending: 0,
+        unopened: 0,
+        resolved: 0,
+    });
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        fetchReports();
+    }, []);
+
+    const fetchReports = async () => {
+        try {
+            setLoading(true);
+            const response = await Admin.getAdminreports();
+
+            setReports(response.data?.data || []);
+            setStatistics(response.statistics || {});
+            setPagination(response.pagination || {});
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    if (loading) {
+        return <h2>Loading...</h2>;
+    }
     return (
         <Box className="admin-layout">
             <Sidebar />
@@ -94,7 +106,7 @@ export default function MyReports() {
                                     Total Reports
                                 </Typography>
                                 <Typography className="card-number">
-                                    23
+                                    {statistics.total}
                                 </Typography>
                             </Box>
 
@@ -109,7 +121,7 @@ export default function MyReports() {
                                     Pending
                                 </Typography>
                                 <Typography className="card-number">
-                                    7
+                                    {statistics.pending}
                                 </Typography>
                             </Box>
 
@@ -124,7 +136,7 @@ export default function MyReports() {
                                     Unopened
                                 </Typography>
                                 <Typography className="card-number">
-                                    8
+                                    {statistics.unopened}
                                 </Typography>
                             </Box>
 
@@ -139,7 +151,7 @@ export default function MyReports() {
                                     Resolved
                                 </Typography>
                                 <Typography className="card-number">
-                                    8
+                                    {statistics.resolved}
                                 </Typography>
                             </Box>
 
@@ -168,14 +180,13 @@ export default function MyReports() {
                                 </TableHead>
 
                                 <TableBody>
-                                    {reports.map((report, index) => (
-                                        <TableRow key={index}>
+                                    {reports.map((report) => (
+                                        <TableRow key={report.id}>
                                             <TableCell>{report.id}</TableCell>
 
-                                            <TableCell>{report.user}</TableCell>
+                                            <TableCell> {report.user?.name}</TableCell>
 
-                                            <TableCell>{report.subject}</TableCell>
-
+                                            <TableCell>  {report.subject}</TableCell>
                                             <TableCell>
                                                 <Chip
                                                     label={report.status}
@@ -188,15 +199,16 @@ export default function MyReports() {
                                                 />
                                             </TableCell>
 
-                                            <TableCell>{report.date}</TableCell>
+                                            <TableCell>{report.created_at_human}</TableCell>
 
                                             <TableCell align="center">
-                                                <Button
-                                                    variant="outlined"
-                                                    size="small"
-                                                >
-                                                    View
-                                                </Button>
+                                 <Button
+    variant="outlined"
+    size="small"
+    onClick={() => navigate(`/admin/reports/${report.id}`)}
+>
+    View
+</Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -206,12 +218,12 @@ export default function MyReports() {
 
                         <Box className="pagination-wrapper">
                             <Typography>
-                                Showing 1 to 8 of 23 reports
+                                Showing 1 to {reports.length} of {pagination.total} reports
                             </Typography>
 
                             <Pagination
-                                count={3}
-                                page={1}
+                                count={pagination.last_page || 1}
+                                page={pagination.current_page || 1}
                                 color="primary"
                             />
                         </Box>

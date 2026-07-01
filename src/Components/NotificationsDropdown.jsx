@@ -1,65 +1,185 @@
-import { useNavigate } from "react-router-dom";
-const NotificationsDropdown = () => {
-    const navigate = useNavigate();
+import "./NotificationsDropdown.css";
+
+const TABS = ["All", "Unread", "Read"];
+
+import { useEffect, useState } from "react";
+import Student from "../services/Student.model";
+import { FaBell, FaTimesCircle } from "react-icons/fa";
+function NotificationsDropdown() {
+  const [activeTab, setActiveTab] = useState("All");
+  const [requests, setRequests] = useState({}); // { [id]: "accepted" | "rejected" }
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getNotifications();
+  }, []);
+useEffect(() => {
+  const refresh = () => {
+    getNotifications();
+  };
+
+  window.addEventListener("refresh-notifications", refresh);
+
+  return () => {
+    window.removeEventListener("refresh-notifications", refresh);
+  };
+}, []);
+const getNotifications = async () => {
+  try {
+    setLoading(true);
+
+    const res = await Student.getNotifications();
+
+    console.log(res);
+
+    const formatted = res.map((item) => ({
+      id: item.id,
+      status: item.read_at ? "read" : "unread",
+
+      type: item.type,
+      name: item.data.from_user_name || "",
+      message: item.data.message,
+      time: item.created_at,
+      icon: item.data.icon,
+      color: item.data.color,
+
+      avatar: item.data.from_user_name
+        ? `https://i.pravatar.cc/40?u=${item.data.from_user_id}`
+        : null,
+
+      hasActions:
+        item.type === "new_request" &&
+        item.data.request_type === "team_form",
+
+      requestId: item.data.request_id,
+      teamId: item.data.team_id,
+    }));
+
+    setNotifications(formatted);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
+  const filtered = notifications.filter((n) => {
+    if (activeTab === "All") return true;
+    if (activeTab === "Unread") return n.status === "unread";
+    if (activeTab === "Read") return n.status === "read";
+    return true;
+  });
+  const handleAccept = (id) =>
+    setRequests((prev) => ({ ...prev, [id]: "accepted" }));
+  const handleReject = (id) =>
+    setRequests((prev) => ({ ...prev, [id]: "rejected" }));
+
+const renderAvatar = (notif) => {
+  if (notif.avatar) {
+    return (
+      <img
+        src={notif.avatar}
+        alt={notif.name}
+        className="notif-avatar-img"
+      />
+    );
+  }
+
+  switch (notif.icon) {
+    case "bell":
+      return <FaBell />;
+
+    case "x-circle":
+      return <FaTimesCircle color="red" />;
+
+    default:
+      return <FaBell />;
+  }
+};
+
   return (
-    <div className="absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-lg p-4 z-50">
-      <h3 className="text-lg font-semibold mb-3">Notifications</h3>
+    <div className="notif-dropdown">
+      {/* Title */}
+      <h3 className="notif-title">Notifications</h3>
 
       {/* Tabs */}
-      <div className="flex gap-4 text-sm border-b pb-2 mb-3">
-        <span className="text-blue-600 border-b-2 border-blue-600 pb-1">
-          All
-        </span>
-        <span className="text-gray-500">Unread</span>
-        <span className="text-gray-500">Read</span>
-      </div>
-
-      {/* Notification Item */}
-      <div className="bg-blue-50 p-3 rounded-lg mb-3">
-        <p className="text-sm">
-          <span className="font-medium">Dennisa Nedry</span> requested to join your team
-        </p>
-
-        <div className="flex gap-2 mt-2">
-          <button className="bg-red-500 text-white px-3 py-1 rounded text-xs">
-            Accept
+      <div className="notif-tabs">
+        {TABS.map((tab) => (
+          <button
+            key={tab}
+            className={`notif-tab ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
           </button>
-          <button className="border px-3 py-1 rounded text-xs">
-            Reject
-          </button>
-        </div>
-
-        <p className="text-xs text-gray-400 mt-2">
-          Last Wednesday at 9:42 AM
-        </p>
+        ))}
       </div>
 
-      {/* Another item */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-8 h-8 bg-blue-500 text-white flex items-center justify-center rounded-full text-sm">
-          DN
-        </div>
-        <div>
-          <p className="text-sm font-medium">Dennisa Nedry</p>
-          <p className="text-xs text-gray-500">leaved a note</p>
-        </div>
+      {/* List */}
+      <div className="notif-list">
+        {loading ? (
+          <p className="notif-empty">Loading...</p>
+        ) : filtered.length === 0 ? (
+          <p className="notif-empty">No notifications</p>
+        ) : (
+          filtered.map((notif) => (
+            <div
+              key={notif.id}
+              className={`notif-item ${notif.status === "unread" ? "unread" : ""}`}
+            >
+              {/* Avatar */}
+              <div className="notif-avatar">{renderAvatar(notif)}</div>
+
+              {/* Content */}
+              <div className="notif-content">
+                {notif.name && (
+                  <p className="notif-text">
+                    {notif.name && <strong>{notif.name} </strong>}
+                    {notif.message}
+                  </p>
+                )}
+
+                {!notif.name && <p className="notif-text">{notif.message}</p>}
+
+                {/* Accept / Reject */}
+                {notif.hasActions && !requests[notif.id] && (
+                  <div className="notif-actions">
+                    <button
+                      className="notif-accept"
+                      onClick={() => handleAccept(notif.id)}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      className="notif-reject"
+                      onClick={() => handleReject(notif.id)}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                )}
+
+                {requests[notif.id] && (
+                  <span className={`notif-status-label ${requests[notif.id]}`}>
+                    {requests[notif.id] === "accepted"
+                      ? "✔ Accepted"
+                      : "✘ Rejected"}
+                  </span>
+                )}
+
+                <p className="notif-time">{notif.time}</p>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
-      <hr className="my-3" />
-
-      <p className="text-sm text-gray-500 mb-3">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit...
-      </p>
-
-      <div className="text-center">
-<button
-  onClick={() => navigate("/notifications")}
-  className="text-blue-600 text-sm hover:underline"
->
-  See All Notifications
-</button>
+      {/* Footer */}
+      <div className="notif-footer">
+        <button className="notif-see-all">See All Notifictions</button>
       </div>
     </div>
   );
-};
+}
+
 export default NotificationsDropdown;

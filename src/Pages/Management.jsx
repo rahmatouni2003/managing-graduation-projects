@@ -281,11 +281,11 @@ toast.success("File exported successfully");
   return (
 
     <>
-
+<div className="admin-managment">
       <Sidebar />
       <Header />
 
-      <div className="page">
+      <div className="admin-managment">
 
         <h2>
           {type === "project1" && "Project 1 Students"}
@@ -677,6 +677,7 @@ toast.success("File exported successfully");
           )}
         </div>
 
+      </div>
       </div>
     </>
   );

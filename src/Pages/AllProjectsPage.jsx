@@ -4,37 +4,27 @@ import {
   FaRegHeart,
 } from "react-icons/fa";
 
-import {
-  useParams,
-} from "react-router-dom";
 
 import {
   useEffect,
   useState,
 } from "react";
-
+import { useNavigate, useParams } from "react-router-dom";
 import Project from "../Services/Project.model";
 
-function ProjectCard({
-  title,
-  department,
-  year,
-  description,
-  tags,
-  favorite,
-}) {
+function ProjectCard({ id, title, department, year, description, tags, favorite, type }) {
+  const navigate = useNavigate();
+
   return (
     <div className="project-card">
       <div className="card-top">
         <div>
           <h3>{title}</h3>
-
           <div className="card-meta">
             <span>{department}</span>
             <span>{year}</span>
           </div>
         </div>
-
         <button className="favorite-btn">
           {favorite ? (
             <FaHeart className="heart-filled" />
@@ -44,9 +34,7 @@ function ProjectCard({
         </button>
       </div>
 
-      <p className="card-description">
-        {description}
-      </p>
+      <p className="card-description">{description}</p>
 
       <div className="tags">
         {tags?.map((tag, index) => (
@@ -54,12 +42,22 @@ function ProjectCard({
         ))}
       </div>
 
-      <button className="details-btn">
+      <button
+        className="details-btn"
+        onClick={() =>
+          navigate(
+            type === "suggested"
+              ? `/projectsLiberary/suggested-project-details/${id}`
+              : `/projectsLiberary/project-details/${id}`
+          )
+        }
+      >
         View Details →
       </button>
     </div>
   );
 }
+
 
 export default function AllProjectsPage() {
   const { type } = useParams();
@@ -109,17 +107,18 @@ useEffect(() => {
       </div>
 
       <div className="cards-grid">
-        {projects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            title={project.title}
-            department={project.department_name}
-            year={project.year}
-            description={project.description}
-            tags={project.technologies}
-            
-          />
-        ))}
+{projects.map((project) => (
+  <ProjectCard
+    key={project.id}
+    id={project.id}        
+    type={type}            
+    title={project.title}
+    department={project.department_name}
+    year={project.year}
+    description={project.description}
+    tags={project.technologies}
+  />
+))}
       </div>
 
     </div>

@@ -6,11 +6,16 @@ import { MdExpandMore } from "react-icons/md";
 import Project from "../Services/Project.model";
 import { toast } from "react-hot-toast";
 import Milestones from "../Services/Milestones.model";
-import { useEffect, useState } from "react";
+import Student from "../services/Student.model";
+import { useEffect, useState, useRef } from "react";
 import "./StudentNavbar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
+import echo from "../echo";
+import { FaUserCircle } from "react-icons/fa";
+
 export const StudentNavbar = () => {
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const [openNotif, setOpenNotif] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -19,15 +24,65 @@ export const StudentNavbar = () => {
   const [milestones, setMilestones] = useState([]);
   const [milestoneId, setMilestoneId] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
-const location = useLocation();
-const isLibraryPage =
-  location.pathname.includes("projectsLiberary");
+  const location = useLocation();
+  const isLibraryPage = location.pathname.includes("projectsLiberary");
+  const isActive = (path) => location.pathname === path;
+  const openNotifRef = useRef(false);
+  const loadUnreadCount = async () => {
+    try {
+      const res = await Student.getNotifications();
+
+      const unread = res.filter((item) => item.read_at === null).length;
+
+      setUnreadCount(unread);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    console.log("Echo", echo);
+  }, []);
+  useEffect(() => {
+    loadUnreadCount();
+  }, []);
+  const handleOpenNotifications = async () => {
+    const next = !openNotif;
+    setOpenNotif(next);
+    openNotifRef.current = next;
+
+    if (next) {
+      try {
+        await Student.readNotifications();
+        setUnreadCount(0);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
       setCurrentUser(JSON.parse(user));
     }
   }, []);
+  useEffect(() => {
+    if (!currentUser) return;
+
+    echo
+      .private(`user.${currentUser.id}`)
+      .listen(".new-notification", (event) => {
+        console.log("New Notification:", event);
+        loadUnreadCount();
+
+        if (openNotifRef.current) {
+          window.dispatchEvent(new Event("refresh-notifications"));
+        }
+      });
+
+    return () => {
+      echo.leave(`private-user.${currentUser.id}`);
+    };
+  }, [currentUser]);
   useEffect(() => {
     const fetchMilestones = async () => {
       try {
@@ -58,7 +113,7 @@ const isLibraryPage =
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
             <strong>Upload Task</strong>
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ color: "green", fontSize: "18px" }}>✔</span>
+              <span style={{ color: "green", fontSize: "18px" }}>✔️</span>
               <span>Your task has been submitted successfully</span>
             </div>
           </div>
@@ -91,35 +146,66 @@ const isLibraryPage =
         <img src={logo} alt="logo" width="60" />
       </div>
       <div className="nav-center">
-        <span className="nav-link">Home</span>
-        <span className="nav-link" onClick={() => navigate("/projectsLiberary")}>Library</span>
-        <span className="nav-link" onClick={() => navigate("/team")}>
-          My Team
+        <span
+          className={`nav-link ${isActive("/") ? "activ-link" : ""}`}
+          onClick={() => navigate("/")}
+        >
+          Home
         </span>
-        <span className="nav-link" onClick={() => navigate("/timeline")}>
+
+        <span
+          className={`nav-link ${location.pathname.startsWith("/projectsLiberary") ? "activ-link" : ""}`}
+          onClick={() => navigate("/projectsLiberary")}
+        >
+          Library
+        </span>
+        {currentUser && (
+          <span
+            className={`nav-link ${isActive("/team") ? "activ-link" : ""}`}
+            onClick={() =>
+              navigate(
+                currentUser?.has_team
+                  ? "/inteam/team"
+                  : "/student/notinteam/notinteam",
+              )
+            }
+          >
+            My Team
+          </span>
+        )}
+
+        <span
+          className={`nav-link ${isActive("/timeline") ? "activ-link" : ""}`}
+          onClick={() =>
+            navigate(
+              currentUser?.has_team ? "student/inteam/timeline" : "/timeline",
+            )
+          }
+        >
           Timeline
         </span>
       </div>
       <div className="nav-right">
-{isLibraryPage ? (
-  <button
-    className="favorite-btn-navbar"
-       onClick={() =>
-    navigate("/projectsLiberary/favorites")
-  }
-  >
-    <FaHeart />
-    Favorites
-  </button>
-) : (
-  <button
-    onClick={() => setShowPopup(true)}
-    className="upload-btn"
-  >
-    <FiUpload />
-    Upload Task
-  </button>
-)}
+        {isLibraryPage ? (
+          currentUser && (
+            <button
+              className="favorite-btn-navbar"
+              onClick={() => navigate("/projectsLiberary/favorites")}
+            >
+              <FaHeart />
+              Favorites
+            </button>
+          )
+        ) : (
+          <button
+            onClick={() => currentUser && setShowPopup(true)}
+            className={`upload-btn ${!currentUser ? "upload-btn-disabled" : ""}`}
+            disabled={!currentUser}
+          >
+            <FiUpload />
+            Upload Task
+          </button>
+        )}
         {showPopup && (
           <div className="popup-overlay">
             <div className="popup-box">
@@ -144,7 +230,10 @@ const isLibraryPage =
                 onChange={(e) => setNotes(e.target.value)}
               />
               <div className="popup-actions">
-                <button className="btn-cancel" onClick={() => setShowPopup(false)}>
+                <button
+                  className="btn-cancel"
+                  onClick={() => setShowPopup(false)}
+                >
                   Cancel
                 </button>
                 <button className="btn-submit" onClick={handleUpload}>
@@ -157,19 +246,35 @@ const isLibraryPage =
         <div className="relative">
           <FaBell
             className="text-gray-600 text-lg cursor-pointer"
-            onClick={() => setOpenNotif(!openNotif)}
+            onClick={handleOpenNotifications}
           />
+
+          {unreadCount > 0 && (
+            <span className="notif-badge">{unreadCount}</span>
+          )}
+
           {openNotif && <NotificationsDropdown />}
         </div>
-        <div className="flex items-center gap-2 cursor-pointer">
-          <img
-            src="https://i.pravatar.cc/40"
-            className="w-8 h-8 rounded-full"
-          />
-          <span className="text-sm">
-            {currentUser?.full_name || "User"}
-          </span>
-          <MdExpandMore />
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => currentUser && navigate("/profile")}
+        >
+          {currentUser ? (
+            <>
+              <img
+                src="https://i.pravatar.cc/40"
+                className="w-8 h-8 rounded-full"
+                alt="Profile"
+              />
+              <span className="text-sm">{currentUser.full_name}</span>
+              <MdExpandMore />
+            </>
+          ) : (
+            <>
+              <FaUserCircle size={32} color="#BDBDBD" />
+              <span className="text-sm text-gray-400">Guest</span>
+            </>
+          )}
         </div>
       </div>
     </div>

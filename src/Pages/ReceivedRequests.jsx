@@ -141,16 +141,13 @@ function RequestsPage() {
 
       <div className="requests-header">
 
-        <div className="header-left">
-
-          <IoArrowBack
-            className="back-icon"
-            onClick={() => navigate(-1)}
-          />
-
-          <h2>Requests</h2>
-
-        </div>
+ <div className="header-left">
+  <IoArrowBack
+    className="backk-icon"
+    onClick={() => navigate(-1)}
+  />
+  <h2 >Requests</h2>
+</div>
 
         <button
           className="new-request-btn"
@@ -203,7 +200,7 @@ function RequestsPage() {
 
         <div className="search-row">
 
-          <div className="search-box">
+          <div className="recived-search-boxx">
 
             <FiSearch className="search-icon" />
 

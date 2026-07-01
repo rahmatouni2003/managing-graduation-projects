@@ -135,6 +135,17 @@ class Admin {
       "GET"
     );
   }
+static getAdminreports() {
+  return submitRequestAsync(`admin/reports`, "GET", null, {}, true);
+}
+static getAdminreportsDetails(id) {
+  return submitRequestAsync(`/admin/reports/${id}`, "GET",);
+  }
+
+static sendReportSolution(id, body) {
+  return submitRequestAsync(`admin/reports/${id}/respond`, "POST", body);
+}
+
   static getMilestones() {
     return submitRequestAsync(
       "/milestones",

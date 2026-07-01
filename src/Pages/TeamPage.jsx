@@ -281,7 +281,14 @@ const handleLeaveTeam = async () => {
           Supervision
         </h3>
 
-        <span className="section-link">
+        <span className="section-link"
+        
+          onClick={() =>
+    navigate("/supervision/requests")
+  }
+        >
+
+       
           Choose Supervision
         </span>
 

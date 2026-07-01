@@ -1,0 +1,239 @@
+.report-details-page {
+    padding: 24px 32px;
+}
+
+.report-details-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+}
+
+/* Title bar */
+.report-details-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    min-width: 36px !important;
+    width: 36px;
+    height: 36px;
+    color: #333 !important;
+}
+
+.back-btn .MuiButton-startIcon {
+    margin: 0;
+}
+
+.report-details-title {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #1a1a2e;
+}
+
+/* Info card */
+.report-info-card {
+    padding: 28px 32px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+}
+
+.info-row.align-top {
+    align-items: flex-start;
+}
+
+.info-label {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1a1a2e;
+    min-width: 130px;
+}
+
+.info-value {
+    font-size: 14px !important;
+    color: #444;
+}
+
+.description-text {
+    line-height: 1.6 !important;
+    max-width: 600px;
+}
+
+/* Attachment */
+.attachment-section {
+    margin-top: 20px;
+}
+
+.section-label {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1a1a2e;
+    margin-bottom: 10px !important;
+}
+
+.attachment-preview {
+    display: inline-flex;
+    flex-direction: column;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 200px;
+}
+
+.attachment-thumb {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    background: #1e1e2e;
+}
+
+.attachment-name {
+    font-size: 12px !important;
+    padding: 8px 10px;
+    color: #555;
+    border-top: 1px solid #eee;
+}
+
+.divider-line {
+    height: 1px;
+    background: #eee;
+    margin: 28px 0;
+}
+
+/* Existing admin response */
+.admin-response-readonly {
+    margin-bottom: 28px;
+}
+
+.response-text {
+    font-size: 14px !important;
+    color: #444;
+    line-height: 1.6 !important;
+    background: #f7f8fa;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-bottom: 12px !important;
+}
+
+.admin-attachments-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.admin-attachment-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #1565c0;
+    text-decoration: none;
+    background: #eef4ff;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.admin-attachment-chip:hover {
+    text-decoration: underline;
+}
+
+.resolved-at {
+    font-size: 12px !important;
+    color: #888;
+}
+
+/* Solution form */
+.solution-form {
+    margin-top: 8px;
+}
+
+.field-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #333;
+    margin: 14px 0 8px !important;
+}
+
+.upload-label {
+    margin-top: 22px !important;
+}
+
+.solution-textfield .MuiOutlinedInput-root {
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.upload-dropzone {
+    border: 1.5px dashed #c9cdd4;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: #fafbfc;
+}
+
+.upload-dropzone:hover {
+    border-color: #1976d2;
+    background: #f5f9ff;
+}
+
+.upload-icon {
+    color: #888 !important;
+    font-size: 28px !important;
+    margin-bottom: 6px;
+}
+
+.upload-text {
+    font-size: 13px !important;
+    color: #555;
+}
+
+.upload-hint {
+    font-size: 12px !important;
+    color: #999;
+    margin-top: 2px !important;
+}
+
+.upload-preview-img {
+    max-height: 140px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+.send-solution-btn {
+    margin-top: 24px !important;
+    background-color: #1565c0 !important;
+    text-transform: none !important;
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .report-details-page {
+        padding: 16px;
+    }
+
+    .report-info-card {
+        padding: 20px !important;
+    }
+
+    .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}

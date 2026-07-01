@@ -275,7 +275,7 @@ const [hoveredMember, setHoveredMember] =
         <div className="member-item">
 
           <img
-            src={`https://i.pravatar.cc/150?u=${member.id}`}
+          src={project.image_url || `https://picsum.photos/1000/450?random=${project.id}`}
             alt={member.name}
           />
 

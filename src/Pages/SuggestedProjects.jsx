@@ -385,7 +385,7 @@ export default function SuggestedProjects() {
 
                     setShowDeleteModal(false);
                     setSelectedProjectId(null);
-                  } catch (err) {
+                  } catch {
                     toast.error("Failed to delete project");
                   }
                 }}

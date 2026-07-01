@@ -25,7 +25,8 @@ export async function submitRequestAsync(
   endpoint,
   method = "GET",
   body = null,
-  addHeaders = {}
+  addHeaders = {},
+   rawResponse = false
 ) {
   const baseUrl = getBaseUrl();
 
@@ -72,8 +73,7 @@ export async function submitRequestAsync(
         res?.message || `Error ${response.status}: Request failed`;
       throw new Error(errorMsg);
     }
-
-    return extractResponseData(res);
+return rawResponse ? res : extractResponseData(res);
   } catch (error) {
   let errorMsg = "";
 

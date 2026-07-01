@@ -29,11 +29,11 @@
   object-fit: contain;
 }
 
-.search-boxx {
-  width: 420px;
+.admin-search-boxx {
+  width:400px !important;
   height: 40px;
-  background: #fff;
-
+  background: #fff; 
+    margin-left: 95px !important;
   display: flex;
   align-items: center;
   gap: 10px;

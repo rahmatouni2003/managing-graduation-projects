@@ -4,6 +4,7 @@
   min-height: 100vh;
   background: #ececec;
   padding: 24px;
+  margin-top: 50px;
 }
 
 .home-container {
@@ -46,17 +47,18 @@
   font-weight: 700;
 }
 
-.search-boxx {
-  width: 550px;
+.home-search-box{
+  width: 500px !important;
   background: white;
   border-radius: 6px;
-  padding: 12px 16px;
+  padding: 13px 26px;
+    margin-right: 30px !important;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.search-boxx input {
+.home-search-box input {
   border: none;
   width: 100%;
   outline: none;
@@ -192,7 +194,7 @@
   min-height: 220px;
 }
 
-.card-title {
+.home-card-title {
   color: #2563eb;
   display: flex;
   gap: 10px;

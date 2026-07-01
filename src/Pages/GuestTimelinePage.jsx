@@ -1,114 +1,118 @@
 import { useEffect, useState } from "react";
-import { FaCalendarAlt } from "react-icons/fa";
 import Project from "../Services/Project.model";
-import "./TimelinePage.css";
+import "./Guesttimelinepage.css";
 
-function GuestTimelinePage() {
+const statusLabels = {
+  on_progress: "On Progress",
+  pending: "Pending",
+  completed: "Completed",
+  closed: "Closed",
+};
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+export default function MilestonesTimeline() {
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
+
+    async function fetchMilestones() {
+      try {
+        const response = await Project.getMyGuestMilestones();
+        const data = response|| response?.data || [];
+
+        if (isMounted) {
+          setMilestones(data);
+        }
+      } catch {
+        if (isMounted) {
+          setError("تعذر تحميل المراحل، حاول مرة أخرى.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
     fetchMilestones();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const fetchMilestones = async () => {
-    try {
-      setLoading(true);
-
-      const response =
-        await Project.getMyGuestMilestones();
-
-      setMilestones(response || []);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "completed":
-        return "completed";
-
-      case "on_progress":
-        return "progress";
-
-      default:
-        return "pending";
-    }
-  };
-
-  const getStatusText = (status) => {
-    switch (status) {
-      case "completed":
-        return "Completed";
-
-      case "on_progress":
-        return "On Progress";
-
-      default:
-        return "Pending";
-    }
-  };
-
   return (
-    <div className="timeline-page">
-      <div className="timeline-header">
-        <h2>Project Timeline Overview</h2>
+    <div className="page">
+      <h1 className="title">Project Timeline Overview</h1>
 
-        <p>
-          Track the progress of key project milestones and
-          phases. Each card represents a significant event
-          in the project lifecycle.
-        </p>
-      </div>
+      <p className="subtitle">
+        Track the progress of key project milestones and phases. Each card
+        represents a significant event in the project lifecycle.
+      </p>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="timeline-wrapper">
+      {loading && <p className="statusText">جاري التحميل...</p>}
+      {error && <p className="statusText">{error}</p>}
 
-          <div className="timeline-line" />
+      {!loading && !error && (
+        <div className="timeline">
+          <div className="timelineLine" />
 
-          {milestones.map((item) => (
-            <div
-              className="timeline-item"
-              key={item.id}
-            >
-              <div className="timeline-dot" />
+          {milestones.map((milestone) => (
+            <div key={milestone.id} className="timelineItem">
+              <span className="timelineDot" />
 
-              <div className="timeline-card guest-card">
+              <div className="card">
+                <div className="cardHeader">
+                  <div className="iconWrapper">
+                    <BulbIcon />
+                  </div>
 
-                <div className="timeline-top">
-                  <div>
-                    <h3>{item.title}</h3>
+                  <div className="cardHeaderText">
+                    <h2 className="cardTitle">{milestone.title}</h2>
 
-                    <div className="timeline-date">
-                      <FaCalendarAlt />
-
+                    <div className="cardDate">
+                      <CalendarIcon />
                       <span>
-                        {item.deadline}
+                        {formatDate(milestone.start_date)} -{" "}
+                        {formatDate(milestone.deadline)}
                       </span>
                     </div>
                   </div>
 
-                  <div className="marks">
-                    {item.max_score} Marks
-                  </div>
+                  <span className="marksBadge">
+                    {Number(milestone.max_score)} Marks
+                  </span>
                 </div>
 
-                <p className="timeline-description">
-                  {item.description}
+                <p className="cardDescription">
+                  {milestone.description}
                 </p>
 
-                <div
-                  className={`status-badge ${getStatusClass(
-                    item.status
-                  )}`}
+                {milestone.requirements?.length > 0 && (
+                  <ul className="requirementsList">
+                    {milestone.requirements.map((req) => (
+                      <li key={req.id}>{req.requirement}</li>
+                    ))}
+                  </ul>
+                )}
+
+                <span
+                  className={`statusBadge ${milestone.status}`}
                 >
-                  {getStatusText(item.status)}
-                </div>
+                  {statusLabels[milestone.status] || milestone.status}
+                </span>
               </div>
             </div>
           ))}
@@ -118,4 +122,38 @@ function GuestTimelinePage() {
   );
 }
 
-export default GuestTimelinePage;
+function BulbIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M9 21h6M12 3a6 6 0 00-3.5 10.9c.5.4.8 1 .8 1.6v.5h5.4v-.5c0-.6.3-1.2.8-1.6A6 6 0 0012 3z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <rect
+        x="3"
+        y="5"
+        width="18"
+        height="16"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <path
+        d="M16 3v4M8 3v4M3 10h18"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}

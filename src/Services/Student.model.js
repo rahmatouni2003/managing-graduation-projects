@@ -26,6 +26,12 @@ class Student {
     static getMilestonesActive() {
   return submitRequestAsync(`home`, "GET");
 } 
+    static getNotifications() {
+  return submitRequestAsync(`notifications`, "GET");
+} 
+    static readNotifications() {
+  return submitRequestAsync(`/notifications/read-all`, "POST");
+}
 }
 
 

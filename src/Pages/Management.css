@@ -1,38 +1,38 @@
-.page {
-  margin-left: 250px;
-  padding: 80px 25px;
+.admin-managment {
+  margin-left: 100px;
+  padding: 50px 25px;
   background: #F5F6F8;
   min-height: calc(100vh - 70px);
 }
 
-.page h2 {
+.admin-managment h2 {
   margin-bottom: 20px;
 }
 
-.tabs {
+.admin-managment .tabs {
   display: flex;
   margin-bottom: 20px;
 }
 
-.tabs button {
+.admin-managment .tabs button {
   border: 1px solid #d8d8d8;
   background: white;
   padding: 10px 20px;
   cursor: pointer;
 }
 
-.tabs .active {
+.admin-managment .tabs .active {
   color: #0C5BC4;
   font-weight: 600;
 }
 
-.table-card {
+.admin-managment .table-card {
   background: white;
-  padding: 20px;
+  padding: 10px;
   border-radius: 6px;
 }
 
-.top-bar {
+.admin-managment .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,12 +40,12 @@
   margin-bottom: 20px;
 }
 
-.search-wrapper {
+.admin-managment .search-wrapper {
   position: relative;
   width: 280px;
 }
 
-.search-wrapper input {
+.admin-managment .search-wrapper input {
   width: 100%;
   height: 38px;
 
@@ -58,7 +58,7 @@
   outline: none;
 }
 
-.search-icon {
+.admin-managment .search-icon {
   position: absolute;
   left: 12px;
   top: 50%;
@@ -69,12 +69,12 @@
   font-size: 13px;
 }
 
-.top-actions {
+.admin-managment .top-actions {
   display: flex;
   gap: 10px;
 }
 
-.btn-primary {
+.admin-managment .btn-primary {
   height: 38px;
 
   border: none;
@@ -93,7 +93,7 @@
   cursor: pointer;
 }
 
-.btn-secondary {
+.admin-managment .btn-secondary {
   height: 38px;
 
   background: white;
@@ -113,7 +113,7 @@
   cursor: pointer;
 }
 
-.btn-secondary:hover {
+.admin-managment .btn-secondary:hover {
   background: #f9fafb;
 }
 
@@ -121,16 +121,16 @@
   background: #084ba3;
 }
 
-table {
+.admin-managment table {
   width: 100%;
       border-collapse: collapse;
 }
 
-thead {
+.admin-managment thead {
   background: #DDDCDC;
 }
 
-th, td {
+.admin-managment th, td {
   border: 1px solid #ddd;
   padding: 12px;
   text-align: left;
@@ -140,18 +140,18 @@ th, td {
   text-overflow: ellipsis;
 }
 
-tbody tr:hover {
+.admin-managment tbody tr:hover {
   background: #f7f7f7;
 }
-.action-buttons {
+.admin-managment .action-buttons {
   display: flex;
   align-items: center;
   gap: 6px;
  margin-bottom: 35px;
 }
 
-.edit-btn,
-.deactivate-btn {
+.admin-managment .edit-btn,
+.admin-managment .deactivate-btn {
   display: flex;
   align-items: center;
   /* gap: 5px;
@@ -169,12 +169,12 @@ tbody tr:hover {
   cursor: pointer;
 }
 
-.edit-btn svg,
-.deactivate-btn svg {
+.admin-managment .edit-btn svg,
+.admin-managment .deactivate-btn svg {
   font-size: 10px;
 }
 
-.activate-btn {
+.admin-managment .activate-btn {
   border: none;
   background: transparent;
 
@@ -185,12 +185,12 @@ tbody tr:hover {
   cursor: pointer;
 }
 
-.edit-btn:hover,
-.deactivate-btn:hover {
+.admin-managment .edit-btn:hover,
+.admin-managment .deactivate-btn:hover {
   background: #f7f7f7;
 }
 /* Overlay */
-.modal-overlay {
+.admin-managment .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -208,7 +208,7 @@ tbody tr:hover {
 }
 
 /* Modal Box */
-.year-modal {
+.admin-managment .year-modal {
   width: 420px;
 
   background: #fff;
@@ -233,7 +233,7 @@ tbody tr:hover {
 }
 
 /* Header */
-.modal-header {
+.admin-managment .modal-header {
   background: #243B56;
   color: #fff;
 
@@ -244,13 +244,13 @@ tbody tr:hover {
   align-items: center;
 }
 
-.modal-header h3 {
+.admin-managment .modal-header h3 {
   font-size: 16px;
   margin: 0;
     color: #fff;
 }
 
-.close-btn {
+.admin-managment .close-btn {
   background: transparent;
   border: none;
 
@@ -261,18 +261,18 @@ tbody tr:hover {
 }
 
 /* Body */
-.modal-body {
+.admin-managment .modal-body {
   padding: 20px;
   font-size: 14px;
   color: #333;
 }
 
-.modal-body p {
+.admin-managment .modal-body p {
   margin: 0;
   line-height: 1.6;
 }
 
-.file-box {
+.admin-managment .file-box {
   margin-top: 12px;
   padding: 10px;
 
@@ -285,7 +285,7 @@ tbody tr:hover {
 }
 
 /* Footer */
-.modal-footer {
+.admin-managment .modal-footer {
   padding: 14px 16px;
 
   display: flex;
@@ -296,7 +296,7 @@ tbody tr:hover {
 }
 
 /* Buttons */
-.cancel-btn {
+.admin-managment .cancel-btn {
   padding: 8px 14px;
 
   border: none;
@@ -306,11 +306,11 @@ tbody tr:hover {
   cursor: pointer;
 }
 
-.cancel-btn:hover {
+.admin-managment .cancel-btn:hover {
   background: #d5d5d5;
 }
 
-.save-btn {
+.admin-managment .save-btn {
   padding: 8px 14px;
 
   border: none;
@@ -322,11 +322,11 @@ tbody tr:hover {
   cursor: pointer;
 }
 
-.save-btn:hover {
+.admin-managment .save-btn:hover {
   background: #094a9e;
 }
 
-.status {
+.admin-managment .status {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -340,7 +340,7 @@ tbody tr:hover {
   width: fit-content;
 }
 
-.status {
+.admin-managment .status {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -358,31 +358,31 @@ tbody tr:hover {
 }
 
 /* Active */
-.status.active {
+.admin-managment .status.active {
   color: #22c55e;
   background: rgba(34, 197, 94, 0.12);
 }
 
 /* Inactive */
-.status.inactive {
+.admin-managment .status.inactive {
   color: #6b7280;
   background: rgba(107, 114, 128, 0.12);
 }
 
-.status:hover {
+.admin-managment .status:hover {
   opacity: 0.85;
 }
 
-.status.active svg {
+.admin-managment .status.active svg {
   color: #1aa34a;
 }
 
 
-.status.inactive svg {
+.admin-managment .status.inactive svg {
   color: #d9534f;
 }
-.table-input,
-.table-select {
+.admin-managment .table-input,
+.admin-managment .table-select {
   width: 100%;
   padding: 6px 10px;
   border: 1px solid #ddd;
@@ -393,8 +393,8 @@ tbody tr:hover {
   background: #fff;
 }
 
-.table-input:focus,
-.table-select:focus {
+.admin-managment .table-input:focus,
+.admin-managment .table-select:focus {
   border-color: #4a90e2;
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
 }

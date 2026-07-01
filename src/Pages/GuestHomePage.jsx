@@ -1,268 +1,184 @@
 import "./GuestHomePage.css";
 
+import React, { useEffect, useState } from "react";
 import {
-  FaSearch,
-  FaStar,
-  FaLightbulb,
-  FaBuilding,
-  FaProjectDiagram,
-} from "react-icons/fa";
+  Search,
+  Star,
+  FolderOpen,
+  Lightbulb,
+  LayoutGrid,
+  ClipboardList,
+  ArrowRight,
+} from "lucide-react";
+
+import Student from "../Services/Student.model";
+
+const PROJECT_ICONS = [
+  { bg: "#dbeafe", icon: <FolderOpen size={22} color="#2563eb" /> },
+  { bg: "#fef3c7", icon: <FolderOpen size={22} color="#d97706" /> },
+  { bg: "#fce7f3", icon: <FolderOpen size={22} color="#db2777" /> },
+];
 
 export default function GuestHomePage() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  /* ================= API DATA ================= */
+  useEffect(() => {
+const fetchHome = async () => {
+  try {
+    setLoading(true);
+    const response = await Student.getHome();
+    if (response) {
+      setData(response); // response هنا هو الـ data الفعلية مباشرة
+    } else {
+      setError("Failed to load data");
+    }
+  } catch {
+    setError("Something went wrong while loading the page");
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const apiData = {
-    success: true,
-    data: {
-      user_status: "guest",
+    fetchHome();
+  }, []);
 
-      project_rules: {
-        min_team_size: 4,
-        max_team_size: 6,
-        project1_team_formation_deadline: "2026-06-10",
-        supervisor_max_score: "40.00",
-        defense_max_score: "40.00",
-        passing_percentage: 50,
-        total_score: 100,
-        milestone_committee_total_score: 20,
-      },
+  if (loading) {
+    return <div className="home-loading">Loading...</div>;
+  }
 
-      featured_projects: [
-        {
-          title: "AI Smart Attendance System Team 1",
-          department: "MM",
-          year: null,
-        },
-      ],
-
-      statistics: {
-        projects: 1,
-        ideas: 8,
-        departments: 4,
-      },
-
-      project_guidelines: [
-        "The idea should be original and innovative.",
-        "The project must address a real-world problem.",
-        "Project ideas from previous years cannot be repeated.",
-      ],
-
-      suggested_projects_ideas: [
-        {
-          id: 1,
-          title: "AI Study Planner",
-        },
-        {
-          id: 2,
-          title: "Smart Clinic Queue System",
-        },
-        {
-          id: 3,
-          title: "Campus Lost & Found Platform",
-        },
-        {
-          id: 4,
-          title: "Cyber Awareness Game",
-        },
-      ],
-    },
-  };
-
-  /* ================= DATA ================= */
+  if (error || !data) {
+    return <div className="home-error">{error || "No data available"}</div>;
+  }
 
   const {
-    statistics,
-    featured_projects,
-    project_guidelines,
-    suggested_projects_ideas,
-    project_rules,
-  } = apiData.data;
+    featured_projects = [],
+    statistics = {},
+    project_guidelines = [],
+    suggested_projects_ideas = [],
+  } = data;
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    console.log("Searching for:", searchTerm);
+  };
 
   return (
-    <div className="guest-home">
-      <div className="guest-container">
+    <div className="home-page">
+      {/* Hero */}
+      <section className="home-hero">
+        <h1 className="home-title">
+          Welcome <span className="wave">👋</span>
+        </h1>
+        <p className="home-subtitle">
+          Explore graduation projects and discover new ideas.
+        </p>
 
-        {/* ================= Welcome Section ================= */}
+        <form className="home-search" onSubmit={handleSearchSubmit}>
+          <Search size={18} className="home-search-icon" />
+          <input
+            type="text"
+            placeholder="Search Projects"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </form>
 
-        <div className="welcome-section">
-          <h1>
-            Welcome ! <span>👋🏻</span>
-          </h1>
-
-          <p>
-            Explore graduation projects and discover new ideas.
-          </p>
-
-          {/* ================= Search ================= */}
-
-          <div className="search-box">
-            <FaSearch className="search-icon" />
-
-            <input
-              type="text"
-              placeholder="Search Projects"
-            />
+        <div className="home-stats">
+          <div className="home-stat-item">
+            <FolderOpen size={16} className="home-stat-icon" />
+            <span>
+              <strong>{statistics.projects}+</strong> Projects
+            </span>
           </div>
-
-          {/* ================= Statistics ================= */}
-
-          <div className="stats-box">
-
-            <div className="stat-item">
-              <FaProjectDiagram />
-
-              <strong>{statistics.projects}+</strong>
-
-              <span>Projects</span>
-            </div>
-
-            <div className="stat-item">
-              <FaLightbulb />
-
-              <strong>{statistics.ideas}+</strong>
-
-              <span>Ideas</span>
-            </div>
-
-            <div className="stat-item">
-              <FaBuilding />
-
-              <strong>{statistics.departments}</strong>
-
-              <span>Departments</span>
-            </div>
-
+          <span className="home-stat-divider" />
+          <div className="home-stat-item">
+            <Lightbulb size={16} className="home-stat-icon" />
+            <span>
+              <strong>{statistics.ideas}+</strong> Ideas
+            </span>
+          </div>
+          <span className="home-stat-divider" />
+          <div className="home-stat-item">
+            <LayoutGrid size={16} className="home-stat-icon" />
+            <span>
+              <strong>{statistics.departments}</strong> Departments
+            </span>
           </div>
         </div>
+      </section>
 
-        {/* ================= Featured Projects ================= */}
+      {/* Featured projects */}
+      <section className="home-card featured-card">
+        <div className="featured-header">
+          <Star size={18} className="featured-star" />
+          <span className="card-title">Featured Projects</span>
+        </div>
+        <hr className="card-divider" />
 
-        <div className="featured-section">
-
-          <div className="section-title">
-            <FaStar />
-
-            <h2>Featured Projects</h2>
-          </div>
-
-          <div className="projects-grid">
-
-            {featured_projects.map((project, index) => (
-              <div
-                className="project-card"
-                key={index}
-              >
-
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png"
-                  alt={project.title}
-                />
-
-                <div className="project-info">
-
-                  <h3>{project.title}</h3>
-
-                  <p>
-                    {project.department}
-                    {project.year && ` • ${project.year}`}
-                  </p>
-
+        <div className="featured-grid">
+          {featured_projects.map((project, index) => {
+            const iconStyle = PROJECT_ICONS[index % PROJECT_ICONS.length];
+            return (
+              <div className="featured-project" key={index}>
+                <div
+                  className="featured-project-icon"
+                  style={{ background: iconStyle.bg }}
+                >
+                  {iconStyle.icon}
+                </div>
+                <div className="featured-project-info">
+                  <span className="featured-project-title">
+                    {project.title}
+                  </span>
+                  <span className="featured-project-meta">
+                    {project.department} · {project.year}
+                  </span>
                 </div>
               </div>
+            );
+          })}
+        </div>
+
+        <a href="/projects" className="browse-link">
+          Browse All Projects <ArrowRight size={16} />
+        </a>
+      </section>
+
+      {/* Guidelines + suggested ideas */}
+      <section className="home-bottom-grid">
+        <div className="home-card">
+          <div className="bottom-card-header">
+            <ClipboardList size={18} className="bottom-card-icon" />
+            <span className="card-title">Project Guidelines</span>
+          </div>
+          <hr className="card-divider" />
+          <ul className="guidelines-list">
+            {project_guidelines.map((rule, index) => (
+              <li key={index}>{rule}</li>
             ))}
+          </ul>
+        </div>
 
+        <div className="home-card">
+          <div className="bottom-card-header">
+            <Lightbulb size={18} className="bottom-card-icon ideas-icon" />
+            <span className="card-title">Suggested Project Ideas</span>
           </div>
-
-          <a
-            href="#"
-            className="browse-btn"
-          >
-            Browse All Projects →
+          <hr className="card-divider" />
+          <ul className="ideas-list">
+            {suggested_projects_ideas.map((idea) => (
+              <li key={idea.id}>{idea.title}</li>
+            ))}
+          </ul>
+          <a href="/ideas" className="explore-link">
+            Explore All Ideas <ArrowRight size={16} />
           </a>
-
         </div>
-
-        {/* ================= Bottom Sections ================= */}
-
-        <div className="bottom-sections">
-
-          {/* ================= Guidelines ================= */}
-
-          <div className="info-box">
-
-            <div className="info-header">
-
-              <div className="info-header-left">
-                <span>📑</span>
-
-                <h3>Project Guidelines</h3>
-              </div>
-
-              <span>⌃</span>
-
-            </div>
-
-            <div className="info-content">
-
-              <ul className="info-list">
-
-                {project_guidelines.map((item, index) => (
-                  <li key={index}>
-                    {item}
-                  </li>
-                ))}
-
-                <li>
-                  Minimum Team size is{" "}
-                  {project_rules.min_team_size}{" "}
-                  members and maximum is{" "}
-                  {project_rules.max_team_size}.
-                </li>
-
-              </ul>
-
-            </div>
-          </div>
-
-          {/* ================= Suggested Ideas ================= */}
-
-          <div className="info-box">
-
-            <div className="info-header">
-
-              <div className="info-header-left">
-                <FaLightbulb />
-
-                <h3>Suggested Project Ideas</h3>
-              </div>
-
-            </div>
-
-            <div className="info-content">
-
-              <ul className="info-list">
-
-                {suggested_projects_ideas.map((idea) => (
-                  <li key={idea.id}>
-                    {idea.title}
-                  </li>
-                ))}
-
-              </ul>
-
-              <a
-                href="#"
-                className="explore-link"
-              >
-                Explore All Ideas →
-              </a>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

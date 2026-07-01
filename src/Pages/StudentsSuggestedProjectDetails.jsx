@@ -19,8 +19,7 @@ function SuggestedProjectDetails() {
     try {
       setLoading(true);
 
-      const response =
-        await Project.getSuggestedProjectDetails(id);
+      const response = await Project.getSuggestedProjectDetails(id);
 
       setProject(response.data || response);
     } catch (error) {
@@ -31,45 +30,28 @@ function SuggestedProjectDetails() {
   };
 
   if (loading) {
-    return (
-      <div className="loading">
-        Loading...
-      </div>
-    );
+    return <div className="loading">Loading...</div>;
   }
 
   if (!project) {
-    return (
-      <div className="loading">
-        No Project Found
-      </div>
-    );
+    return <div className="loading">No Project Found</div>;
   }
 
   return (
     <div className="suggested-wrapper">
-
       <div className="suggested-card">
-
         {/* Header */}
 
         <div className="suggested-header">
-
-          <button
-            className="back-btn"
-            onClick={() => navigate(-1)}
-          >
+          <button className="back-btn" onClick={() => navigate(-1)}>
             <FaArrowLeft />
           </button>
 
           <div>
             <h1>{project.title}</h1>
 
-            <span className="department-badge">
-              {project.department_name}
-            </span>
+            <span className="department-badge">{project.department_name}</span>
           </div>
-
         </div>
 
         {/* Image */}
@@ -77,7 +59,7 @@ function SuggestedProjectDetails() {
         <img
           src={
             project.image_url ||
-            "https://via.placeholder.com/1000x450?text=Suggested+Project"
+            `https://picsum.photos/1000/450?random=${project.id}`
           }
           alt={project.title}
           className="suggested-image"
@@ -88,9 +70,7 @@ function SuggestedProjectDetails() {
         <div className="section-box">
           <h3>Description</h3>
 
-          <p>
-            {project.description}
-          </p>
+          <p>{project.description}</p>
         </div>
 
         {/* Technologies */}
@@ -102,64 +82,41 @@ function SuggestedProjectDetails() {
           </h3>
 
           <div className="tech-container">
-
             {project.technologies?.length > 0 ? (
-              project.technologies.map(
-                (tech, index) => (
-                  <span
-                    key={index}
-                    className="tech-tag"
-                  >
-                    {tech}
-                  </span>
-                )
-              )
+              project.technologies.map((tech, index) => (
+                <span key={index} className="tech-tag">
+                  {tech}
+                </span>
+              ))
             ) : (
-              <p>
-                No technologies specified
-              </p>
+              <p>No technologies specified</p>
             )}
-
           </div>
         </div>
 
         {/* Dates */}
 
         <div className="section-box">
-
           <h3>
             <FaCalendarAlt />
             Project Information
           </h3>
 
           <div className="info-grid">
-
             <div>
-              <strong>
-                Created At
-              </strong>
+              <strong>Created At</strong>
 
-              <p>
-                {project.created_at}
-              </p>
+              <p>{project.created_at}</p>
             </div>
 
             <div>
-              <strong>
-                Updated At
-              </strong>
+              <strong>Updated At</strong>
 
-              <p>
-                {project.updated_at}
-              </p>
+              <p>{project.updated_at}</p>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }

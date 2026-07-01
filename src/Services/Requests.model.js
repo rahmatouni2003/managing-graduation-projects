@@ -47,6 +47,15 @@ class Requests {
       "GET"
     );
   }
+      static getAvailableSupervisors() {
+  return submitRequestAsync(`available/supervisors`, "GET");
+} 
+    static sendsupervisionrequests(data) {
+  return submitRequestAsync(`supervision-requests`, "POST" , data);
+} 
+    static getSupervisorRequests() {
+  return submitRequestAsync(`/supervisor/requests`, "GET");
+} 
 }
 
 

@@ -46,7 +46,6 @@ useEffect(() => {
 
 const {
   user,
-  project_rules,
   project_guidelines,
   project,
   next_deadline,
@@ -54,8 +53,6 @@ const {
   important_notes,
   supervisors,
   milestone_committee,
-  team_size_info,
-  user_status,
 } = homeData;
 
   return (
@@ -69,7 +66,7 @@ const {
           <div className="hero-content">
             <h2>Welcome {user?.name} 👋🏻</h2>
 
-            <div className="search-boxx">
+            <div className="home-search-box">
               <FaSearch />
               <input
                 type="text"
@@ -164,7 +161,7 @@ const {
             {/* Feedback */}
 
             <div className="info-card">
-              <div className="card-title">
+              <div className="home-card-title">
                 <FaBookOpen />
                 Last Feedback
               </div>
@@ -188,7 +185,7 @@ const {
             {/* Notes */}
 
             <div className="info-card">
-              <div className="card-title">
+              <div className="home-card-title">
                 <HiOutlineSpeakerphone />
                 Important Notes
               </div>
@@ -205,7 +202,7 @@ const {
             {/* Supervisors */}
 
             <div className="info-card">
-              <div className="card-title">
+              <div className="home-card-title">
                 <FaUserFriends />
                 Supervisors
               </div>
@@ -225,7 +222,7 @@ const {
             {/* Committee */}
 
             <div className="info-card">
-              <div className="card-title">
+              <div className="home-card-title">
                 <FaUserFriends />
                 Supervising Committee
               </div>
