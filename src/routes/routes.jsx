@@ -389,6 +389,7 @@ import EditStudentProfile from "../Pages/EditStudentProfile.jsx";
 import StudentsSuggestedProjectDetails from "../Pages/StudentsSuggestedProjectDetails";
 import ProtectedRoute from "../Components/ProtectedRoute";
 import AddMilestone from "../Pages/AddMilestone";
+import NotInNewRequests from "../Pages/NotInNewRequests.jsx";
 import AllDiscussion from "../pages/AllDiscussion";
 import RequestsPageNotInTeam from "../Pages/RequestsPageNotInTeam";
 import PoliciesPage from "../Pages/PoliciesPage";
@@ -670,6 +671,11 @@ export const router = createBrowserRouter([
 
         element: <NotInTeamRequests />,
       },
+                            {
+        path: "student/notinteam/notInNewRequests",
+
+        element: <NotInNewRequests />,
+      },
       {
         path: "/guestHomePage",
         element: <GuestHomePage />,
@@ -679,8 +685,8 @@ export const router = createBrowserRouter([
         element: <SentRequestsPage />,
       },
       {
-        path: "student/inteamsupervision/new-requests",
-        element: <NewRequestPage />,
+        path: "student/notinteam/new-requests",
+        element: <NotInNewRequests />,
       },
 
       // ================= PROJECT DETAILS =================

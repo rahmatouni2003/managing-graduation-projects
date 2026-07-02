@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Requests from "../Services/Requests.model";
 import "./NotInTeamRequests.css";
+import { useNavigate } from "react-router-dom";
 
 // السهم الخلفي المطابق للصورة الكلاسيكية
 const BackIcon = () => (
@@ -25,10 +26,10 @@ const TeamIcon = () => (
   </svg>
 );
 
-const StudentIcon = () => (
+// أيقونة الجرس الجديدة بدلاً من العلم
+const BellIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-    <path d="M4 4v16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M4 5l14 4-14 4" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15" />
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -52,10 +53,10 @@ function StatusBadge({ status }) {
   return <span className={`nitrStatusBadge ${conf.className}`}>{conf.label}</span>;
 }
 
-// التابات الفرعية المطابقة للصورة تماماً (All | Teams | Students)
+// الفلاتر الافتراضية للواجهة (All | Teams | Students)
 const FILTERS = [
   { key: "all", label: "All" },
-  { key: "team_join", label: "Teams" },
+  { key: "teams", label: "Teams" }, // تم جعل المفتاح عامًا للتحكم به برمجياً حسب التاب الرئيسي
   { key: "team_form", label: "Students" },
 ];
 
@@ -63,6 +64,7 @@ export default function NotInTeamRequests() {
   const [activeMainTab, setActiveMainTab] = useState("received"); // received | sent
   const [activeFilter, setActiveFilter] = useState("all");
   const [search, setSearch] = useState("");
+const navigate = useNavigate();
 
   // Received state
   const [requests, setRequests] = useState([]);
@@ -76,6 +78,7 @@ export default function NotInTeamRequests() {
   const [sentError, setSentError] = useState(null);
 
   useEffect(() => {
+    setActiveFilter("all"); // إعادة تعيين الفلتر الفرعي عند التنقل بين Received و Sent
     if (activeMainTab === "received") {
       fetchReceivedRequests();
     } else {
@@ -88,7 +91,7 @@ export default function NotInTeamRequests() {
     setError(null);
     try {
       const res = await Requests.getReceivedRequests();
-      const list = res?.data ?? [];
+      const list = res?.data?.data ?? res?.data ?? [];
       setRequests(Array.isArray(list) ? list : []);
     } catch {
       setError("Failed to load requests. Please try again.");
@@ -103,7 +106,6 @@ export default function NotInTeamRequests() {
     setSentError(null);
     try {
       const res = await Requests.getSentRequests();
-      // الشكل: { success, data: { data: [...], ... } } (paginator)
       const list = res?.data?.data ?? res?.data ?? [];
       setSentRequests(Array.isArray(list) ? list : []);
     } catch {
@@ -129,7 +131,17 @@ export default function NotInTeamRequests() {
   const handleAccept = (id) => handleRespond(id, "accepted");
   const handleReject = (id) => handleRespond(id, "rejected");
 
-  const matchesFilter = (r) => (activeFilter === "all" ? true : r.request_type === activeFilter);
+  // دالة الفلترة الذكية بناءً على التاب الرئيسي الحالي
+  const matchesFilter = (r) => {
+    if (activeFilter === "all") return true;
+    if (activeFilter === "team_form") return r.request_type === "team_form";
+    
+    if (activeFilter === "teams") {
+      // إذا كنا في الـ Received نبحث عن team_invite، وإذا كنا في الـ Sent نبحث عن team_join
+      return activeMainTab === "received" ? r.request_type === "team_invite" : r.request_type === "team_join";
+    }
+    return true;
+  };
 
   const matchesSearch = (r, personKey) => {
     if (!search.trim()) return true;
@@ -153,7 +165,6 @@ export default function NotInTeamRequests() {
 
   return (
     <div className="nitrPage">
-      {/* الـ Header بعد ضبط توزيع العناصر ليطابق الصورة */}
       <div className="nitrHeader">
         <div className="nitrHeaderLeft">
           <button className="nitrBackBtn" aria-label="Back">
@@ -161,10 +172,11 @@ export default function NotInTeamRequests() {
           </button>
           <h1 className="nitrTitle">Requests</h1>
         </div>
-        <button className="nitrSendBtn">Send New Requests</button>
+       <button className="nitrSendBtn" onClick={() => navigate("/student/notinteam/new-requests")}>
+  Send New Requests
+</button>
       </div>
 
-      {/* تابات التنقل الرئيسية (Received / Sent) تقع تحت الـ Header مباشرة */}
       <div className="nitrMainTabs">
         <button
           className={`nitrMainTab ${activeMainTab === "received" ? "nitrMainTabActive" : ""}`}
@@ -180,9 +192,7 @@ export default function NotInTeamRequests() {
         </button>
       </div>
 
-      {/* الـ Card الأبيض الرئيسي */}
       <div className="nitrCard">
-        {/* حقل البحث */}
         <div className="nitrSearchWrapper">
           <span className="nitrSearchIcon">
             <SearchIcon />
@@ -195,7 +205,6 @@ export default function NotInTeamRequests() {
           />
         </div>
 
-        {/* الفلاتر الفرعية المدمجة (All | Teams | Students) */}
         <div className="nitrFilters">
           {FILTERS.map((f) => (
             <button
@@ -208,7 +217,6 @@ export default function NotInTeamRequests() {
           ))}
         </div>
 
-        {/* قائمة الطلبات */}
         <div className="nitrList">
           {activeMainTab === "received" && (
             <>
@@ -221,17 +229,18 @@ export default function NotInTeamRequests() {
               {!loading &&
                 !error &&
                 filteredRequests.map((req) => {
-                  const isTeamJoin = req.request_type === "team_join";
-                  const avatars = isTeamJoin
-                    ? [req.from_user, ...(req.team?.members ?? [])]
+                  const isTeamInvite = req.request_type === "team_invite";
+                  
+                  const avatars = isTeamInvite && req.team?.members?.length
+                    ? req.team.members
                     : [req.from_user];
 
                   return (
                     <div key={req.id} className="nitrRow">
                       <div className="nitrRowLeft">
-                        <span className={`nitrBadge ${isTeamJoin ? "nitrBadgeTeam" : "nitrBadgeStudent"}`}>
-                          {isTeamJoin ? <TeamIcon /> : <StudentIcon />}
-                          {isTeamJoin ? "Team Invite" : "Student Request"}
+                        <span className={`nitrBadge ${isTeamInvite ? "nitrBadgeTeam" : "nitrBadgeStudent"}`}>
+                          {isTeamInvite ? <TeamIcon /> : <BellIcon />}
+                          {isTeamInvite ? "Team Invite" : "Student Request"}
                         </span>
                       </div>
 
@@ -240,8 +249,8 @@ export default function NotInTeamRequests() {
                           <div className="nitrMember" key={person?.id ?? idx}>
                             <Avatar name={person?.name} image={person?.profile_image} />
                             <div className="nitrMemberInfo">
-                              <span className={`nitrMemberName ${idx === 0 && isTeamJoin ? "nitrMemberNameHighlight" : ""}`}>
-                                {person?.name}
+                              <span className={`nitrMemberName ${isTeamInvite && person?.role === "leader" ? "nitrMemberNameHighlight" : ""}`}>
+                                {person?.name} {isTeamInvite && person?.role === "leader" && "(Leader)"}
                               </span>
                               <span className="nitrMemberTrack">{person?.track}</span>
                             </div>
@@ -282,27 +291,21 @@ export default function NotInTeamRequests() {
               {!sentLoading &&
                 !sentError &&
                 filteredSentRequests.map((req) => {
-                  const isTeamJoin = req.request_type ;
-                  // لو الـ API رجع أعضاء الفريق نعرضهم، لو مش موجودين نعرض بس الشخص المُرسل له
-                  const avatars = isTeamJoin
-                    ? req.team?.members?.length
-                      ? req.team.members
-                      : [req.to_user]
+                  // التعديل للـ Sent: التحقق إذا كان نوع الطلب هو team_join الخاص بالفرق
+                  const isTeamJoin = req.request_type === "team_join";
+              
+                  // إظهار أعضاء الفريق بالكامل في الـ Sent لو كان نوع الطلب تيم
+                  const avatars = isTeamJoin && req.team?.members?.length
+                    ? req.team.members
                     : [req.to_user];
 
                   return (
                     <div key={req.id} className="nitrRow">
                       <div className="nitrRowLeft">
-                        {isTeamJoin ? (
-                          <span className="nitrBadge nitrBadgeTeam">
-                            <TeamIcon />
-                            { req.request_type}
-                          </span>
-                        ) : (
-                          <span className="nitrBadge nitrBadgeStudent" style={{ visibility: "hidden" }}>
-                            <StudentIcon />
-                          </span>
-                        )}
+                        <span className={`nitrBadge ${isTeamJoin ? "nitrBadgeTeam" : "nitrBadgeStudent"}`}>
+                          {isTeamJoin ? <TeamIcon /> : <BellIcon />}
+                          {isTeamJoin ? "Team Invite" : "Student Request"}
+                        </span>
                       </div>
 
                       <div className="nitrRowMembers">
@@ -310,7 +313,9 @@ export default function NotInTeamRequests() {
                           <div className="nitrMember" key={person?.id ?? idx}>
                             <Avatar name={person?.name} image={person?.profile_image} />
                             <div className="nitrMemberInfo">
-                              <span className="nitrMemberName">{person?.name}</span>
+                              <span className={`nitrMemberName ${isTeamJoin && person?.role === "leader" ? "nitrMemberNameHighlight" : ""}`}>
+                                {person?.name} {isTeamJoin && person?.role === "leader" && "(Leader)"}
+                              </span>
                               <span className="nitrMemberTrack">{person?.track}</span>
                             </div>
                           </div>
