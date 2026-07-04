@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://mango-attendant-handyman.ngrok-free.dev",
+        target: "https://0508-154-183-132-96.ngrok-free.app",
         changeOrigin: true,
         secure: true,
 

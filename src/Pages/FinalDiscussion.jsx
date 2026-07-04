@@ -186,7 +186,7 @@ useEffect(() => {
   className="view-discussions-btn"
   onClick={() =>
     navigate(
-      `/all-discussions?capstoneId=${capstoneId}`
+      `/admin/all-discussions`
     )
   }
 >

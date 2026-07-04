@@ -17,7 +17,15 @@ class Project {
   static getDepartments() {
     return submitRequestAsync("departments", "GET");
   }
-
+static async getProposals() {
+  return submitRequestAsync("admin/proposals", "GET", null, {}, true);
+}
+static async getProposalsDetails(id) {
+  return submitRequestAsync(`admin/proposals/${id}/similarity`, "GET");
+}
+ static getStatusesAndSimilarity_levels() {
+    return submitRequestAsync("admin/proposals/filters", "GET");
+  }
   static getAcademicYears() {
     return submitRequestAsync("academic-years", "GET");
   }

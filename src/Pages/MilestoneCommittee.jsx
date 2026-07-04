@@ -143,9 +143,9 @@ const handleSubmit = async () => {
 
 <Button
   variant="contained"
-  className="view-btn"
+  className="vieww-btn"
   onClick={() =>
-    navigate("/all-milestone-committees")
+    navigate("/admin/all-milestone-committees")
   }
 >
   View All Committees

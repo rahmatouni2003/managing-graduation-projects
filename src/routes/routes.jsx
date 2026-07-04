@@ -417,7 +417,9 @@ import Rules from "../Pages/Rules.jsx";
 import ReportDetails from "../pages/ReportDetails";
 import NotInTeam from "../Pages/NotInTeam";
 import ChatConversationsPage from "../Pages/ChatConversationsPage";
+import AiFilter from "../Pages/AiFilter";
 import StudentRoute from "../context/StudentRoute .jsx";
+import ProposalDetailsPage from "../Pages/ProposalDetailsPage.jsx";
 export const router = createBrowserRouter([
   // ================= AUTH =================
   {
@@ -435,6 +437,14 @@ export const router = createBrowserRouter([
       {
         path: "/admin/reports/:id",
         element: <ReportDetails />,
+      },
+            {
+        path: "/admin/proposals/:id",
+        element: <ProposalDetailsPage />,
+      },
+            {
+        path: "/admin/ai-filter",
+        element: <AiFilter />,
       },
       {
         path: "discussion-details/:id",

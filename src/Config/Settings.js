@@ -1,3 +1,3 @@
 export const settings = {
-backendServer: 'https://mango-attendant-handyman.ngrok-free.dev/api'
+backendServer: 'https://0508-154-183-132-96.ngrok-free.app/api'
 };

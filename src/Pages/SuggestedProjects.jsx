@@ -318,14 +318,14 @@ export default function SuggestedProjects() {
 
             <div className="modal-footer">
               <button
-                className="save-btn"
+                className="saveE-btn "
                 onClick={handleSaveProject}
               >
                 Save
               </button>
 
               <button
-                className="cancel-btn"
+                className="cancEl-btn"
                 onClick={() => {
                   setShowModal(false);
                   setIsEditMode(false);

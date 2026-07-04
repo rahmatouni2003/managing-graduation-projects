@@ -307,21 +307,21 @@
 
 
 
-.save-btn {
+.saveE-btn {
   width: 110px;
   height: 60px;
 
   border: none;
   border-radius: 6px;
-
+cursor: pointer;
   background: #1565d8;
   color: white;
 }
 
-.cancel-btn {
+.cancEl-btn {
   width: 110px;
   height: 60px;
-
+cursor: pointer;
   border: 1px solid #ccc;
   border-radius: 6px;
 
