@@ -23,6 +23,10 @@ static async getProposals() {
 static async getProposalsDetails(id) {
   return submitRequestAsync(`admin/proposals/${id}/similarity`, "GET");
 }
+static async sendProposalApprovalStatus(id, status) {
+  return submitRequestAsync(`admin/proposals/${id}/${status} `, "PUT");
+}
+
  static getStatusesAndSimilarity_levels() {
     return submitRequestAsync("admin/proposals/filters", "GET");
   }

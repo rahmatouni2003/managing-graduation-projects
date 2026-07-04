@@ -2,10 +2,12 @@ import "./adminHeader.css";
 import { useState, useEffect } from "react";
 import Admin from "../services/Admin.model";
 import { FaSearch, FaBell, FaGraduationCap, FaPen } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext"; // 👈 تأكدي من كتابة المسار الصحيح لملف الـ Context الخاص بكِ
 
 import logo from "../assets/logo2.png";
 
 const Header = () => {
+  const { user } = useAuth(); // 👈 جلب بيانات المستخدم الحالي من الـ Context
   const [academicYear, setAcademicYear] = useState("");
   const [academicYears, setAcademicYears] = useState([]);
   const [selectedYearId, setSelectedYearId] = useState("");
@@ -14,13 +16,10 @@ const Header = () => {
   const loadAcademicYears = async () => {
     try {
       const response = await Admin.getAcademicYears();
-
       console.log("Academic Years =>", response);
-
       setAcademicYears(response);
 
       const activeYear = response.find((year) => year.is_active === 1);
-
       if (activeYear) {
         setAcademicYear(activeYear.code);
         setSelectedYearId(activeYear.id);
@@ -29,11 +28,11 @@ const Header = () => {
       console.error(error);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       await loadAcademicYears();
     };
-
     fetchData();
   }, []);
 
@@ -41,22 +40,19 @@ const Header = () => {
     const selectedYear = academicYears.find(
       (year) => year.id === Number(selectedYearId),
     );
-
     if (selectedYear) {
       setAcademicYear(selectedYear.code);
     }
-
     setShowYearModal(false);
   };
+
   return (
     <>
       <header className="header">
         <div className="headerr-left">
           <img src={logo} alt="logo" className="header-logo" />
-
           <div className="admin-search-boxx">
             <FaSearch />
-
             <input placeholder="Search Projects or Students" />
           </div>
         </div>
@@ -64,9 +60,7 @@ const Header = () => {
         <div className="header-right">
           <div className="academic-year">
             <FaGraduationCap className="grad-icon" />
-
             <span>Academic Year : {academicYear}</span>
-
             <button
               className="edit-year-btn"
               onClick={() => setShowYearModal(true)}
@@ -79,8 +73,9 @@ const Header = () => {
 
           <div className="profile">
             <img src="https://i.pravatar.cc/40" alt="profile" />
-
-            <span>Mahmoud Fareed</span>
+            
+            {/* 👈 هنا قمنا باستبدال الاسم الثابت بالاسم القادم ديناميكياً */}
+            <span>{user?.full_name || "Admin"}</span> 
           </div>
         </div>
       </header>
@@ -96,7 +91,6 @@ const Header = () => {
               >
                 ×
               </button>
-              http://localhost:5173/{" "}
             </div>
 
             <div className="modal-body">
@@ -131,8 +125,7 @@ const Header = () => {
               >
                 Cancel
               </button>
-
-              <button className="save-btn" onClick={handleSave}>
+              <button className="saVe-btn" onClick={handleSave}>
                 Save
               </button>
             </div>

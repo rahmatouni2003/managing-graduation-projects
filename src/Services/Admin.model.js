@@ -18,7 +18,7 @@ class Admin {
   static addStudent(data) {
     return submitRequestAsync(
       `/admin/student/store`,
-      "PUT",
+      "POST",
       data
     );
   }

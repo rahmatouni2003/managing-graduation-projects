@@ -101,8 +101,10 @@ const handleUpdate = async (id) => {
     try {
       const formData = new FormData();
 
+      const course = type === "project1" ? 1 : 2;
+
       formData.append("file", excelFile);
-      formData.append("course", 2);
+      formData.append("course", course);
 
       const response = await Admin.uploadStudent(formData);
 
