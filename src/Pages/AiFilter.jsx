@@ -5,6 +5,7 @@ import Sidebar from "../components/adminSidebar";
 import Project from "../services/Project.model";
 import "./AIFilter.css";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function AIFilterPage() {
   const [proposals, setProposals] = useState([]);
@@ -13,6 +14,11 @@ export default function AIFilterPage() {
   const [departments, setDepartments] = useState([]);
   const [statistics, setStatistics] = useState({});
   const [loading, setLoading] = useState(true);
+
+  // ✅ بدل ما يكون فيه actionLoadingId واحد للكارت كله،
+  // هنستخدم object فيه مفتاح مركب (proposalId + status) عشان كل زرار يتحكم في نفسه لوحده
+  const [actionLoadingKey, setActionLoadingKey] = useState(null);
+
   const navigate = useNavigate();
 
   const handleViewDetails = (proposalId) => {
@@ -61,8 +67,57 @@ export default function AIFilterPage() {
     }
   };
 
-  const handleApprove = (proposalId) => console.log("Approve", proposalId);
-  const handleReject = (proposalId) => console.log("Reject", proposalId);
+  // ✅ دالة موحدة تتعامل مع القبول والرفض
+  // بنعمل مفتاح فريد لكل زرار (proposalId-status) عشان يبقى مستقل عن الزرار التاني
+  const handleProposalAction = async (proposalId, status) => {
+    const actionKey = `${proposalId}-${status}`;
+    setActionLoadingKey(actionKey);
+    try {
+      const res = await Project.sendProposalApprovalStatus(proposalId, status);
+
+      const successMessage =
+        res?.message ||
+        (status === "approved"
+          ? "Proposal approved successfully"
+          : "Proposal rejected successfully");
+
+      toast.success(successMessage);
+
+      // شيل الـ proposal من الليستة الحالية (لأنها كانت pending)
+      setProposals((prev) => prev.filter((p) => p.proposal_id !== proposalId));
+
+      // تحديث الإحصائيات محليًا
+      setStatistics((prev) => ({
+        ...prev,
+        total_pending: (prev.total_pending || 1) - 1,
+        total_approved:
+          status === "approved"
+            ? (prev.total_approved || 0) + 1
+            : prev.total_approved,
+        total_rejected:
+          status === "rejected"
+            ? (prev.total_rejected || 0) + 1
+            : prev.total_rejected,
+      }));
+    } catch (err) {
+      console.error(err);
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        (status === "approved"
+          ? "Failed to approve proposal"
+          : "Failed to reject proposal");
+      toast.error(errorMessage);
+    } finally {
+      setActionLoadingKey(null);
+    }
+  };
+
+  const handleApprove = (proposalId) =>
+    handleProposalAction(proposalId, "approved");
+
+  const handleReject = (proposalId) =>
+    handleProposalAction(proposalId, "rejected");
 
   const getSimilarityInfo = (level) => {
     switch (level) {
@@ -75,7 +130,6 @@ export default function AIFilterPage() {
     }
   };
 
-  // روابط أفاتار افتراضية جاهزة واحترافية للـ Fallback والكارت التجريبي
   const defaultAvatars = [
     "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
     "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
@@ -85,6 +139,9 @@ export default function AIFilterPage() {
 
   return (
     <div className="ai-filter-container">
+      {/* مكوّن الـ Toaster لازم يتحط مرة واحدة في الصفحة */}
+      <Toaster position="top-right" reverseOrder={false} />
+
       <Sidebar active="ai-filter" />
 
       <div className="ai-filter-content">
@@ -93,7 +150,6 @@ export default function AIFilterPage() {
         <main className="ai-filter-main">
           <h1 className="ai-filter-title">AI Project Ideas Filter</h1>
 
-          {/* شريط الإحصائيات العلوي */}
           <div className="ai-filter-statistics-bar">
             <div className="ai-filter-stat-item pendingg">
               <span className="ai-filter-stat-badge">
@@ -119,7 +175,6 @@ export default function AIFilterPage() {
             </div>
           </div>
 
-          {/* شريط الفلاتر والبحث */}
           <div className="ai-filter-filters-wrapper">
             <div className="ai-filter-search-container">
               <Search size={18} className="ai-filter-search-icon" />
@@ -191,11 +246,9 @@ export default function AIFilterPage() {
             </div>
           </div>
 
-          {/* قائمة الكروت */}
           <div className="ai-filter-proposals-list">
             {loading && <p className="status-message">Loading proposals...</p>}
             {!loading && proposals.length === 0 && (
-              /* كارت تجريبي متطابق مع الصورة تماماً في حال لم تأتِ بيانات من الـ API */
               <div className="ai-filter-proposal-card">
                 <div className="ai-filter-proposal-header">
                   <div className="proposal-info">
@@ -274,10 +327,17 @@ export default function AIFilterPage() {
               </div>
             )}
 
-            {/* عرض البيانات القادمة من السيرفر بشكل ديناميكي */}
             {!loading &&
               proposals.map((proposal) => {
                 const simInfo = getSimilarityInfo(proposal.similarity_level);
+
+                // ✅ كل زرار بيتحقق من مفتاحه الخاص بيه بس (proposalId + status)
+                // فبقى الزرار التاني مش بيتأثر خالص لما زرار غيره يكون شغال
+                const isApproveLoading =
+                  actionLoadingKey === `${proposal.proposal_id}-approved`;
+                const isRejectLoading =
+                  actionLoadingKey === `${proposal.proposal_id}-rejected`;
+
                 return (
                   <div
                     key={proposal.proposal_id}
@@ -376,15 +436,17 @@ export default function AIFilterPage() {
                     <div className="ai-filter-actions-container">
                       <button
                         onClick={() => handleApprove(proposal.proposal_id)}
+                        disabled={isApproveLoading}
                         className="ai-filter-btn-action ai-filter-btn-approve"
                       >
-                        Approve Idea
+                        {isApproveLoading ? "..." : "Approve Idea"}
                       </button>
                       <button
                         onClick={() => handleReject(proposal.proposal_id)}
+                        disabled={isRejectLoading}
                         className="ai-filter-btn-action ai-filter-btn-reject"
                       >
-                        Reject Idea
+                        {isRejectLoading ? "..." : "Reject Idea"}
                       </button>
                     </div>
                   </div>
