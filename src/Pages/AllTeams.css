@@ -1,6 +1,7 @@
+/* الهيكل العام وتنسيقات الـ Layout */
 .teams-layout {
   display: flex;
-  background: #eef2f6; /* لون الخلفية الرمادي الفاتح المائل للزرقة كالصورة */
+  background: #f8f9fe;
   min-height: 100vh;
 }
 
@@ -11,228 +12,198 @@
 }
 
 .teams-container {
-  padding: 30px;
-}
-
-.top-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 25px;
-}
-
-.year-text {
-  margin-top: 4px;
-  color: #777;
-  font-size: 0.9rem;
-}
-
-.stats-container {
-  display: flex;
-  gap: 12px;
-  margin-top: 15px;
-}
-
-.status-summary-chip {
-  background: white !important;
-  border: 1px solid #e0e0e0 !important;
-  border-radius: 8px !important;
-  font-size: 0.85rem !important;
-  padding: 4px 8px;
+  padding: 24px;
 }
 
 .info-card {
   background: white;
-  padding: 16px 20px;
+  padding: 12px 20px;
   border-radius: 12px;
-  min-width: 320px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.info-card-line {
-  color: #555;
-}
-
-.info-label {
-  color: #1976d2;
-  font-weight: bold;
-}
-
-.filter-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.search-input {
-  background: white;
-  border-radius: 8px;
-  flex: 1;
-}
-
-.search-input .MuiOutlinedInput-notchedOutline {
-  border: none !important; /* إخفاء الحدود لجعلها فلات كالصورة */
-}
-.search-input .MuiOutlinedInput-root {
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-}
-
-.dropdown-group {
-  display: flex;
-  gap: 12px;
-}
-
-.filter-dropdown {
-  background: white;
-  border-radius: 8px;
-  min-width: 140px;
-}
-.filter-dropdown .MuiOutlinedInput-notchedOutline {
-  border: none !important;
-}
-.filter-dropdown .MuiSelect-select {
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-  font-size: 0.85rem !important;
+  min-width: 260px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  border: 1px solid #edf2f7;
 }
 
 .blue-text {
   color: #1976d2;
 }
 
-.font-bold {
-  font-weight: 600;
-}
-
-
-.team-card {
-  border-radius: 16px !important;
-
-  display: flex;
-  padding: 20px;
-  width : 500px !important;
-  background: white !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04) !important;
-  position: relative;
-  border: 1px solid transparent;
-}
-
-.delayed-border {
-  border: 1px solid #d32f2f !important;
-}
-
-.card-body {
-  display: flex;
-  gap: 20px;
-}
-
-.card-left-col {
-  display: flex;
-  flex-direction: column;
-  width: 160px;
-}
-
-.project-image {
+/* ==========================================
+   كود الكروت الثابتة والمميزة (PURE CSS)
+   ========================================== */
+.custom-team-card {
+  background: #ffffff;
+  border: 1px solid #f0f2f5;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   width: 100%;
-  height: 95px;
-  border-radius: 10px;
-  object-fit: cover;
-  margin-bottom: 8px;
-}
-
-.members-count-text {
-  color: #666;
-  margin-bottom: 4px !important;
-}
-
-.team-avatars {
-  justify-content: flex-start !important;
-  margin-bottom: 12px;
-}
-
-.card-status-badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-.status-ontrack { color: #2e7d32; }
-.status-delayed { color: #d32f2f; }
-.status-pending { color: #ef6c00; }
-
-.card-right-col {
+  
+  /* الحجم الثابت الحاسم هنا */
+  height: 480px; 
+  
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.project-desc {
-  color: #777;
-  margin-top: 4px !important;
-  line-height: 1.4 !important;
+.custom-team-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
 }
 
-.tech-tags {
+/* كارت في حالة التأخير */
+.custom-team-card.delayed {
+  border: 2px solid #ef5350;
+  box-shadow: 0 4px 22px rgba(239, 83, 80, 0.12);
+}
+
+/* صورة الكارت الثابتة */
+.card-project-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  flex-shrink: 0; /* يمنع الصورة من الإنضغاط */
+}
+
+/* منطقة المحتوى الأوسط */
+.card-main-content {
+  padding: 16px;
   display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* تأخذ المساحة المتبقية بالتساوي */
+  overflow: hidden; 
+}
+
+/* العنوان (يختفي بنقاط بعد سطر واحد لو طويل) */
+.card-project-title {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* الوصف (يختفي بنقاط بعد سطرين تماماً لو طويل) */
+.card-project-desc {
+  margin: 0 0 10px 0;
+  font-size: 0.8rem;
+  color: #777;
+  font-style: italic;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* منطقة التصنيفات */
+.card-tags-row {
+  display: flex;
+  flex-wrap: wrap;
   gap: 6px;
+  margin-bottom: auto; /* تدفع المحتوى الأسفل ليبقى بالأسفل دائماً */
+  max-height: 56px; /* تمنع التمدد في حال كثرة الـ Tags */
+  overflow: hidden;
+}
+
+.badge-dept {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.badge-tech {
+  background-color: #f1f3f9;
+  color: #555;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* قسم الأعضاء */
+.card-members-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 10px;
+  border-top: 1px dashed #f0f2f5;
+  padding-top: 8px;
 }
 
-.tech-chip {
-  background-color: #e3f2fd !important;
-  color: #1e88e5 !important;
-  font-size: 0.7rem !important;
-  font-weight: 600 !important;
-  height: 20px !important;
-  border-radius: 4px !important;
-}
-
-.supervisors-section {
-  margin-top: auto; 
-  padding-top: 15px;
+.card-members-section .members-count {
+  font-size: 0.8rem;
   color: #555;
 }
 
-.card-action-row {
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
+.card-members-section .members-count strong {
+  color: #1976d2;
 }
 
-.view-btnn {
+/* تداخل الأفاتار */
+.avatars-group-override {
+  flex-direction: row-reverse !important;
+}
+
+/* صف الحالة */
+.card-status-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* الفوتر الثابت في أسفل الكارت */
+.card-footer-section {
+  padding: 12px 16px;
+  background: #fafbff;
+  border-top: 1px solid #f0f2f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0; /* يمنع الفوتر من الإنضغاط */
+}
+
+.supervisors-info {
+  font-size: 0.72rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+.supervisors-info span {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+/* زر العرض المخصص */
+.card-action-btn {
   background: #1976d2 !important;
   color: #fff !important;
   border-radius: 8px !important;
   text-transform: none !important;
-  padding: 6px 40px !important;
-  font-size: 0.85rem !important;
+  padding: 5px 16px !important;
+  font-size: 0.75rem !important;
   font-weight: bold !important;
   box-shadow: none !important;
 }
 
+.card-action-btn:hover {
+  background: #1565c0 !important;
+}
 
-/* الشاشات الصغيرة */
-@media (max-width: 992px) {
-  .top-section {
-    flex-direction: column;
-    gap: 20px;
-  }
-  .info-card {
-    width: 100%;
-    min-width: auto;
-  }
-  .filter-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .dropdown-group {
-    flex-direction: column;
-  }
-  .card-body {
-    flex-direction: column;
-  }
-  .card-left-col {
-    width: 100%;
-  }
-  .project-image {
-    height: 160px;
+/* التجاوب مع شاشات الموبايل الصغير لتلائم الارتفاع المرن */
+@media (max-width: 576px) {
+  .custom-team-card {
+    height: auto; /* في الشاشات الصغيرة جداً يتحول للوضع المرن لمنع تكدس النصوص */
+    min-height: 460px;
   }
 }

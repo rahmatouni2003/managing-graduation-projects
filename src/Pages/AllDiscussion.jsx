@@ -130,7 +130,7 @@ useEffect(() => {
   renderCell: (params) => (
     <div className="action-buttons">
       <IconButton
-        className="edit-btn"
+        className="EDIT-btn"
         onClick={() => {
           console.log("Edit", params.row.id);
         }}

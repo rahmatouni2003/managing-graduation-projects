@@ -382,13 +382,18 @@ class Admin {
   static getCapastone() {
     return submitRequestAsync(`/project-courses`, "GET");
   }
-  static getAllTeams(params) {
-    return submitRequestAsync(
-      "admin/teams",
-      "GET",
-      params
-    );
-  }
+static getAllTeams(params = {}, rawResponse = false) {
+  const query = new URLSearchParams(params).toString();
+  const endpoint = `admin/teams${query ? `?${query}` : ""}`;
+
+  return submitRequestAsync(
+    endpoint,
+    "GET",
+    null,        // مفيش body مع GET
+    {},          // addHeaders
+    rawResponse  // <-- ده اللي كان ناقص
+  );
+}
   static getTeamDetails(id) {
     return submitRequestAsync(
       `admin/teams/view_team/${id}`,
