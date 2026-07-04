@@ -233,7 +233,7 @@ export default function EditProfile() {
           </div>
 
           <div className="form-group password-group">
-            <label>Password (Leave blank if unchanged)</label>
+            <label>Password</label>
             <div className="password-input">
               <input
                 type={showPassword ? "text" : "password"}
