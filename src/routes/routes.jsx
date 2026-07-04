@@ -673,6 +673,10 @@ export const router = createBrowserRouter([
         element: <TimelinePage />,
       },
       {
+       path: "student/inteam/milestones/:id",
+        element: <MilestoneDetails />,
+       },
+      {
         path: "student/inteam/sent-requests",
         element: <SentRequestsPage />,
       },
