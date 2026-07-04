@@ -114,8 +114,7 @@
   color: #555;
 }
 
-.save-btn {
-  margin-top: 40px;
+.save-button {
   margin-left: 360px;
   width: 250px;
   height: 50px;
@@ -127,6 +126,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
+
 }
 
 .save-btn:hover {
