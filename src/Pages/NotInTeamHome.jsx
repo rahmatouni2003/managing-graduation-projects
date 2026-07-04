@@ -3,9 +3,9 @@ import { ChevronUp, ChevronDown, Search, Users } from "lucide-react";
 import StudentService from "../services/Student.model";
 import "./NotInTeamHome.css";
 
-// رسمة الـ SVG التوضيحية المقاربة للصورة تماماً
+// رسمة الـ SVG التوضيحية
 const TeamIllustration = () => (
-  <svg viewBox="0 0 320 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="nth-illustration">
+  <svg viewBox="0 0 320 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="nit-hero-illustration">
     <circle cx="60" cy="60" r="18" fill="#D1D9E6" opacity="0.5" />
     <ellipse cx="60" cy="105" rx="22" ry="30" fill="#D1D9E6" opacity="0.4" />
     <circle cx="265" cy="75" r="15" fill="#D1D9E6" opacity="0.4" />
@@ -64,33 +64,33 @@ export default function NotInTeamHome() {
 
   if (loading) {
     return (
-      <div className="nth-centered">
-        <div className="nth-spinner" />
+      <div className="nit-state-container">
+        <div className="nit-loading-spinner" />
       </div>
     );
   }
 
-  if (error) return <div className="nth-centered">{error}</div>;
+  if (error) return <div className="nit-state-container">{error}</div>;
   if (!homeData) return null;
 
   const { project_guidelines, welcome_message } = homeData;
 
   return (
-    <div className="nth-page">
+    <div className="nit-page-wrapper">
 
       {/* ── 1. الجزء العلوي المنحني (خلفية بنفسجية خفيفة) ── */}
-      <div className="nth-top-container">
-        <div className="nth-header-content">
-          <div className="nth-welcome-top">
+      <div className="nit-hero-banner">
+        <div className="nit-header-container">
+          <div className="nit-welcome-row">
             <TeamIllustration />
-            <h1 className="nth-welcome-heading">{welcome_message} ! 👏</h1>
+            <h1 className="nit-welcome-title">{welcome_message} ! 👏</h1>
           </div>
           
-          <div className="nth-search-wrapper">
-            <Search size={18} className="nth-search-icon" />
+          <div className="nit-search-box">
+            <Search size={18} className="nit-search-icon" />
             <input
               type="text"
-              className="nth-search-input"
+              className="nit-search-input"
               placeholder="Search Projects or Students"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -100,17 +100,17 @@ export default function NotInTeamHome() {
       </div>
 
       {/* ── 2. الجزء الأوسط الممتد (الخلفية البيضاء للأزرار والنصوص) ── */}
-      <div className="nth-middle-white-section">
-        <div className="nth-middle-content">
-          <h2 className="nth-no-team-title">You aren’t in a team yet</h2>
-          <p className="nth-no-team-sub">Find a team to join or start your own!</p>
+      <div className="nit-main-content-section">
+        <div className="nit-content-limiter">
+          <h2 className="nit-status-title">You aren’t in a team yet</h2>
+          <p className="nit-status-subtitle">Find a team to join or start your own!</p>
           
-          <div className="nth-actions">
-            <button className="nth-btn-outline">
+          <div className="nit-action-buttons">
+            <button className="nit-btn nit-btn-secondary">
               <Search size={16} />
               Find a Team
             </button>
-            <button className="nth-btn-filled">
+            <button className="nit-btn nit-btn-primary">
               <Users size={16} />
               Start a Team
             </button>
@@ -118,34 +118,34 @@ export default function NotInTeamHome() {
         </div>
       </div>
 
-{/* ── 3. الجزء السفلي (بطاقة الإرشادات الممتدة) ── */}
-<div className="nth-bottomm-container">
-  <div className="nth-guidelines-card">
-    <button
-      className="nth-guidelines-header"
-      onClick={() => setGuidelinesOpen((o) => !o)}
-    >
-      <span className="nth-guidelines-title">
-        <span className="nth-guidelines-icon">
-          <Users size={18} style={{ marginRight: '6px' }} />
-        </span>
-        Project Guidelines
-      </span>
-      {guidelinesOpen ? <ChevronUp size={18} color="#4a4a6a" /> : <ChevronDown size={18} color="#4a4a6a" />}
-    </button>
+      {/* ── 3. الجزء السفلي (بطاقة الإرشادات الممتدة) ── */}
+      <div className="nit-footer-container">
+        <div className="nit-accordion-card">
+          <button
+            className="nit-accordion-trigger"
+            onClick={() => setGuidelinesOpen((o) => !o)}
+          >
+            <span className="nit-accordion-title-block">
+              <span className="nit-accent-icon">
+                <Users size={18} />
+              </span>
+              Project Guidelines
+            </span>
+            {guidelinesOpen ? <ChevronUp size={18} color="#4a4a6a" /> : <ChevronDown size={18} color="#4a4a6a" />}
+          </button>
 
-    {guidelinesOpen && (
-      <ul className="nth-guidelines-list">
-        {project_guidelines.map((item, i) => (
-          <li key={i} className="nth-guidelines-item">
-            <span className="nth-bullet" />
-            {item}
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
-</div>
+          {guidelinesOpen && (
+            <ul className="nit-accordion-content-list">
+              {project_guidelines.map((item, i) => (
+                <li key={i} className="nit-guideline-item">
+                  <span className="nit-custom-bullet" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
 
     </div>
   );

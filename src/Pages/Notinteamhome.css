@@ -1,5 +1,5 @@
 /* ── Page Base ── */
-.nth-page {
+.nit-page-wrapper {
   min-height: 100vh;
   background-color: #eaeaf4; /* الخلفية البنفسجية الفاتحة جداً أسفل الكارت */
   font-family: "Inter", "Segoe UI", sans-serif;
@@ -10,15 +10,14 @@
   margin-top: 50px; 
 }
 
-.nth-top-container {
+.nit-hero-banner {
   background-color: #e6e6f4; 
   border-bottom-right-radius: 120px 40px; 
   padding: 40px 40px 60px 40px;
   position: relative;
 }
 
-
-.nth-header-content {
+.nit-header-container {
   background: transparent;
   display: flex;
   flex-direction: column;
@@ -28,27 +27,26 @@
   width: 100%;
 }
 
-.nth-welcome-top {
+.nit-welcome-row {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.nth-illustration {
+.nit-hero-illustration {
   width: 140px;
   height: auto;
   flex-shrink: 0;
 }
 
-.nth-welcome-heading {
+.nit-welcome-title {
   font-size: 1.8rem;
   font-weight: 600;
   color: #2b2d42;
   margin: 0;
 }
 
-
-.nth-search-wrapper {
+.nit-search-box {
   background: #ffffff; 
   border-radius: 10px;
   padding: 0 16px;
@@ -60,12 +58,12 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.nth-search-icon {
+.nit-search-icon {
   color: #7e7e8f;
   flex-shrink: 0;
 }
 
-.nth-search-input {
+.nit-search-input {
   border: none;
   outline: none;
   width: 100%;
@@ -74,54 +72,49 @@
   background: transparent;
 }
 
-.nth-search-input::placeholder {
+.nit-search-input::placeholder {
   color: #a0a0b0;
 }
 
-
-.nth-middle-white-section {
+.nit-main-content-section {
   background: #ffffff;
   padding: 50px 40px 60px 40px;
   border-bottom-left-radius: 90px 40px; 
   margin-top: -2px; 
 }
 
-.nth-middle-content {
+.nit-content-limiter {
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
 }
 
-.nth-no-team-title {
+.nit-status-title {
   font-size: 1.75rem;
   font-weight: 700;
   color: #1a1c33;
   margin: 0 0 10px 0;
 }
 
-.nth-no-team-sub {
+.nit-status-subtitle {
   font-size: 1.05rem;
   color: #6c727c;
   margin: 0 0 35px 0;
 }
 
-
-.nth-actions {
+.nit-action-buttons {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-.nth-btn-outline {
+.nit-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   padding: 0 32px;
   height: 50px;
-  border: 1px solid #c2cfe0; 
-  background: #eef2f9; 
-  color: #0c4cb4; 
   border-radius: 6px;
   font-size: 1rem;
   font-weight: 600;
@@ -129,39 +122,33 @@
   transition: all 0.2s ease;
 }
 
-.nth-btn-outline:hover {
+.nit-btn-secondary {
+  border: 1px solid #c2cfe0; 
+  background: #eef2f9; 
+  color: #0c4cb4; 
+}
+
+.nit-btn-secondary:hover {
   background: #e2eaf5;
 }
 
-.nth-btn-filled {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 0 32px;
-  height: 50px;
+.nit-btn-primary {
   border: none;
   background: #0c59cf; 
   color: #ffffff;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
 }
 
-.nth-btn-filled:hover {
+.nit-btn-primary:hover {
   background: #0a4ab3;
 }
 
-
-.nth-bottomm-container {
+.nit-footer-container {
   margin: 24px auto 0 auto;
   width: 100%;
   box-sizing: border-box;
 }
 
-.nth-guidelines-card {
+.nit-accordion-card {
   background: #ffffff;
   border-radius: 10px; 
   border: 1px solid #e1e4e8;
@@ -169,7 +156,7 @@
   overflow: hidden; 
 }
 
-.nth-guidelines-header {
+.nit-accordion-trigger {
   width: 100%;
   display: flex;
   align-items: center;
@@ -181,7 +168,13 @@
   color: #1a1a2e;
 }
 
-.nth-guidelines-list {
+.nit-accordion-title-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nit-accordion-content-list {
   list-style: none;
   margin: 0;
   padding: 0 24px 24px 24px; 
@@ -191,15 +184,13 @@
   border-top: 1px solid #f0f0f6;
 }
 
-.nth-guidelines-icon {
+.nit-accent-icon {
   display: flex;
   align-items: center;
   color: #0c59cf; 
 }
 
-
-
-.nth-guidelines-item {
+.nit-guideline-item {
   display: flex;
   align-items: center; 
   gap: 10px;
@@ -207,7 +198,7 @@
   color: #4a4a6a;
 }
 
-.nth-bullet {
+.nit-custom-bullet {
   width: 4px;
   height: 4px;
   border-radius: 50%;
@@ -215,12 +206,24 @@
   flex-shrink: 0;
 }
 
-
-.nth-centered {
+.nit-state-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   background: #ebebf3;
   color: #6b6b8a;
+}
+
+.nit-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #c2cfe0;
+  border-top-color: #0c59cf;
+  border-radius: 50%;
+  animation: nit-spin 1s linear infinite;
+}
+
+@keyframes nit-spin {
+  to { transform: rotate(360deg); }
 }

@@ -22,6 +22,9 @@ function ProjectCard({
   onFavoriteClick,
 }) {
   const navigate = useNavigate();
+  
+  // التحقق مما إذا كان المستخدم مسجل دخوله حالياً
+  const userIsLoggedIn = isLoggedIn();
 
   return (
     <div className="project-card">
@@ -35,13 +38,16 @@ function ProjectCard({
           </div>
         </div>
 
-        <button className="favorite-btn" onClick={() => onFavoriteClick(id, type)}>
-          {favorite ? (
-            <FaHeart className="heart-filled" />
-          ) : (
-            <FaRegHeart className="heart-outline" />
-          )}
-        </button>
+        {/* تعديل: يظهر زر القلب فقط إذا كان المستخدم مسجل دخوله وليس جيست */}
+        {userIsLoggedIn && (
+          <button className="favorite-btn" onClick={() => onFavoriteClick(id, type)}>
+            {favorite ? (
+              <FaHeart className="heart-filled" />
+            ) : (
+              <FaRegHeart className="heart-outline" />
+            )}
+          </button>
+        )}
       </div>
 
       <p className="card-description">{description}</p>
@@ -321,7 +327,7 @@ export default function ProjectsLiberary() {
               <option value="AI">AI</option>
               <option value="Web">Web</option>
               <option value="Mobile">Mobile</option>
-              <option value="IoT">IoT</option>   {/* إضافة خيار IoT */}
+              <option value="IoT">IoT</option>
             </select>
             <span className="select-label">Category:</span>
             <span className="select-arrow">▼</span>
