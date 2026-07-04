@@ -693,6 +693,15 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "student/notinteam/notinteam",
+        element: (
+          <StudentRoute teamStatus="no-team">
+            <NotInTeam />
+          </StudentRoute>
+        ),
+      },
+
+      {
         path: "student/notinteam/notInTeamRequests",
 
         element: <NotInTeamRequests />,

@@ -1,6 +1,8 @@
 import React from "react";
 import "./NotInTeam.css";
-import { ChevronUp, ChevronDown, Search, Users } from "lucide-react";
+import { ChevronUp, ChevronDown, Search, Users, FileText } from "lucide-react"; // تم إضافة FileText للأيقونة
+import { useNavigate } from "react-router-dom";
+
 const SearchIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="11" cy="11" r="8" />
@@ -60,6 +62,8 @@ const TeamIllustration = () => (
 );
 
 export default function NotInTeam() {
+  const navigate = useNavigate();
+
   return (
     <div className="not-in-team-page">
       <div className="not-in-team-card">
@@ -68,16 +72,37 @@ export default function NotInTeam() {
         </div>
         <h2 className="not-in-team-title">You aren't in a team yet</h2>
         <p className="not-in-team-subtitle">Find a team to join or start your own!</p>
+        
+        {/* حاوية الأزرار الكلية تم تعديل هيكلتها في الـ CSS لتدعم الترتيب الجديد */}
+        <div className="nth-container">
           <div className="nth-actions">
-            <button className="nth-btn-outline">
+            <button 
+              className="nth-btn-outline" 
+              onClick={() => navigate("/student/notinteam/notInNewRequests", { state: { activeTab: "students" } })}
+            >
               <Search size={16} />
               Find a Team
             </button>
-            <button className="nth-btn-filled">
+            
+            <button 
+              className="nth-btn-filled"
+              onClick={() => navigate("/student/notinteam/notInNewRequests", { state: { activeTab: "teams" } })}
+            >
               <Users size={16} />
               Start a Team
             </button>
           </div>
+
+          {/* زرار الـ Requests الجديد باللون الأزرق الممتد بالكامل */}
+          <button 
+            className="nth-btn-requests"
+            onClick={() => navigate("/student/notinteam/notInTeamRequests")}
+          >
+            <FileText size={16} />
+            Requests
+          </button>
+        </div>
+
       </div>
     </div>
   );

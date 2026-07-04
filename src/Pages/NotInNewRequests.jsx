@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // تم إضافة useLocation هنا
 import Student from "../Services/Student.model";
 import Requests from "../Services/Requests.model";
 import "./NotInNewRequests.css";
@@ -38,8 +38,10 @@ const TABS = [
 
 export default function NotInNewRequests() {
   const navigate = useNavigate();
+  const location = useLocation(); // تم تعريف الـ location لقراءة الـ state المرسلة
 
-  const [activeTab, setActiveTab] = useState("students");
+  // التعديل الأساسي: جعل التابة النشطة تعتمد على القيمة المرسلة من الصفحة السابقة كأولوية
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || "students");
   const [search, setSearch] = useState("");
 
   const [students, setStudents] = useState([]);
@@ -94,7 +96,6 @@ export default function NotInNewRequests() {
     if (sentIds.has(id) || sendingId === id) return;
     setSendingId(id);
     try {
-      // يمكنك تخصيص الـ payload بناء على نوع الطلب (للطالب أو للفريق)
       await Requests.sendRequest({
         to_id: id, 
         request_type: type === "team" ? "join_team" : "team_form",

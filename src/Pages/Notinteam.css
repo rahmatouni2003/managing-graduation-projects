@@ -42,6 +42,14 @@
   line-height: 1.5;
 }
 
+/* حاوية تجمع أزرار الصف الأول والزرار السفلي لمنحهم نفس العرض */
+.nth-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
 /* ── الأزرار (تعديل كلاس الحاوية والـ wrap) ── */
 .nth-actions {
   display: flex !important;
@@ -58,7 +66,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 0 24px;              /* تقليل البادنج قليلاً من 32 ليتناسب مع المساحة المتاحة كالصورة */
+  padding: 0 24px;              
   height: 50px;
   border: 1px solid #c2cfe0; 
   background: #eef2f9; 
@@ -68,8 +76,9 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap !important; /* 🌟 منع الكلمات من الالتفاف نهائياً */
-  flex-shrink: 0;                /* يمنع المتصفح من كبس أو ضغط الزر */
+  white-space: nowrap !important; 
+  flex-shrink: 0;                
+  flex: 1; /* لجعل الزرين متساويين في المساحة لملء العرض المتاح */
 }
 
 .nth-btn-outline:hover {
@@ -92,10 +101,33 @@
   cursor: pointer;
   transition: background 0.2s ease;
   white-space: nowrap !important; 
-  flex-shrink: 0;               
+  flex-shrink: 0; 
+  flex: 1; /* لجعل الزرين متساويين في المساحة لملء العرض المتاح */
 }
 
 .nth-btn-filled:hover {
   background: #0a4ab3;
 }
 
+/* ── زرار Requests الجديد ── */
+.nth-btn-requests {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%; /* يأخذ نفس عرض الحاوية بالكامل */
+  height: 50px;
+  border: none;
+  background: #0070f3; /* درجة لون أزرق مميزة */
+  color: #ffffff;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  white-space: nowrap !important;
+}
+
+.nth-btn-requests:hover {
+  background: #005bc5;
+}

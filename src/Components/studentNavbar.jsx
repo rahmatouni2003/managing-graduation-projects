@@ -351,18 +351,21 @@ export const StudentNavbar = () => {
           </div>
         )}
 
-        <div className="relative">
-          <FaBell
-            className="text-gray-600 text-lg cursor-pointer"
-            onClick={handleOpenNotifications}
-          />
+        {/* تم تعديل هذا الجزء لإخفاء الجرس تماماً في حال كان المستخدم Guest */}
+        {currentUser && (
+          <div className="relative">
+            <FaBell
+              className="text-gray-600 text-lg cursor-pointer"
+              onClick={handleOpenNotifications}
+            />
 
-          {unreadCount > 0 && (
-            <span className="notif-badge">{unreadCount}</span>
-          )}
+            {unreadCount > 0 && (
+              <span className="notif-badge">{unreadCount}</span>
+            )}
 
-          {openNotif && <NotificationsDropdown />}
-        </div>
+            {openNotif && <NotificationsDropdown />}
+          </div>
+        )}
 
         {/* Profile Section */}
         <div
