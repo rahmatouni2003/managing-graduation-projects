@@ -1,11 +1,14 @@
 import "./NotificationsDropdown.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // 1. استيراد useNavigate
+import Student from "../services/Student.model";
+import { FaBell, FaTimesCircle } from "react-icons/fa";
 
 const TABS = ["All", "Unread", "Read"];
 
-import { useEffect, useState } from "react";
-import Student from "../services/Student.model";
-import { FaBell, FaTimesCircle } from "react-icons/fa";
 function NotificationsDropdown() {
+  const navigate = useNavigate(); // 2. تعريف الـ navigate
+  
   const [activeTab, setActiveTab] = useState("All");
   const [requests, setRequests] = useState({}); // { [id]: "accepted" | "rejected" }
   const [notifications, setNotifications] = useState([]);
@@ -14,88 +17,84 @@ function NotificationsDropdown() {
   useEffect(() => {
     getNotifications();
   }, []);
-useEffect(() => {
-  const refresh = () => {
-    getNotifications();
+
+  useEffect(() => {
+    const refresh = () => {
+      getNotifications();
+    };
+
+    window.addEventListener("refresh-notifications", refresh);
+
+    return () => {
+      window.removeEventListener("refresh-notifications", refresh);
+    };
+  }, []);
+
+  const getNotifications = async () => {
+    try {
+      setLoading(true);
+      const res = await Student.getNotifications();
+      console.log(res);
+
+      const formatted = res.map((item) => ({
+        id: item.id,
+        status: item.read_at ? "read" : "unread",
+        type: item.type,
+        name: item.data.from_user_name || "",
+        message: item.data.message,
+        time: item.created_at,
+        icon: item.data.icon,
+        color: item.data.color,
+        avatar: item.data.from_user_name
+          ? `https://i.pravatar.cc/40?u=${item.data.from_user_id}`
+          : null,
+        hasActions:
+          item.type === "new_request" &&
+          item.data.request_type === "team_form",
+        requestId: item.data.request_id,
+        teamId: item.data.team_id,
+      }));
+
+      setNotifications(formatted);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  window.addEventListener("refresh-notifications", refresh);
-
-  return () => {
-    window.removeEventListener("refresh-notifications", refresh);
-  };
-}, []);
-const getNotifications = async () => {
-  try {
-    setLoading(true);
-
-    const res = await Student.getNotifications();
-
-    console.log(res);
-
-    const formatted = res.map((item) => ({
-      id: item.id,
-      status: item.read_at ? "read" : "unread",
-
-      type: item.type,
-      name: item.data.from_user_name || "",
-      message: item.data.message,
-      time: item.created_at,
-      icon: item.data.icon,
-      color: item.data.color,
-
-      avatar: item.data.from_user_name
-        ? `https://i.pravatar.cc/40?u=${item.data.from_user_id}`
-        : null,
-
-      hasActions:
-        item.type === "new_request" &&
-        item.data.request_type === "team_form",
-
-      requestId: item.data.request_id,
-      teamId: item.data.team_id,
-    }));
-
-    setNotifications(formatted);
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
-};
   const filtered = notifications.filter((n) => {
     if (activeTab === "All") return true;
     if (activeTab === "Unread") return n.status === "unread";
     if (activeTab === "Read") return n.status === "read";
     return true;
   });
+
   const handleAccept = (id) =>
     setRequests((prev) => ({ ...prev, [id]: "accepted" }));
   const handleReject = (id) =>
     setRequests((prev) => ({ ...prev, [id]: "rejected" }));
 
-const renderAvatar = (notif) => {
-  if (notif.avatar) {
-    return (
-      <img
-        src={notif.avatar}
-        alt={notif.name}
-        className="notif-avatar-img"
-      />
-    );
-  }
+  const renderAvatar = (notif) => {
+    if (notif.avatar) {
+      return (
+        <img
+          src={notif.avatar}
+          alt={notif.name}
+          className="notif-avatar-img"
+        />
+      );
+    }
 
-  switch (notif.icon) {
-    case "bell":
-      return <FaBell />;
-
-    case "x-circle":
-      return <FaTimesCircle color="red" />;
-
-    default:
-      return <FaBell />;
-  }
-};
+    switch (notif.icon) {
+      case "bell":
+        return <FaBell />;
+      case "x-circle":
+        return <FaTimesCircle color="red" />;
+      default:
+        return <FaBell />;
+    }
+  };
 
   return (
     <div className="notif-dropdown">
@@ -134,7 +133,7 @@ const renderAvatar = (notif) => {
               <div className="notif-content">
                 {notif.name && (
                   <p className="notif-text">
-                    {notif.name && <strong>{notif.name} </strong>}
+                    <strong>{notif.name} </strong>
                     {notif.message}
                   </p>
                 )}
@@ -176,7 +175,13 @@ const renderAvatar = (notif) => {
 
       {/* Footer */}
       <div className="notif-footer">
-        <button className="notif-see-all">See All Notifictions</button>
+        {/* 3. إضافة الـ onClick هنا للتوجيه */}
+        <button 
+          className="notif-see-all" 
+          onClick={() => navigate("/student/notifications")}
+        >
+          See All Notifications
+        </button>
       </div>
     </div>
   );

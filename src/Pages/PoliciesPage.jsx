@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 
 import StudentSidebar from "../Components/StudentSidebar";
-import "./policies.css"; // 👈 مهم جدًا
+import "./policies.css";
 
 const policiesData = [
   {
@@ -98,7 +98,8 @@ const policiesData = [
 
 export default function GraduationProjectPolicies() {
   return (
-    <div className="page-container">
+    /* تمت إضافة كلاس النطاق المميز هنا لعزل التنسيقات بالكامل */
+    <div className="graduation-policies-page-scope page-container">
 
       {/* Sidebar */}
       <div className="sidebar-wrapper">

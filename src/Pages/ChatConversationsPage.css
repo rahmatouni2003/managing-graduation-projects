@@ -1,0 +1,516 @@
+/* الحاوية الخارجية للصفحة كلها (بتحتوي الهيدر الخارجي + الكونتينر) */
+.nitr-chat-outer {
+  max-width: 1200px;
+  margin: 30px auto;
+  margin-top: 80px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* السهم واسم الفريق - برّه الكارد بالكامل */
+.nitr-chat-page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.nitr-chat-page-header .nitr-chat-back-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #495057;
+}
+
+.nitr-chat-page-header .nitr-chat-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* الإطار العام والتقسيم الثنائي */
+.nitr-chat-page-container {
+  display: flex;
+  gap: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* المنطقة اليسرى - شاشة المحادثة */
+.nitr-chat-main-area {
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #eef0f2;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  overflow: hidden;
+}
+
+/* شريط المستخدمين العلوي - أفتارز متراكبة */
+.nitr-chat-participants-bar {
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.nitr-chat-participants-bar .nitr-avatar-wrapper {
+  margin-left: -12px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #eef0f2;
+}
+
+.nitr-chat-participants-bar .nitr-avatar-wrapper:first-child {
+  margin-left: 0;
+}
+
+.nitr-chat-participants-bar .nitr-avatar-wrapper:hover {
+  z-index: 5;
+}
+
+/* الأفتار و النقطة الخضراء للحالة */
+.nitr-avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.nitr-avatar-has-tooltip {
+  cursor: pointer;
+}
+
+.nitr-chat-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nitr-chat-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.nitr-avatar-status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #22c55e;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+}
+
+/* تلميح اسم المستخدم عند الوقوف بالماوس على الأفتار */
+.nitr-avatar-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #1f2937;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 20;
+}
+
+.nitr-avatar-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #1f2937 transparent transparent transparent;
+}
+
+.nitr-avatar-has-tooltip:hover .nitr-avatar-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* قائمة الرسائل في المحادثة */
+.nitr-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 12px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #ffffff;
+}
+
+/* مقسم التاريخ */
+.nitr-chat-date-divider {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.nitr-chat-date-divider span {
+  font-size: 11px;
+  color: #adb5bd;
+}
+
+/* تصميم صفوف الرسائل والفقاعات */
+.nitr-chat-msg-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 75%;
+}
+
+.nitr-chat-msg-row-other {
+  align-self: flex-start;
+}
+.nitr-chat-msg-row-mine {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+  margin-left: auto;
+  max-width: 85%;
+}
+/* العمود الحاوي لاسم المرسل + الفقاعة + الوقت (رسائل الطرف الآخر) */
+.nitr-chat-message-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nitr-chat-bubble-with-time {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.nitr-chat-bubble {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.nitr-chat-bubble-other {
+  background-color: #f1f3f5;
+  color: #212529;
+}
+
+.nitr-chat-bubble-mine {
+  background-color: #0066cc;
+  color: #ffffff;
+}
+
+/* السطر العلوي لاسم المرسل والبيدج الوظيفي (فوق الفقاعة) */
+.nitr-chat-sender-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.nitr-chat-sender-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.nitr-chat-sender-badge {
+  font-size: 10px;
+  color: #6c757d;
+  background-color: #e9ecef;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.nitr-chat-sender-badge.badge-instructor {
+  background-color: #e7f5ff;
+  color: #228be6;
+}
+
+.nitr-chat-bubble-text {
+  margin: 0;
+  word-break: break-word;
+}
+
+/* توقيت الرسالة */
+.nitr-chat-bubble-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.nitr-chat-bubble-check {
+  color: #74c0fc;
+}
+
+/* وقت رسائل الطرف الآخر - خارج الفقاعة */
+.nitr-chat-bubble-time-other {
+  font-size: 10px;
+  color: #adb5bd;
+  white-space: nowrap;
+  margin-bottom: 6px;
+}
+
+/* شريط إدخال الرسائل المحدث */
+.nitr-chat-input-container {
+  border-top: 1px solid #f1f3f5;
+  padding: 16px 20px;
+  background-color: #ffffff;
+}
+
+.nitr-chat-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nitr-chat-attach-btn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid #e9ecef;
+  background-color: #ffffff;
+  font-size: 20px;
+  color: #868e96;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nitr-chat-attach-btn:hover {
+  background-color: #f8f9fa;
+}
+
+/* الحقل الدائري المحيط بالكتابة وزر الإرسال */
+.nitr-chat-input-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f1f3f5;
+  border-radius: 999px;
+  padding: 4px 6px 4px 18px;
+}
+
+.nitr-chat-input {
+  flex: 1;
+  border: none;
+  padding: 10px 0;
+  font-size: 14px;
+  background-color: transparent;
+  outline: none;
+  color: #212529;
+}
+
+.nitr-chat-send-btn {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: none;
+  background-color: #e9ecef;
+  color: #adb5bd;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nitr-chat-send-btn:not(:disabled) {
+  background-color: #0066cc;
+  color: #ffffff;
+}
+
+.nitr-chat-attachment-preview {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f1f3f5;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+/* ======================================================= */
+/* الجزء الأيمن - الـ Sidebar (3 سكاشن فقط)              */
+/* ======================================================= */
+.nitr-chat-sidebar {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nitr-sidebar-widget {
+  background-color: #ffffff;
+  border: 1px solid #eef0f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.nitr-sidebar-widget h3 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nitr-sidebar-widget .team-subtext {
+  font-size: 12px;
+  color: #6c757d;
+  margin: 0 0 14px 0;
+}
+
+/* شريط التقدم */
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #6c757d;
+}
+
+.progress-percent {
+  font-weight: 500;
+}
+
+.progress-bar-container {
+  height: 6px;
+  background-color: #e9ecef;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #22c55e;
+  border-radius: 3px;
+}
+
+.progress-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #adb5bd;
+  margin-top: 2px;
+}
+
+/* قائمة الإجراءات والروابط */
+.action-list, .links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-list li, .links-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #495057;
+}
+
+.action-icon, .link-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.links-list a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.links-list a:hover {
+  text-decoration: underline;
+}
+
+/* أزرار الإجراءات السريعة */
+.quick-actions-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-quick {
+  flex: 1;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #495057;
+}
+
+.btn-quick:hover {
+  background-color: #f8f9fa;
+}
+
+/* المشرفين والمساعدين (Supervision) */
+.supervisors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.supervisor-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.supervisor-info h4 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.supervisor-info p {
+  margin: 2px 0 0 0;
+  font-size: 11px;
+  color: #868e96;
+}
+
+/* حالات التحميل والخطأ */
+.nitr-chat-state {
+  text-align: center;
+  padding: 40px;
+  color: #868e96;
+}

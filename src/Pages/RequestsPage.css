@@ -116,9 +116,9 @@
   font-size: 15px;
   color: #333;
 }
-.recived-search-boxx input::placeholder {
+/* .recived-search-boxx input::placeholder {
   padding-left: 50px;
-}
+} */
 .filter-btn {
   width: 52px;
   height: 52px;

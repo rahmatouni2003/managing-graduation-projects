@@ -178,7 +178,7 @@ const handleLeaveTeam = async () => {
      <span
   className="section-link"
   onClick={() =>
-    navigate("/received")
+    navigate("/student/inteam/received")
   }
 >
   Requests
@@ -284,7 +284,7 @@ const handleLeaveTeam = async () => {
         <span className="section-link"
         
           onClick={() =>
-    navigate("/supervision/requests")
+    navigate("/student/inteam/supervision/requests")
   }
         >
 

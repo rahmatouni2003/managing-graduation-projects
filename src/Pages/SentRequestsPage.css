@@ -106,9 +106,9 @@
   font-size: 18px;
   flex-shrink: 0; 
 }
-.sent-search-box input::placeholder {
+/* .sent-search-box input::placeholder {
   padding-left: 50px;
-}
+} */
 .sent-search-box input {
   border: none;
   outline: none;

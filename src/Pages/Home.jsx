@@ -57,7 +57,7 @@ const {
 
   return (
     <div className="home-page">
-      <div className="home-container">
+      <div className="homee-container">
         {/* Hero */}
         <div className="hero">
           <img src={landing} alt="" />

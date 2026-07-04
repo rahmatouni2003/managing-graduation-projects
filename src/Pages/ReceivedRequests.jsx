@@ -125,14 +125,16 @@ function RequestsPage() {
     }
   };
 
-  /* ================= FILTER ================= */
+  /* ================= FILTER (البحث بالاسم أو التراك) ================= */
 
   const filteredRequests =
-    requestsData.filter((item) =>
-      item.from_user.name
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    );
+    requestsData.filter((item) => {
+      const name = item.from_user?.name?.toLowerCase() || "";
+      const track = item.from_user?.track?.toLowerCase() || "";
+      const query = search.toLowerCase();
+
+      return name.includes(query) || track.includes(query);
+    });
 
   return (
     <div className="requests-page">
@@ -141,18 +143,18 @@ function RequestsPage() {
 
       <div className="requests-header">
 
- <div className="header-left">
-  <IoArrowBack
-    className="backk-icon"
-    onClick={() => navigate(-1)}
-  />
-  <h2 >Requests</h2>
-</div>
+        <div className="header-left">
+          <IoArrowBack
+            className="backk-icon"
+            onClick={() => navigate(-1)}
+          />
+          <h2>Requests</h2>
+        </div>
 
         <button
           className="new-request-btn"
           onClick={() =>
-            navigate("/new-request")
+            navigate("/student/inteam/supervision/new-requests")
           }
         >
           Send New Requests
@@ -171,7 +173,7 @@ function RequestsPage() {
               : "tab"
           }
           onClick={() =>
-            navigate("/received")
+            navigate("/student/inteam/received")
           }
         >
           Received
@@ -184,7 +186,7 @@ function RequestsPage() {
               : "tab"
           }
           onClick={() =>
-            navigate("/sent-requests")
+            navigate("/student/inteam/sent-requests")
           }
         >
           Sent
@@ -206,7 +208,7 @@ function RequestsPage() {
 
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search by name or track..."
               value={search}
               onChange={(e) =>
                 setSearch(e.target.value)
@@ -254,12 +256,11 @@ function RequestsPage() {
 
                   <img
                     src={
-                      item.from_user
-                        .profile_image ||
+                      item.from_user?.profile_image ||
                       "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                     }
                     alt={
-                      item.from_user.name
+                      item.from_user?.name
                     }
                   />
 
@@ -267,15 +268,13 @@ function RequestsPage() {
 
                     <h4>
                       {
-                        item.from_user
-                          .name
+                        item.from_user?.name
                       }
                     </h4>
 
                     <p>
                       {
-                        item.from_user
-                          .track
+                        item.from_user?.track
                       }
                     </p>
 

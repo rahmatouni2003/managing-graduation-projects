@@ -32,8 +32,19 @@ class Student {
     static readNotifications() {
   return submitRequestAsync(`/notifications/read-all`, "POST");
 }
+    static getChatConversations(id) {
+  return submitRequestAsync(`chat/${id}`, "GET");
+} 
+    static getConversations() {
+  return submitRequestAsync(`chat/conversations`, "GET");
 }
-
+    static sendChatMessages(data) {
+  return submitRequestAsync(`chat/messages`, "POST", data);
+} 
+    static sendChatTeamInfo() {
+  return submitRequestAsync(`api/chat/team/info`, "GET", );
+} 
+}
 
 
 export default Student;

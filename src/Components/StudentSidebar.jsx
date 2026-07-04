@@ -17,7 +17,7 @@ export default function ProfileSidebar() {
     {
       title: "Edit Profile",
       icon: <User size={18} />,
-      path: "/profile",
+      path: "/student/profile",
     },
     {
       title: "Terms & Policies",
@@ -27,7 +27,7 @@ export default function ProfileSidebar() {
     {
       title: "Report a Problem",
       icon: <Flag size={18} />,
-      path: "/report-problem",
+      path: "/student/inteam/report-problem",
     },
   ];
 

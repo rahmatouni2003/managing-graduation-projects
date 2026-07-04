@@ -1,284 +1,414 @@
-
-
-/* reportProblem.css */
-
-.report-wrapper {
+/* ===== تنسيق الحاوية الرئيسية والخلفية الخارجية مع الكلاس المميز ===== */
+.report-problem-page-scope .report-wrapper {
   min-height: 100vh;
-  /* background: #eaeaea; */
-  padding: 20px;
+  background-color: #f4f6f9;
+  padding: 30px 40px !important; 
   display: flex;
-  margin-top:50px;
-  justify-content: center;
-  font-family: Inter, sans-serif;
+  flex-direction: row;
+  justify-content: flex-start; 
+  align-items: flex-start;
+  gap: 30px;
+  margin-top: 50px;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
 }
 
-
-
-.sidebar-wrapper {
-  width: 220px;
+.report-problem-page-scope .sidebar-wrapperr {
+  width: 250px; 
   flex-shrink: 0;
-}
-.report-container {
-  width: 100%;
-  max-width: 1180px;
-  /* background: #F3F4F6; */
-  border-radius: 8px;
-  padding: 20px;
+  background-color: #ffffff; 
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
 }
 
-.report-header {
+/* الكارت الأبيض الرئيسي الداخلي */
+.report-problem-page-scope .report-main-card {
+  flex: 1; 
+  max-width: 1100px; 
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid #eef0f3;
+  overflow: hidden; 
+}
+
+/* الهيدر العلوي */
+.report-problem-page-scope .report-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 30px;
+  align-items: center;
+  background-color: #F8FAFC; 
+  padding: 35px 40px;      
+  border-bottom: 1px solid #f1f3f7;
 }
 
-.title-row {
+.report-problem-page-scope .header-text {
+  max-width: 70%;
+}
+
+.report-problem-page-scope .title-row {
   display: flex;
   align-items: center;
   gap: 14px;
   margin-bottom: 12px;
 }
 
-.main-icon {
-  color: #2563EB;
-  font-size: 27px;
+.report-problem-page-scope .main-icon {
+  color: #0252cc;
+  font-size: 28px;
 }
 
-.title-row h1 {
-  font-size: 22px;
-  color: #5A5959;
+.report-problem-page-scope .title-row h1 {
+  font-size: 26px;
+  color: #1e293b;
   margin: 0;
-  font-weight: 500;
+  font-weight: 700;
 }
 
-.report-header p {
-  color: #5A5959;
-  font-size: 12\.5px;
-  line-height: 1.8;
-  max-width: 540px;
+.report-problem-page-scope .header-text p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
 }
 
-.header-image {
-  width: 150px;
+/* رسمة الـ Illustration الجانبية بالـ CSS */
+.report-problem-page-scope .header-illustration {
+  position: relative;
+  width: 130px;
   height: 110px;
-  background: #f1f3ff;
-  border-radius: 8px;
+}
+
+.report-problem-page-scope .illustration-clipboard {
+  width: 60px;
+  height: 80px;
+  background: white;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 5px;
+  left: 20px;
+  padding: 12px 6px 6px 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.report-problem-page-scope .clipboard-clip {
+  width: 26px;
+  height: 10px;
+  background: #3b82f6;
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+}
+
+.report-problem-page-scope .clip-line {
+  height: 3px;
+  background: #e2e8f0;
+  margin-bottom: 6px;
+  border-radius: 2px;
+}
+.report-problem-page-scope .short-line { width: 80%; }
+
+.report-problem-page-scope .clip-grid {
+  height: 30px;
+  border: 1px solid #f1f5f9;
+  background-color: #F8FAFC; 
+  margin-top: 5px;
+  background-image: linear-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 100% 6px;
+}
+
+.report-problem-page-scope .illustration-bubble {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  background: #dbeafe;
+  color: #2563eb;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: bold;
+  font-size: 13px;
+  box-shadow: 0 2px 5px rgba(37, 99, 235, 0.1);
 }
 
-.paper {
-  width: 70px;
-  height: 85px;
-  background: white;
-  border-radius: 8px;
-  position: relative;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-
-.paper-top {
-  height: 14px;
-  background: #2563EB;
-  border-radius: 6px 6px 0 0;
-}
-
-.line {
-  height: 5px;
-  background: #dbeafe;
-  margin: 10px;
-  border-radius: 10px;
-}
-
-.short {
-  width: 60%;
-}
-
-.report-content {
-  display: grid;
-  grid-template-columns: 1fr 260px;
-  gap: 22px;
-}
-
-.field-group {
-  margin-bottom: 24px;
-}
-
-.field-group label {
-  display: block;
-  margin-bottom: 12px;
+.report-problem-page-scope .illustration-check-bg {
+  position: absolute;
+  bottom: 30px;
+  left: -5px;
+  color: #cbd5e1;
   font-size: 14px;
-  color: #5A5959;
-  font-weight: 500;
+  opacity: 0.7;
 }
 
-.field-group label span {
-  color: red;
+/* تقسيم المحتوى الداخلي */
+.report-problem-page-scope .report-body-padding {
+  padding: 40px;
 }
 
-.field-group label small {
-  color: #8b8b8b;
+.report-problem-page-scope .report-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 40px;
+}
+
+/* حقول المدخلات */
+.report-problem-page-scope .field-group {
+  margin-bottom: 25px;
+}
+
+.report-problem-page-scope .field-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.report-problem-page-scope .required {
+  color: #ef4444;
+  margin-left: 4px;
+}
+
+.report-problem-page-scope .optional {
+  color: #64748b;
   font-weight: normal;
+  font-size: 14px;
+  margin-left: 4px;
 }
 
-.field-group input,
-.field-group textarea {
+.report-problem-page-scope .field-group input,
+.report-problem-page-scope .field-group textarea {
   width: 100%;
-  border: 1px solid #d8d8d8;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
-  background: white;
-  padding: 14px;
-  font-size: 12\.5px;
+  background: #ffffff;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #334155;
   outline: none;
-  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.field-group textarea {
-  height: 140px;
+.report-problem-page-scope .field-group input:focus,
+.report-problem-page-scope .field-group textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.report-problem-page-scope .field-group input::placeholder,
+.report-problem-page-scope .field-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+.report-problem-page-scope .field-group textarea {
+  height: 160px;
   resize: none;
 }
 
-.upload-box {
-  height: 90px;
-  border: 1px solid #d8d8d8;
+/* منطقة رفع الملفات المحدثة بالكامل */
+.report-problem-page-scope .upload-box {
+  border: 1px dashed #cbd5e1;
   border-radius: 6px;
-  background: #fcfcfd;
+  background: #f8fafc;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.upload-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #2563EB;
-  font-size: 12\.5px;
-}
-
-.upload-row small {
-  color: #7c7c7c;
-}
-
-.upload-box p {
-  margin-top: 8px;
-  color: #9ca3af;
-  font-size: 11px;
-}
-
-.button-row {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-}
-
-.cancel-btn,
-.submit-btnn {
-  height: 52px;
-  border-radius: 5px;
-  font-size: 12\.5px;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-.cancel-btn {
-  width: 110px;
-  background: white;
-  border: 1px solid #d1d5db;
+.report-problem-page-scope .upload-box:hover {
+  background: #f1f5f9;
 }
 
-.submit-btnn {
-  width: 175px;
-  border: none;
-    padding: 20px;
-  background: #2563EB;
-  color: white;
+.report-problem-page-scope .hidden-input {
+  display: none;
+}
+
+.report-problem-page-scope .upload-row {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
-.side-section {
+.report-problem-page-scope .upload-icon {
+  color: #2563eb;
+  font-size: 18px;
+}
+
+.report-problem-page-scope .upload-text-blue {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.report-problem-page-scope .upload-text-gray {
+  color: #64748b;
+}
+
+.report-problem-page-scope .upload-hint {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* أزرار التحكم بالأسفل */
+.report-problem-page-scope .button-row {
   display: flex;
-  flex-direction: column;
+  justify-content: flex-end;
   gap: 16px;
+  margin-top: 35px;
 }
 
-.info-card {
-  background: #F5F7FB;
-  border: 1px solid #ebedf3;
-  border-radius: 8px;
-  padding: 18px;
+.report-problem-page-scope .cancel-btn {
+  width: 120px;
+  height: 44px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #334155;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.card-title {
+.report-problem-page-scope .cancel-btn:hover {
+  background: #f8fafc;
+}
+
+.report-problem-page-scope .submit-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.card-title svg {
-  color: #2563EB;
+  justify-content: center;
+  gap: 8px;
+  width: 160px;
+  height: 44px;
+  background: #0252cc;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 500;
   font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.card-title h3 {
+.report-problem-page-scope .submit-btn:hover {
+  background: #0141a3;
+}
+
+/* السايد بار الجانبي للمعلومات */
+.report-problem-page-scope .side-section {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.report-problem-page-scope .info-card {
+  background: #f4f7fe !important;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.report-problem-page-scope .card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.report-problem-page-scope .side-icon {
+  color: #2563eb;
+  font-size: 18px;
+}
+
+.report-problem-page-scope .card-title h3 {
   margin: 0;
-  color: #2563EB;
-  font-size: 14px;
+  color: #1e3a8a;
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.card-text {
-  color: #5A5959;
-  font-size: 12\.5px;
-  margin-bottom: 18px;
+.report-problem-page-scope .side-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 16px 0;
 }
 
-.info-card ul {
+.report-problem-page-scope .info-card ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.info-card li {
+.report-problem-page-scope .info-card li {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 16px;
-  color: #5A5959;
-  font-size: 12\.5px;
-  line-height: 1.6;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-.info-card li svg {
-  color: #2563EB;
-  margin-top: 3px;
+.report-problem-page-scope .info-card li:last-child {
+  margin-bottom: 0;
 }
 
-.steps .step-number {
+.report-problem-page-scope .check-icon {
+  color: #2563eb;
+  font-size: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* أرقام الخطوات لقائمة What happens next */
+.report-problem-page-scope .steps-list .step-number {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #2563EB;
+  background: #2563eb;
   color: white;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
-@media (max-width: 900px) {
-  .report-content {
+/* ريسبونسيف للشاشات الصغيرة */
+@media (max-width: 850px) {
+  .report-problem-page-scope .report-content {
     grid-template-columns: 1fr;
   }
-
-  .report-header {
+  .report-problem-page-scope .report-header {
     flex-direction: column;
-    gap: 20px;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 25px;
+  }
+  .report-problem-page-scope .report-body-padding {
+    padding: 25px;
+  }
+  .report-problem-page-scope .header-text {
+    max-width: 100%;
+  }
+  .report-problem-page-scope .header-illustration {
+    display: none;
   }
 }

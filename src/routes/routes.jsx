@@ -417,7 +417,7 @@ import EditMilestone from "../Pages/EditMilestone";
 import Rules from "../Pages/Rules.jsx";
 import ReportDetails from "../pages/ReportDetails";
 import NotInTeam from "../Pages/NotInTeam";
-
+import ChatConversationsPage from '../Pages/ChatConversationsPage'
 export const router = createBrowserRouter([
   // ================= AUTH =================
   {
@@ -576,10 +576,10 @@ export const router = createBrowserRouter([
 
   // ================= GENERAL =================
 
-  {
-    path: "notifications",
-    element: <NotificationsPage />,
-  },
+  // {
+  //   path: "notifications",
+  //   element: <NotificationsPage />,
+  // },
 
   {
     path: "project-types",
@@ -601,7 +601,7 @@ export const router = createBrowserRouter([
 
       // Upload Idea
       {
-        path: "Upload-Project-Idea",
+        path: "student/inteam/upload-project-idea",
         element: <UploadProjectIdea />,
       },
 
@@ -628,13 +628,19 @@ export const router = createBrowserRouter([
         path: "policies",
         element: <PoliciesPage />,
       },
-
+  {
+    path: "student/notifications",
+    element: <NotificationsPage />,
+  },
       {
         path: "student/inteam/report-problem",
         element: <ReportProblemPage />,
       },
 
-      // Projects Main Page
+       {
+       path: "student/inteam/supervision/new-requests",
+        element: <NewRequestPage />,
+       },
       {
         path: "projectsLiberary",
         element: <ProjectsLiberary />,
@@ -656,6 +662,10 @@ export const router = createBrowserRouter([
       {
         path: "student/inteam/sent-requests",
         element: <SentRequestsPage />,
+      },
+            {
+        path: "student/inteam/chatconversations",
+        element: <ChatConversationsPage />,
       },
       // {
       //   path: "user/inteam/new-request",

@@ -50,9 +50,17 @@
   border-radius: 14px;
   padding: 24px;
   border: 1px solid #ddd;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  
+  /* الإضافات الجديدة */
+  cursor: pointer; /* بيغير شكل الماوس لـ إيد */
+  transition: all 0.3s ease; /* عشان الحركة تكون ناعمة */
 }
-
+.timeline-card:hover {
+  transform: translateY(-3px); /* بيرفع الكارد لفوق حاجة بسيطة */
+  
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15); /* بيزود ضل أزرق خفيف */
+}
 .timeline-top {
   display: flex;
   justify-content: space-between;

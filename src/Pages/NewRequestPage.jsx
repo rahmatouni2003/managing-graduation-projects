@@ -88,16 +88,21 @@ function NewRequestPage() {
     }
   };
 
-  /* ================= FILTER ================= */
+  /* ================= FILTER (تحديث الفلتر للبحث بالاسم، التراك، أو الوظيفة) ================= */
   const currentList = isSupervision
     ? activeTab === "doctors"
       ? doctors
       : tas
     : students;
 
-  const filteredList = currentList.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredList = currentList.filter((item) => {
+    const name = item?.name?.toLowerCase() || "";
+    const track = item?.track?.toLowerCase() || "";
+    const role = item?.role?.toLowerCase() || "";
+    const query = search.toLowerCase();
+
+    return name.includes(query) || track.includes(query) || role.includes(query);
+  });
 
   /* ================= RENDER USERS ================= */
   const renderUsers = () => {
@@ -167,7 +172,7 @@ function NewRequestPage() {
             <FiSearch className="search-icon" />
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search by name, track or role..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -201,11 +206,11 @@ function NewRequestPage() {
           </div>
         )}
 
-        {/* USERS */}
-        <div className="users-list">{renderUsers()}</div>
+          {/* USERS */}
+          <div className="users-list">{renderUsers()}</div>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
 export default NewRequestPage;

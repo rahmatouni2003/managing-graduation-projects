@@ -1,5 +1,4 @@
-import { FaBell } from "react-icons/fa";
-import { FiUpload } from "react-icons/fi";
+import { FiUpload, FiMessageCircle } from "react-icons/fi";
 import logo from "../assets/logo.png";
 import NotificationsDropdown from "./NotificationsDropdown";
 import { MdExpandMore } from "react-icons/md";
@@ -7,12 +6,15 @@ import Project from "../Services/Project.model";
 import { toast } from "react-hot-toast";
 import Milestones from "../Services/Milestones.model";
 import Student from "../services/Student.model";
+import Auth from "../Services/Auth.model"; 
 import { useEffect, useState, useRef } from "react";
 import "./StudentNavbar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 import echo from "../echo";
 import { FaUserCircle } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
+import { FaBell, FaCommentDots } from "react-icons/fa";
 
 export const StudentNavbar = () => {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -23,28 +25,67 @@ export const StudentNavbar = () => {
   const [notes, setNotes] = useState("");
   const [milestones, setMilestones] = useState([]);
   const [milestoneId, setMilestoneId] = useState("");
-  const [currentUser, setCurrentUser] = useState(null);
+  const [proposalStatus, setProposalStatus] = useState(null); 
   const location = useLocation();
+  
   const isLibraryPage = location.pathname.includes("projectsLiberary");
-  const isActive = (path) => location.pathname === path;
+  const isTeamPage = location.pathname.includes("/inteam/team");
+  const isTimelinePage = location.pathname.includes("timeline");
+  const isProfilePage = location.pathname.includes("/student/profile");
+
+  // دالة دقيقة للتحقق من اللينك النشط الحالي
+  const isActive = (path) => {
+    if (path === "/") return location.pathname === "/";
+    return location.pathname.startsWith(path);
+  };
+
   const openNotifRef = useRef(false);
+  const { user: currentUser, updateUser } = useAuth();
+
   const loadUnreadCount = async () => {
     try {
       const res = await Student.getNotifications();
-
       const unread = res.filter((item) => item.read_at === null).length;
-
       setUnreadCount(unread);
     } catch (err) {
       console.log(err);
     }
   };
+
+  const loadProfileData = async () => {
+    try {
+      const res = await Auth.getProfileData();
+      const profileData = res; 
+      if (profileData) {
+        setProposalStatus(profileData.proposal_status);
+
+        if (updateUser) {
+          updateUser({
+            proposal_status: profileData.proposal_status,
+            submitted_proposal: profileData.submitted_proposal,
+            proposal_accepted: profileData.proposal_accepted,
+          });
+        }
+      }
+    } catch (err) {
+      console.log("Error fetching profile data:", err);
+    }
+  };
+
   useEffect(() => {
     console.log("Echo", echo);
   }, []);
+
   useEffect(() => {
     loadUnreadCount();
   }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      loadProfileData();
+    }
+  }, [currentUser]);
+
   const handleOpenNotifications = async () => {
     const next = !openNotif;
     setOpenNotif(next);
@@ -59,12 +100,7 @@ export const StudentNavbar = () => {
       }
     }
   };
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setCurrentUser(JSON.parse(user));
-    }
-  }, []);
+
   useEffect(() => {
     if (!currentUser) return;
 
@@ -83,6 +119,7 @@ export const StudentNavbar = () => {
       echo.leave(`private-user.${currentUser.id}`);
     };
   }, [currentUser]);
+
   useEffect(() => {
     const fetchMilestones = async () => {
       try {
@@ -95,9 +132,14 @@ export const StudentNavbar = () => {
     };
     fetchMilestones();
   }, []);
+
   const openMilestones = milestones?.filter((m) => m.is_open === true) || [];
-  const currentMilestone = openMilestones[0];
-  console.log("CURRENT MILESTONE:", currentMilestone);
+
+  const isProposalApproved = proposalStatus === "approved" || currentUser?.proposal_status === "approved";
+  
+  const uploadButtonText = isProposalApproved ? "Upload Task" : "Upload Idea";
+  const popupTitle = isProposalApproved ? "Upload Task" : "Upload Idea";
+
   const handleUpload = async () => {
     try {
       const formData = new FormData();
@@ -108,43 +150,47 @@ export const StudentNavbar = () => {
       }
       const response = await Project.submitTask(formData);
       console.log(response);
+
       toast.success(
         () => (
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            <strong>Upload Task</strong>
+            <strong>{popupTitle}</strong>
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
               <span style={{ color: "green", fontSize: "18px" }}>✔️</span>
-              <span>Your task has been submitted successfully</span>
+              <span>Your submission has been completed successfully</span>
             </div>
           </div>
         ),
-        {
-          duration: 3000,
-        },
+        { duration: 3000 }
       );
       setShowPopup(false);
       setFile(null);
       setNotes("");
       setMilestoneId("");
+      
+      loadProfileData();
     } catch (error) {
       console.log("ERROR CAUGHT:", error);
       toast.error(
         () => (
           <div>
-            <strong>Upload Failed</strong>
+            <strong>Submission Failed</strong>
             <div>{error?.message}</div>
           </div>
         ),
-        { duration: 3000 },
+        { duration: 3000 }
       );
     }
   };
+
   return (
     <div className="flex items-center student-navbar justify-between px-8 py-3 bg-white ">
       {/* Left */}
       <div className="nav-left">
         <img src={logo} alt="logo" width="60" />
       </div>
+      
+      {/* Center Links */}
       <div className="nav-center">
         <span
           className={`nav-link ${isActive("/") ? "activ-link" : ""}`}
@@ -154,14 +200,15 @@ export const StudentNavbar = () => {
         </span>
 
         <span
-          className={`nav-link ${location.pathname.startsWith("/projectsLiberary") ? "activ-link" : ""}`}
+          className={`nav-link ${isLibraryPage ? "activ-link" : ""}`}
           onClick={() => navigate("/projectsLiberary")}
         >
           Library
         </span>
+        
         {currentUser && (
           <span
-            className={`nav-link ${isActive("/team") ? "activ-link" : ""}`}
+            className={`nav-link ${isTeamPage || location.pathname.includes("notinteam") ? "activ-link" : ""}`}
             onClick={() =>
               navigate(
                 currentUser?.has_team
@@ -175,7 +222,7 @@ export const StudentNavbar = () => {
         )}
 
         <span
-          className={`nav-link ${isActive("/timeline") ? "activ-link" : ""}`}
+          className={`nav-link ${isTimelinePage ? "activ-link" : ""}`}
           onClick={() =>
             navigate(
               currentUser?.has_team ? "student/inteam/timeline" : "/timeline",
@@ -185,31 +232,51 @@ export const StudentNavbar = () => {
           Timeline
         </span>
       </div>
+
+      {/* Right Controls */}
       <div className="nav-right">
         {isLibraryPage ? (
           currentUser && (
             <button
-              className="favorite-btn-navbar"
-              onClick={() => navigate("/projectsLiberary/favorites")}
+              className={`favorite-btn-navbar ${location.pathname.includes("favorites") ? "active-fav-btn" : ""}`}
+              onClick={() => navigate("/student/inteam/projectsLiberary/favorites")}
             >
               <FaHeart />
               Favorites
             </button>
           )
+        ) : isTeamPage ? (
+          currentUser && (
+            <button
+              className="chat-btn-navbar"
+              onClick={() => navigate("/student/inteam/chatconversations")}
+              aria-label="Conversations"
+            >
+              <FaCommentDots />
+            </button>
+          )
         ) : (
           <button
-            onClick={() => currentUser && setShowPopup(true)}
+            onClick={() => {
+              if (!currentUser) return;
+              if (isProposalApproved) {
+                setShowPopup(true);
+              } else {
+                navigate("student/inteam/upload-project-idea");
+              }
+            }}
             className={`upload-btn ${!currentUser ? "upload-btn-disabled" : ""}`}
             disabled={!currentUser}
           >
             <FiUpload />
-            Upload Task
+            {uploadButtonText}
           </button>
         )}
+        
         {showPopup && (
           <div className="popup-overlay">
             <div className="popup-box">
-              <h2>Upload Task</h2>
+              <h2>{popupTitle}</h2>
               <label>File</label>
               <input type="file" onChange={(e) => setFile(e.target.files[0])} />
               <label>Milestone</label>
@@ -228,7 +295,8 @@ export const StudentNavbar = () => {
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-              />
+              >
+              </textarea>
               <div className="popup-actions">
                 <button
                   className="btn-cancel"
@@ -243,6 +311,7 @@ export const StudentNavbar = () => {
             </div>
           </div>
         )}
+
         <div className="relative">
           <FaBell
             className="text-gray-600 text-lg cursor-pointer"
@@ -255,19 +324,21 @@ export const StudentNavbar = () => {
 
           {openNotif && <NotificationsDropdown />}
         </div>
+
+        {/* Profile Section */}
         <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => currentUser && navigate("/profile")}
+          className={`flex items-center gap-2 cursor-pointer user-profile-container ${isProfilePage ? "profile-active" : ""}`}
+          onClick={() => currentUser && navigate("/student/profile")}
         >
           {currentUser ? (
             <>
               <img
                 src="https://i.pravatar.cc/40"
-                className="w-8 h-8 rounded-full"
+                className={`w-8 h-8 rounded-full ${isProfilePage ? "profile-img-active" : ""}`}
                 alt="Profile"
               />
-              <span className="text-sm">{currentUser.full_name}</span>
-              <MdExpandMore />
+              <span className="text-sm user-profile-name">{currentUser.full_name}</span>
+              <MdExpandMore className="expand-icon" />
             </>
           ) : (
             <>
