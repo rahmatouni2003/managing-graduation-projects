@@ -28,7 +28,6 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
   };
 
-  // دالة اختيارية لو حابب تحدّث بيانات اليوزر من مكان تاني (زي بعد رفع الـ proposal مثلاً)
   const updateUser = (partialData) => {
     setUser((prev) => {
       const updated = { ...prev, ...partialData };

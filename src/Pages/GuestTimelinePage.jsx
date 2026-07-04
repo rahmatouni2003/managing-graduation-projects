@@ -75,7 +75,7 @@ export default function MilestonesTimeline() {
             <div key={milestone.id} className="timelineItem">
               <span className="timelineDot" />
 
-              {/* 👈 إضافة حدث onClick وتعديل الـ style ليشير إلى أنه قابل للضغط */}
+             
               <div 
                 className="card" 
                 onClick={() => navigate(`/guest/milestones/${milestone.id}`)} 

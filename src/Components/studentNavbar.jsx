@@ -52,25 +52,30 @@ export const StudentNavbar = () => {
     }
   };
 
-  const loadProfileData = async () => {
-    try {
-      const res = await Auth.getProfileData();
-      const profileData = res; 
-      if (profileData) {
-        setProposalStatus(profileData.proposal_status);
+const loadProfileData = async () => {
+  // 💡 شرط أمان: إذا كان الـ currentUser غير موجود (تم تسجيل الخروج)، لا تفعل شيئاً واخرج فوراً
+  if (!currentUser) return; 
 
-        if (updateUser) {
-          updateUser({
-            proposal_status: profileData.proposal_status,
-            submitted_proposal: profileData.submitted_proposal,
-            proposal_accepted: profileData.proposal_accepted,
-          });
-        }
+  try {
+    const res = await Auth.getProfileData();
+    const profileData = res; 
+    
+    // 💡 تأكيد إضافي: تحقق أن المستخدم لم يقم بالخروج أثناء فترة انتظار الـ API
+    if (profileData && currentUser) {
+      setProposalStatus(profileData.proposal_status);
+
+      if (updateUser) {
+        updateUser({
+          proposal_status: profileData.proposal_status,
+          submitted_proposal: profileData.submitted_proposal,
+          proposal_accepted: profileData.proposal_accepted,
+        });
       }
-    } catch (err) {
-      console.log("Error fetching profile data:", err);
     }
-  };
+  } catch (err) {
+    console.log("Error fetching profile data:", err);
+  }
+};
 
   useEffect(() => {
     console.log("Echo", echo);
@@ -80,11 +85,21 @@ export const StudentNavbar = () => {
     loadUnreadCount();
   }, []);
 
-  useEffect(() => {
-    if (currentUser) {
-      loadProfileData();
-    }
-  }, [currentUser]);
+useEffect(() => {
+  if (currentUser) {
+    loadUnreadCount();
+  } else {
+    // 💡 تصفير البيانات تماماً عند عمل Logout
+    setUnreadCount(0);
+    setProposalStatus(null);
+    setMilestones([]);
+  }
+}, [currentUser]);
+useEffect(() => {
+  if (currentUser) {
+    loadProfileData();
+  }
+}, [currentUser]);
 
   const handleOpenNotifications = async () => {
     const next = !openNotif;

@@ -33,7 +33,7 @@ export default function ProfileSidebar() {
 
   const handleLogout = () => {
     logout();           
-    navigate("/login"); 
+    navigate("/guestHomePage"); 
   };
 
   return (
