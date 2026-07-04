@@ -38,7 +38,7 @@
 // import GuestHomePage from "../Pages/GuestHomePage";
 // import Home from "../Pages/Home";
 // import NewRequestPage from "../Pages/NewRequestPage";
-// import GuestTimelinePage from "../Pages/GuestTimelinePage"; 
+// import GuestTimelinePage from "../Pages/GuestTimelinePage";
 // import SentRequestsPage from "../pages/SentRequestsPage";
 // import ProjectsLiberary from "../Pages/ProjectsLiberary";
 // import ReceivedRequests from "../pages/ReceivedRequests";
@@ -156,7 +156,6 @@
 //     path: "/reset-password",
 //     element: <ResetPassword />,
 //   },
-
 
 //   {
 //     path: "/doctor",
@@ -398,7 +397,7 @@ import ReportProblemPage from "../Pages/ReportProblemPage.jsx";
 import GuestHomePage from "../Pages/GuestHomePage";
 import Home from "../Pages/Home";
 import NewRequestPage from "../Pages/NewRequestPage";
-import GuestTimelinePage from "../Pages/GuestTimelinePage"; 
+import GuestTimelinePage from "../Pages/GuestTimelinePage";
 import SentRequestsPage from "../pages/SentRequestsPage";
 import ProjectsLiberary from "../Pages/ProjectsLiberary";
 import ReceivedRequests from "../pages/ReceivedRequests";
@@ -417,7 +416,8 @@ import EditMilestone from "../Pages/EditMilestone";
 import Rules from "../Pages/Rules.jsx";
 import ReportDetails from "../pages/ReportDetails";
 import NotInTeam from "../Pages/NotInTeam";
-import ChatConversationsPage from '../Pages/ChatConversationsPage'
+import ChatConversationsPage from "../Pages/ChatConversationsPage";
+import StudentRoute from "../context/StudentRoute .jsx";
 export const router = createBrowserRouter([
   // ================= AUTH =================
   {
@@ -518,7 +518,6 @@ export const router = createBrowserRouter([
     element: <ResetPassword />,
   },
 
-
   {
     path: "/doctor",
 
@@ -594,10 +593,10 @@ export const router = createBrowserRouter([
     element: <Layout />,
 
     children: [
-{
-  index: true,
-  element: <HomeRoute />,
-},
+      {
+        index: true,
+        element: <HomeRoute />,
+      },
 
       // Upload Idea
       {
@@ -628,19 +627,19 @@ export const router = createBrowserRouter([
         path: "policies",
         element: <PoliciesPage />,
       },
-  {
-    path: "student/notifications",
-    element: <NotificationsPage />,
-  },
+      {
+        path: "student/notifications",
+        element: <NotificationsPage />,
+      },
       {
         path: "student/inteam/report-problem",
         element: <ReportProblemPage />,
       },
 
-       {
-       path: "student/inteam/supervision/new-requests",
+      {
+        path: "student/inteam/supervision/new-requests",
         element: <NewRequestPage />,
-       },
+      },
       {
         path: "projectsLiberary",
         element: <ProjectsLiberary />,
@@ -663,28 +662,38 @@ export const router = createBrowserRouter([
         path: "student/inteam/sent-requests",
         element: <SentRequestsPage />,
       },
-            {
+      {
         path: "student/inteam/chatconversations",
-        element: <ChatConversationsPage />,
+        element: (
+          <StudentRoute teamStatus="no-team">
+            <ChatConversationsPage />
+          </StudentRoute>
+        ),
       },
       // {
       //   path: "user/inteam/new-request",
       //   element: <NewRequestPage />,
       // },
-                  {
-        path: "student/notinteam/notinteam",
-
-        element: <NotInTeam />,
+      {
+        path: "student/notinteam/notInTeamRequests",
+        element: (
+          <StudentRoute teamStatus="no-team">
+            <NotInTeamRequests />
+          </StudentRoute>
+        ),
       },
-                        {
+      {
         path: "student/notinteam/notInTeamRequests",
 
         element: <NotInTeamRequests />,
       },
-                            {
+      {
         path: "student/notinteam/notInNewRequests",
-
-        element: <NotInNewRequests />,
+        element: (
+          <StudentRoute teamStatus="no-team">
+            <NotInNewRequests />
+          </StudentRoute>
+        ),
       },
       {
         path: "/guestHomePage",
@@ -696,11 +705,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "student/notinteam/new-requests",
-        element: <NotInNewRequests />,
+        element: (
+          <StudentRoute teamStatus="no-team">
+            <NotInNewRequests />
+          </StudentRoute>
+        ),
       },
-{
+      {
         path: "student/notinteam/milestones/:id",
-        element: <MilestoneDetails />, 
+        element: <MilestoneDetails />,
       },
       // ================= PROJECT DETAILS =================
 
@@ -719,25 +732,35 @@ export const router = createBrowserRouter([
 
         element: <FavoritesPage />,
       },
-           
 
-{
-  path: "timeline",
-  element: (
-    <GuestRoute>
-      <GuestTimelinePage />
-    </GuestRoute>
-  ),
-},
-{
-  path: "student/inteam/timeline",
-  element: (
-      <TimelinePage />
-  ),
-},
+      {
+        path: "timeline",
+        element: (
+          <GuestRoute>
+            <GuestTimelinePage />
+          </GuestRoute>
+        ),
+      },
+
       {
         path: "guest/milestones/:id",
         element: <GuestMilestoneDetailsPage />,
+      },
+      {
+        path: "student/notinteam/milestones/:id",
+        element: (
+          <StudentRoute teamStatus="no-team">
+            <GuestMilestoneDetailsPage />
+          </StudentRoute>
+        ),
+      },
+      {
+        path: "student/notinteam/timeline",
+        element: (
+          <StudentRoute teamStatus="no-team">
+            <GuestTimelinePage />
+          </StudentRoute>
+        ),
       },
       {
         path: "receivedNotInTeam",

@@ -25,7 +25,6 @@ export const StudentNavbar = () => {
   const [notes, setNotes] = useState("");
   const [milestones, setMilestones] = useState([]);
   const [milestoneId, setMilestoneId] = useState("");
-  const [proposalStatus, setProposalStatus] = useState(null); 
   const location = useLocation();
   
   const isLibraryPage = location.pathname.includes("projectsLiberary");
@@ -42,9 +41,22 @@ export const StudentNavbar = () => {
   const openNotifRef = useRef(false);
   const { user: currentUser, updateUser } = useAuth();
 
+  // 💡 Ref لتتبع أحدث قيمة لـ currentUser بشكل لحظي (يحل مشكلة الـ race condition)
+  const currentUserRef = useRef(currentUser);
+  useEffect(() => {
+    currentUserRef.current = currentUser;
+  }, [currentUser]);
+
   const loadUnreadCount = async () => {
+    // 💡 لو المستخدم مش مسجل دخول، متعملش الطلب أصلاً
+    if (!currentUserRef.current) return;
+
     try {
       const res = await Student.getNotifications();
+
+      // 💡 تحقق تاني بعد رجوع الرد، مش بالاعتماد على القيمة القديمة وقت الاستدعاء
+      if (!currentUserRef.current) return;
+
       const unread = res.filter((item) => item.read_at === null).length;
       setUnreadCount(unread);
     } catch (err) {
@@ -52,30 +64,31 @@ export const StudentNavbar = () => {
     }
   };
 
-const loadProfileData = async () => {
-  // 💡 شرط أمان: إذا كان الـ currentUser غير موجود (تم تسجيل الخروج)، لا تفعل شيئاً واخرج فوراً
-  if (!currentUser) return; 
+  const loadProfileData = async () => {
+    // 💡 شرط أمان: إذا كان الـ currentUser غير موجود (تم تسجيل الخروج)، لا تفعل شيئاً واخرج فوراً
+    if (!currentUserRef.current) return;
 
-  try {
-    const res = await Auth.getProfileData();
-    const profileData = res; 
-    
-    // 💡 تأكيد إضافي: تحقق أن المستخدم لم يقم بالخروج أثناء فترة انتظار الـ API
-    if (profileData && currentUser) {
-      setProposalStatus(profileData.proposal_status);
+    try {
+      const res = await Auth.getProfileData();
 
-      if (updateUser) {
-        updateUser({
-          proposal_status: profileData.proposal_status,
-          submitted_proposal: profileData.submitted_proposal,
-          proposal_accepted: profileData.proposal_accepted,
-        });
+      // 💡 تأكيد إضافي حقيقي (مش عن طريق closure قديم): تحقق أن المستخدم لم يقم بالخروج أثناء فترة انتظار الـ API
+      if (!currentUserRef.current) return;
+
+      const profileData = res;
+
+      if (profileData) {
+        if (updateUser) {
+          updateUser({
+            proposal_status: profileData.proposal_status,
+            submitted_proposal: profileData.submitted_proposal,
+            proposal_accepted: profileData.proposal_accepted,
+          });
+        }
       }
+    } catch (err) {
+      console.log("Error fetching profile data:", err);
     }
-  } catch (err) {
-    console.log("Error fetching profile data:", err);
-  }
-};
+  };
 
   useEffect(() => {
     console.log("Echo", echo);
@@ -85,21 +98,22 @@ const loadProfileData = async () => {
     loadUnreadCount();
   }, []);
 
-useEffect(() => {
-  if (currentUser) {
-    loadUnreadCount();
-  } else {
-    // 💡 تصفير البيانات تماماً عند عمل Logout
-    setUnreadCount(0);
-    setProposalStatus(null);
-    setMilestones([]);
-  }
-}, [currentUser]);
-useEffect(() => {
-  if (currentUser) {
-    loadProfileData();
-  }
-}, [currentUser]);
+  useEffect(() => {
+    if (currentUser) {
+      loadUnreadCount();
+      loadProfileData();
+    } else {
+      // 💡 تصفير البيانات تماماً عند عمل Logout
+      setUnreadCount(0);
+      setMilestones([]);
+      setShowPopup(false);
+      setFile(null);
+      setNotes("");
+      setMilestoneId("");
+      setOpenNotif(false);
+      openNotifRef.current = false;
+    }
+  }, [currentUser]);
 
   const handleOpenNotifications = async () => {
     const next = !openNotif;
@@ -136,9 +150,18 @@ useEffect(() => {
   }, [currentUser]);
 
   useEffect(() => {
+    if (!currentUser) {
+      setMilestones([]);
+      return;
+    }
+
     const fetchMilestones = async () => {
       try {
         const res = await Milestones.getOpenMilestones();
+
+        // 💡 تحقق أن المستخدم مازال مسجل دخول بعد رجوع الرد
+        if (!currentUserRef.current) return;
+
         const data = Array.isArray(res) ? res : res?.data || [];
         setMilestones(data);
       } catch (error) {
@@ -146,11 +169,12 @@ useEffect(() => {
       }
     };
     fetchMilestones();
-  }, []);
+  }, [currentUser]);
 
   const openMilestones = milestones?.filter((m) => m.is_open === true) || [];
 
-  const isProposalApproved = proposalStatus === "approved" || currentUser?.proposal_status === "approved";
+  // 💡 مصدر واحد فقط للحقيقة: currentUser.proposal_status
+  const isProposalApproved = currentUser?.proposal_status === "approved";
   
   const uploadButtonText = isProposalApproved ? "Upload Task" : "Upload Idea";
   const popupTitle = isProposalApproved ? "Upload Task" : "Upload Idea";
@@ -288,7 +312,7 @@ useEffect(() => {
           </button>
         )}
         
-        {showPopup && (
+        {showPopup && currentUser && (
           <div className="popup-overlay">
             <div className="popup-box">
               <h2>{popupTitle}</h2>
