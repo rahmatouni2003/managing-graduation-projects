@@ -5,9 +5,12 @@ import {
 class Admin {
 
 
-  static getStudents(courseId) {
-    return submitRequestAsync(`admin/student?course=${courseId}`, "GET");
-  }
+  static getStudents(course, page = 1, perPage = 10) {
+  return submitRequestAsync(
+    `admin/student?course=${course}&page=${page}&per_page=${perPage}`,
+    "GET"
+  );
+}
   static updateStudent(id, data) {
     return submitRequestAsync(
       `admin/student/${id}/update`,
@@ -105,6 +108,7 @@ class Admin {
   static getEigibleTeams() {
     return submitRequestAsync(`admin/milestone-committees/eligible-teams`, "GET");
   }
+
   static getFormData(id) {
     return submitRequestAsync(`admin/milestone-committees/${id}/form-data`, "GET");
   }

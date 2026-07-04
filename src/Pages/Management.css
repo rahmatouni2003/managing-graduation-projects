@@ -365,3 +365,43 @@
   border-color: #4a90e2;
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
 }
+/* ===== Pagination ===== */
+.admin-managment .pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 0 6px;
+}
+
+.admin-managment .pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  background: #fff;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-managment .pagination-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #0C5BC4;
+  color: #0C5BC4;
+}
+
+.admin-managment .pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-managment .pagination-info {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}

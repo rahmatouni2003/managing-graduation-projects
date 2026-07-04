@@ -14,9 +14,12 @@ class Student {
       static submitIdea() {
     return submitRequestAsync("/proposal/submit", "GET");
   }
-        static getStudents() {
-    return submitRequestAsync("admin/student", "GET");
-  }
+static getStudents(course, page = 1, perPage = 10) {
+  return submitRequestAsync(
+    `admin/student?course=${course}&page=${page}&per_page=${perPage}`,
+    "GET"
+  );
+}
     static getAvailableStudents() {
   return submitRequestAsync(`available/students`, "GET");
 } 

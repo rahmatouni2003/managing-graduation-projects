@@ -5,7 +5,9 @@ import {
   FaSearch,
   FaPlus,
   FaUpload,
-  FaShareAlt
+  FaShareAlt,
+  FaChevronLeft,
+  FaChevronRight
 } from "react-icons/fa";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -25,6 +27,24 @@ const StudentsManagement = () => {
   const [students, setStudents] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [tas, setTAs] = useState([]);
+
+  // ===== Pagination state =====
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Meta returned from the server for students (Laravel paginator)
+  const [studentsMeta, setStudentsMeta] = useState({
+    currentPage: 1,
+    lastPage: 1,
+    total: 0,
+    perPage: 10,
+  });
+
+  // Students (project1 / project2) are paginated on the server.
+  // Doctors / Assistants are still paginated on the client (their endpoints
+  // don't accept page/per_page yet).
+  const isServerPaginated = type === "project1" || type === "project2";
+
   useEffect(() => {
     Project.getDepartments().then(res => {
       setDepartments(res);
@@ -44,6 +64,40 @@ const StudentsManagement = () => {
       : type === "assistants"
         ? tas
         : students;
+
+  // ===== Pagination calculations =====
+  const totalPages = isServerPaginated
+    ? studentsMeta.lastPage
+    : Math.max(1, Math.ceil(dataToRender.length / itemsPerPage));
+
+  const paginatedData = isServerPaginated
+    ? dataToRender // already sliced by the backend (only current page's rows)
+    : dataToRender.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      );
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  // Reset to page 1 whenever the tab (type) changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [type]);
+
+  // For doctors/assistants (client-side pagination), clamp the page
+  // if the data shrinks (e.g. after a filter/delete).
+  useEffect(() => {
+    if (!isServerPaginated && currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [dataToRender.length]);
+
   const [isAdding, setIsAdding] = useState(false);
   const [newForm, setNewForm] = useState({
     name: "",
@@ -191,41 +245,52 @@ toast.success("Added successfully");
     toast.error("Add failed");
     }
   };
-  const loadData = async () => {
-    try {
-      setLoading(true);
+const loadData = async () => {
+  try {
+    setLoading(true);
 
-      if (type === "doctors") {
-        const res = await Admin.showDoctor();
-
-        setDoctors(res.data);
-        setStudents([]);
-        setTAs([]);
-      }
-
-      else if (type === "assistants") {
-        const res = await Admin.getTAs();
-
-        setTAs(res.data);
-        setStudents([]);
-        setDoctors([]);
-      }
-
-      else {
-        const course = type === "project1" ? 1 : 2;
-        const res = await Admin.getStudents(course);
-
-        setStudents(res.data);
-        setDoctors([]);
-        setTAs([]);
-      }
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    if (type === "doctors") {
+      const res = await Admin.showDoctor();
+      // إذا كانت دالة الـ doctors ترجع الـ Array مباشرة أو كائن يحتوي على data
+      // تأكد هل res هنا مصفوفة مباشرة أم لا بسبب extractResponseData
+      setDoctors(Array.isArray(res) ? res : res.data || []);
+      setStudents([]);
+      setTAs([]);
     }
-  };
+
+    else if (type === "assistants") {
+      const res = await Admin.getTAs();
+      setTAs(Array.isArray(res) ? res : res.data || []);
+      setStudents([]);
+      setDoctors([]);
+    }
+
+    else {
+      const course = type === "project1" ? 1 : 2;
+
+      // هنا الـ res الراجع هو الـ paginator مباشرة بسبب extractResponseData
+      const paginator = await Admin.getStudents(course, currentPage, itemsPerPage);
+
+      if (paginator) {
+        setStudents(paginator.data || []); // المصفوفة التي تحتوي على الطلاب الـ 10
+        setStudentsMeta({
+          currentPage: paginator.current_page || 1,
+          lastPage: paginator.last_page || 1,
+          total: paginator.total || 0,
+          perPage: paginator.per_page || 10,
+        });
+      }
+
+      setDoctors([]);
+      setTAs([]);
+    }
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
   const handleExport = async () => {
     try {
       let response;
@@ -266,9 +331,20 @@ toast.success("File exported successfully");
       toast.error("Export failed");
     }
   };
+
+  // Refetch when the tab / course changes
   useEffect(() => {
     loadData();
   }, [type, courseId]);
+
+  // Refetch from the server when the page changes, but only for students
+  // (doctors/assistants paginate on the client using data already fetched)
+  useEffect(() => {
+    if (isServerPaginated) {
+      loadData();
+    }
+  }, [currentPage]);
+
   if (loading) {
     return (
       <>
@@ -475,7 +551,7 @@ toast.success("File exported successfully");
                   </td>
                 </tr>
               )}
-              {dataToRender.map((item) => (
+              {paginatedData.map((item) => (
                 <tr key={item.id}>
                   <td>{item.national_id}</td>
 
@@ -629,6 +705,38 @@ toast.success("File exported successfully");
             </tbody>
 
           </table>
+
+          {/* ===== Pagination Controls ===== */}
+          <div className="pagination-wrapper">
+            <button
+              className="pagination-btn"
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+            >
+              <FaChevronLeft />
+              السابق
+            </button>
+
+            <span className="pagination-info">
+              صفحة {currentPage} من {totalPages}
+              {isServerPaginated && (
+                <>
+                  {" "}
+                  ({studentsMeta.total} طالب)
+                </>
+              )}
+            </span>
+
+            <button
+              className="pagination-btn"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              التالي
+              <FaChevronRight />
+            </button>
+          </div>
+
           {showUploadModal && (
             <div className="modal-overlay">
               <div className="year-modal">
