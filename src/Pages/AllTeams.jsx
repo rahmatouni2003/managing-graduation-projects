@@ -356,13 +356,15 @@ const loadTeams = async () => {
 
     return (
       // xs={12} تعني كارت واحد في الموبايل، sm={6} تعني كارتين بجانب بعضهما في الشاشات الأكبر
-      <Grid item xs={12} sm={6} key={team.id} sx={{ display: "flex" }}>
+      <Grid item xs={12} sm={3} key={team.id} sx={{ display: "flex" }}>
         <Card
-          sx={{
-            width: "100%", // يجبر الكارت على أخذ مساحة الـ Grid المخصصة له كاملة
-            display: "flex",
-            flexDirection: "column",
-            borderRadius: 4,
+          
+             sx={{
+    width: "510px",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: 4,
             overflow: "hidden",
             border: isDelayed ? "2px solid #ef5350" : "1px solid #eee",
             boxShadow: isDelayed
