@@ -377,7 +377,7 @@ import FinalDiscussion from "../pages/FinalDiscussion";
 import PreviousProjectDetails from "../Pages/PreviuosProjectDetails";
 import JoinRequests from "../Pages/JoinRequests";
 import StudentDashboard from "../Pages/studentDashboard";
-
+import GuestMilestoneDetailsPage from "../Pages/GuestMilestoneDetailsPage.jsx";
 import NotificationsPage from "../Pages/Notifications";
 import ProjectTypes from "../Pages/projectType";
 import UploadProjectIdea from "../Pages/UploadProjectIdea";
@@ -698,7 +698,10 @@ export const router = createBrowserRouter([
         path: "student/notinteam/new-requests",
         element: <NotInNewRequests />,
       },
-
+{
+        path: "student/notinteam/milestones/:id",
+        element: <MilestoneDetails />, 
+      },
       // ================= PROJECT DETAILS =================
 
       {
@@ -733,8 +736,8 @@ export const router = createBrowserRouter([
   ),
 },
       {
-        path: "student/inteam/milestones/:id",
-        element: <MilestoneDetails />,
+        path: "guest/milestones/:id",
+        element: <GuestMilestoneDetailsPage />,
       },
       {
         path: "receivedNotInTeam",

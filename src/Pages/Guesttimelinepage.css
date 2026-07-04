@@ -1,7 +1,9 @@
 .page { 
   padding: 32px 24px;
   min-height: 100vh;
-   margin:  80px ;
+  /* تغيير الـ margin ليكون علوي/سفلي فقط، والـ width يتكيف تلقائياً */
+  margin: 80px auto; 
+  max-width: 100%; /* تضمن عدم خروج المكونات عن الشاشة */
 }
 
 .title {
@@ -14,7 +16,7 @@
 .subtitle {
   font-size: 14px;
   color: #6b6b66;
-  max-width: 560px;
+  max-width: 100%; /* تم التغيير ليمتد العنوان الفرعي أيضاً مع عرض الشاشة */
   line-height: 1.6;
   margin: 0 0 32px 0;
 }
@@ -26,7 +28,7 @@
 
 .timeline {
   position: relative;
-  max-width: 620px;
+  max-width: 100%; /* تم التغيير من 620px إلى 100% لتملأ الشاشة */
   margin-left: 12px;
 }
 
@@ -43,6 +45,8 @@
   position: relative;
   padding-left: 32px;
   margin-bottom: 28px;
+  width: 100%; /* تضمن أن كل عنصر يأخذ العرض الكامل المتاح */
+  box-sizing: border-box;
 }
 
 .timelineItem:last-child {
@@ -65,8 +69,11 @@
   border-radius: 14px;
   border: 1px solid #ebe9e2;
   padding: 18px 20px;
+  width: 100%; /* تتمدد البطاقة لتملأ كامل عرض الـ timelineItem */
+  box-sizing: border-box;
 }
 
+/* باقي الكود يظل كما هو دون تغيير... */
 .cardHeader {
   display: flex;
   align-items: flex-start;

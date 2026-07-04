@@ -1,0 +1,125 @@
+.details-container {
+  padding: 40px 24px;
+  background-color: #f3f3f3; /* نفس الخلفية الرمادية الفاتحة بالصورة */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 60px auto;
+}
+
+.backk-btn {
+  align-self: flex-start;
+  border: none;
+  color: #6b6b66;
+  text-wrap: nowrap;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: 900;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #1f1f1f;
+}
+
+.details-section-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 28px 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* لتأخذ البطاقات الفرعية حجماً ملائماً حسب محتواها مثل الصورة */
+.details-section-card:nth-of-type(2) {
+  max-width: 500px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin: 0 0 8px 0;
+}
+
+.detail-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #1f1f1f;
+  white-space: nowrap;
+}
+
+.detail-value {
+  color: #5b5a55;
+}
+
+.description-text {
+  max-width: 900px;
+}
+
+.date-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.date-item.due .detail-label, 
+.date-item.due .detail-value {
+  color: #1f1f1f;
+}
+
+.info-icon {
+  flex-shrink: 0;
+}
+
+.details-requirements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.details-requirements-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+  color: #4a4a4a;
+}
+
+.bullet-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #2f7bf0;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.notes-text {
+  font-size: 13.5px;
+  color: #5b5a55;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.statusText {
+  text-align: center;
+  font-size: 16px;
+  color: #6b6b66;
+  margin-top: 40px;
+}

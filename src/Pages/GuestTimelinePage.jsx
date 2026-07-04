@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // 👈 إضافة الـ Navigation
 import Project from "../Services/Project.model";
 import "./Guesttimelinepage.css";
 
@@ -23,6 +24,7 @@ export default function MilestonesTimeline() {
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // 👈 تفعيل الـ Navigation
 
   useEffect(() => {
     let isMounted = true;
@@ -30,7 +32,7 @@ export default function MilestonesTimeline() {
     async function fetchMilestones() {
       try {
         const response = await Project.getMyGuestMilestones();
-        const data = response|| response?.data || [];
+        const data = response || response?.data || [];
 
         if (isMounted) {
           setMilestones(data);
@@ -62,7 +64,7 @@ export default function MilestonesTimeline() {
         represents a significant event in the project lifecycle.
       </p>
 
-      {loading && <p className="statusText">جاري التحميل...</p>}
+      {loading && <p className="statusText">loading...</p>}
       {error && <p className="statusText">{error}</p>}
 
       {!loading && !error && (
@@ -73,7 +75,12 @@ export default function MilestonesTimeline() {
             <div key={milestone.id} className="timelineItem">
               <span className="timelineDot" />
 
-              <div className="card">
+              {/* 👈 إضافة حدث onClick وتعديل الـ style ليشير إلى أنه قابل للضغط */}
+              <div 
+                className="card" 
+                onClick={() => navigate(`/guest/milestones/${milestone.id}`)} 
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="cardHeader">
                   <div className="iconWrapper">
                     <BulbIcon />
@@ -102,15 +109,13 @@ export default function MilestonesTimeline() {
 
                 {milestone.requirements?.length > 0 && (
                   <ul className="requirementsList">
-                    {milestone.requirements.map((req) => (
+                    {milestone.requirements.slice(0, 2).map((req) => (
                       <li key={req.id}>{req.requirement}</li>
                     ))}
                   </ul>
                 )}
 
-                <span
-                  className={`statusBadge ${milestone.status}`}
-                >
+                <span className={`statusBadge ${milestone.status}`}>
                   {statusLabels[milestone.status] || milestone.status}
                 </span>
               </div>
@@ -122,38 +127,6 @@ export default function MilestonesTimeline() {
   );
 }
 
-function BulbIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M9 21h6M12 3a6 6 0 00-3.5 10.9c.5.4.8 1 .8 1.6v.5h5.4v-.5c0-.6.3-1.2.8-1.6A6 6 0 0012 3z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-      <rect
-        x="3"
-        y="5"
-        width="18"
-        height="16"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M16 3v4M8 3v4M3 10h18"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+// الأيقونات تظل كما هي أسفل الملف...
+function BulbIcon() { return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 21h6M12 3a6 6 0 00-3.5 10.9c.5.4.8 1 .8 1.6v.5h5.4v-.5c0-.6.3-1.2.8-1.6A6 6 0 0012 3z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>; }
+function CalendarIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.6" /><path d="M16 3v4M8 3v4M3 10h18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>; }
