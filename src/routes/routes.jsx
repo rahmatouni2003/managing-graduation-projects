@@ -668,6 +668,10 @@ export const router = createBrowserRouter([
         path: "student/inteam/received",
         element: <ReceivedRequests />,
       },
+            {
+        path: "student/inteam/timeline",
+        element: <TimelinePage />,
+      },
       {
         path: "student/inteam/sent-requests",
         element: <SentRequestsPage />,
