@@ -482,198 +482,226 @@ const handleSaveGrade = async (milestoneId) => {
               </Card>
             </Grid>
           </Grid>
-          <Card
-            sx={{
-              borderRadius: "16px",
-              p: 3,
-              mb: 3,
-              boxShadow: "none",
-              border: "1px solid #e2e8f0",
-            }}
-          >
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mb={2}
-            >
-              <Typography
-                variant="h6"
-                fontWeight="700"
-                color="#1e293b"
-                fontSize="18px"
-              >
-                Team Progress
-              </Typography>
-              <Typography
-                variant="h6"
-                fontWeight="700"
-                color="#1e293b"
-                fontSize="16px"
-              >
-                {teamData?.overall_progress}% Complete
-              </Typography>
-            </Box>
+<Card
+  sx={{
+    borderRadius: "16px",
+    p: 3,
+    mb: 3,
+    boxShadow: "none",
+    border: "1px solid #e2e8f0",
+  }}
+>
+  <Box
+    display="flex"
+    justifyContent="space-between"
+    alignItems="center"
+    mb={2}
+  >
+    <Typography
+      variant="h6"
+      fontWeight="700"
+      color="#1e293b"
+      fontSize="18px"
+    >
+      Team Progress
+    </Typography>
+    <Typography
+      variant="h6"
+      fontWeight="700"
+      color="#1e293b"
+      fontSize="16px"
+    >
+      {teamData?.overall_progress}% Complete
+    </Typography>
+  </Box>
 
-            <LinearProgress
-              variant="determinate"
-              value={teamData?.overall_progress}
+  <LinearProgress
+    variant="determinate"
+    value={teamData?.overall_progress || 0}
+    sx={{
+      height: 8,
+      borderRadius: 4,
+      bgcolor: "#e2e8f0",
+      "& .MuiLinearProgress-bar": { bgcolor: "#22c55e" },
+    }}
+  />
+
+  {/* Current milestone / deadline box */}
+  <Box
+    sx={{
+      p: 1.5,
+      bgcolor: "#f8fafc",
+      borderRadius: "10px",
+      border: "1px solid #e2e8f0",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      mt: 2,
+    }}
+  >
+    <Box>
+      <Typography fontSize="13px" fontWeight="600" color="#1e293b">
+        Current Milestone:{" "}
+        <span style={{ color: "#3b82f6" }}>
+          {currentCourse?.current_milestone?.title || "-"}
+        </span>
+      </Typography>
+
+      <Typography
+        fontSize="12px"
+        color="#1e293b"
+        fontWeight="600"
+        mt={0.5}
+      >
+        Deadline:{" "}
+        <span style={{ color: "#64748b", fontWeight: "normal" }}>
+          {currentCourse?.current_milestone?.deadline
+            ? new Date(
+                currentCourse.current_milestone.deadline
+              ).toLocaleDateString()
+            : "-"}
+        </span>
+      </Typography>
+    </Box>
+  </Box>
+
+  {/* Dynamic timeline */}
+  <Box mt={4} sx={{ position: "relative" }}>
+    <Box
+      sx={{
+        position: "absolute",
+        top: 10,
+        left: "4%",
+        right: "4%",
+        height: "2px",
+        bgcolor: "#cbd5e1",
+        zIndex: 1,
+      }}
+    />
+
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      sx={{ position: "relative", zIndex: 2, px: 2, mb: 1.5 }}
+    >
+      {milestones.map((m, i) => {
+        const isLast = i === milestones.length - 1;
+
+        let bg = "#94a3b8";
+        let icon = null;
+        let size = 20;
+        let border = null;
+
+        switch (m.status) {
+          case "completed":
+            bg = "#22c55e";
+            icon = <CheckIcon sx={{ color: "#fff", fontSize: 12 }} />;
+            break;
+          case "in_progress":
+            bg = "#f59e0b";
+            border = "4px solid #fef3c7";
+            break;
+          case "delayed":
+            bg = "#ef4444";
+            icon = <CloseIcon sx={{ color: "#fff", fontSize: 12 }} />;
+            break;
+          case "locked":
+          default:
+            bg = "#94a3b8";
+            border = "3px solid #f1f5f9";
+            size = 16;
+            break;
+        }
+
+        if (isLast) {
+          bg = m.status === "completed" ? "#22c55e" : "#cbd5e1";
+          icon = (
+            <EmojiEventsIcon
               sx={{
-                height: 8,
-                borderRadius: 4,
-                bgcolor: "#e2e8f0",
-                "& .MuiLinearProgress-bar": { bgcolor: "#22c55e" },
+                color: m.status === "completed" ? "#fff" : "#f59e0b",
+                fontSize: 15,
               }}
             />
-            <Box mt={4} sx={{ position: "relative" }}>
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 10,
-                  left: "4%",
-                  right: "4%",
-                  height: "2px",
-                  bgcolor: "#cbd5e1",
-                  zIndex: 1,
-                }}
-              />
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ position: "relative", zIndex: 2, px: 2, mb: 1.5 }}
-              >
-                <Box
-                  sx={{
-                    bgcolor: "#22c55e",
-                    width: 20,
-                    height: 20,
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <CheckIcon sx={{ color: "#fff", fontSize: 12 }} />
-                </Box>
-                <Box
-                  sx={{
-                    bgcolor: "#22c55e",
-                    width: 20,
-                    height: 20,
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <CheckIcon sx={{ color: "#fff", fontSize: 12 }} />
-                </Box>
-                <Box
-                  sx={{
-                    bgcolor: "#f59e0b",
-                    width: 20,
-                    height: 20,
-                    borderRadius: "50%",
-                    border: "4px solid #fef3c7",
-                  }}
-                />
-                <Box
-                  sx={{
-                    bgcolor: "#94a3b8",
-                    width: 16,
-                    height: 16,
-                    borderRadius: "50%",
-                    border: "3px solid #f1f5f9",
-                  }}
-                />
-                <Box
-                  sx={{
-                    bgcolor: "#cbd5e1",
-                    width: 24,
-                    height: 24,
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <EmojiEventsIcon sx={{ color: "#f59e0b", fontSize: 15 }} />
-                </Box>
-              </Box>
+          );
+          size = 24;
+          border = null;
+        }
 
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                textAlign="center"
-              >
-                {[
-                  "Initial Proposal",
-                  "Requirements & Planning",
-                  "Design & Development",
-                  "Internal Defense",
-                  "Final Defense",
-                ].map((text, i) => (
-                  <Typography
-                    key={i}
-                    fontSize="12px"
-                    fontWeight="600"
-                    color="#64748b"
-                    sx={{ width: "20%" }}
-                  >
-                    {text}
-                  </Typography>
-                ))}
-              </Box>
-            </Box>
+        return (
+          <Box
+            key={m.id}
+            sx={{
+              bgcolor: bg,
+              width: size,
+              height: size,
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              ...(border && { border }),
+            }}
+          >
+            {icon}
+          </Box>
+        );
+      })}
+    </Box>
 
-            <Box
-              display="flex"
-              gap={4}
-              mt={3}
-              p={1.5}
-              sx={{ bgcolor: "#f8fafc", borderRadius: "10px" }}
-            >
-              <Box display="flex" alignItems="center" gap={1}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    borderRadius: "50%",
-                    bgcolor: "#22c55e",
-                  }}
-                />
-                <Typography fontSize="12px" fontWeight="500" color="#64748b">
-                  Completed
-                </Typography>
-              </Box>
-              <Box display="flex" alignItems="center" gap={1}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    borderRadius: "50%",
-                    bgcolor: "#f59e0b",
-                  }}
-                />
-                <Typography fontSize="12px" fontWeight="500" color="#64748b">
-                  In Progress
-                </Typography>
-              </Box>
-              <Box display="flex" alignItems="center" gap={0.5}>
-                <LockIcon sx={{ fontSize: 14, color: "#94a3b8" }} />
-                <Typography fontSize="12px" fontWeight="500" color="#64748b">
-                  Locked
-                </Typography>
-              </Box>
-              <Box display="flex" alignItems="center" gap={0.5}>
-                <LockIcon sx={{ fontSize: 14, color: "#94a3b8" }} />
-                <Typography fontSize="12px" fontWeight="500" color="#64748b">
-                  Locked
-                </Typography>
-              </Box>
-            </Box>
-          </Card>
+    <Box display="flex" justifyContent="space-between" textAlign="center">
+      {milestones.map((m) => (
+        <Typography
+          key={m.id}
+          fontSize="12px"
+          fontWeight="600"
+          color="#64748b"
+          sx={{ width: `${100 / (milestones.length || 1)}%`, px: 0.5 }}
+        >
+          {m.title}
+        </Typography>
+      ))}
+    </Box>
+  </Box>
+
+  {/* Legend with real counts */}
+  <Box
+    display="flex"
+    gap={4}
+    mt={3}
+    p={1.5}
+    sx={{ bgcolor: "#f8fafc", borderRadius: "10px" }}
+  >
+    {(() => {
+      const counts = milestones.reduce((acc, m) => {
+        acc[m.status] = (acc[m.status] || 0) + 1;
+        return acc;
+      }, {});
+
+      const legendItems = [
+        { key: "completed", label: "Completed", color: "#22c55e" },
+        { key: "in_progress", label: "In Progress", color: "#f59e0b" },
+        { key: "delayed", label: "Delayed", color: "#ef4444" },
+        { key: "locked", label: "Locked", color: "#94a3b8" },
+      ];
+
+      return legendItems.map((item) => (
+        <Box key={item.key} display="flex" alignItems="center" gap={1}>
+          <Box
+            sx={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              bgcolor: item.color,
+            }}
+          />
+          <Typography fontSize="12px" fontWeight="500" color="#64748b">
+            {item.label} ({counts[item.key] || 0})
+          </Typography>
+        </Box>
+      ));
+    })()}
+  </Box>
+</Card>
 
           <Card
             sx={{
