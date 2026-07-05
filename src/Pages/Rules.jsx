@@ -404,7 +404,7 @@ export default function Rules() {
 
                             <Grid item xs={12} md={4} sx={{ mt: -1 }}>
                                 <Typography className="field-label bold-label">Passing Marks (Out of 100)</Typography>
-                                <Typography className="field-sublabel">Minimum total marks required for project to be considered Pass.</Typography>
+                                <Typography className="field-sublabel">Minimum percentage required for the project to be considered Pass.</Typography>
                                 <Box className="counter-box">
                                     <TextField
                                         size="small"
