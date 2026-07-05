@@ -289,13 +289,20 @@
   align-items: center;
   gap: 12px;
 }
-
+.aif-key-similarities {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
 .aif-score-label {
   width: 120px;
   font-size: 13px;
   font-weight: 600;
   color: #1a2c42;
   flex-shrink: 0;
+  text-wrap: nowrap;
+  margin-right: 18px !Important; /* منع الالتفاف */
 }
 
 .aif-score-bar-bg {

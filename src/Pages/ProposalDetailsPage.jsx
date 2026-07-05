@@ -18,19 +18,20 @@ import Project from "../Services/Project.model";
 import "./ProposalDetails.css";
 
 const SECTION_LABELS = {
-  objectives: "Title Similarity",
-  technology_stack: "Feature Similarity",
-  solution_approach: "Keywords Match",
+  objectives: "Objectives",
+  technology_stack: "Technology Stack", // تم تعديل الحرف الأول هنا من S إلى T
+  solution_approach: "Solution Approach",
+  problem_definition: "Problem Definition"
 };
 function donutColorByPercentage(percentage) {
-  if (percentage >= 80) return "#e74c3c"; 
-  if (percentage >= 50) return "#f5a623";
-  return "#2ecc71"; // 
+  if (percentage > 70) return "#e74c3c"; // High -> Red
+  if (percentage >= 50) return "#f5a623"; // Medium -> Orange
+  return "#2ecc71"; // Low -> Green
 }
-function scoreBarColor(key) {
-  if (key === "objectives") return "#e74c3c"; // Red
-  if (key === "technology_stack") return "#f5a623"; // Orange
-  return "#2ecc71"; // Green
+function scoreBarColor(value) {
+  if (value > 70) return "#e74c3c"; // High -> Red
+  if (value >= 50) return "#f5a623"; // Medium -> Orange
+  return "#2ecc71"; // Low -> Green
 }
 
 const COLOR_MAP = { red: "#e74c3c", orange: "#f5a623", green: "#2ecc71" };
@@ -336,13 +337,13 @@ function AIFilterContent({
                       {SECTION_LABELS[key] || key}:
                     </Typography>
                     <Box className="aif-score-bar-bg">
-                      <Box
-                        className="aif-score-bar-fill"
-                        style={{
-                          width: `${value}%`,
-                          backgroundColor: scoreBarColor(key),
-                        }}
-                      />
+ <Box
+  className="aif-score-bar-fill"
+  style={{
+    width: `${value}%`,
+    backgroundColor: scoreBarColor(value),
+  }}
+/>
                     </Box>
                     <Typography className="aif-score-value">
                       {Math.round(value)}%
@@ -353,22 +354,29 @@ function AIFilterContent({
             </Box>
 
             <Typography className="aif-similar-to">
-              Similar To:{" "}
-              <span className="aif-similar-highlight">
-                AI Medical Assistant (Team Delta)
-              </span>
+     
             </Typography>
+<Box className="aif-insights">
+  <Typography className="aif-insights-title">
+    Explanation:
+  </Typography>
+  <Typography className="aif-insights-text">
+    {selected.explanation}
+  </Typography>
 
-            <Box className="aif-insights">
-              <Typography className="aif-insights-title">
-                AI Insights
-              </Typography>
-              <Typography className="aif-insights-text">
-                The idea shares similar core functionality and target domain
-                with a previously submitted project. However, implementation
-                approach and features show moderate variation.
-              </Typography>
-            </Box>
+  {selected.key_similarities?.length > 0 && (
+    <>
+      <Typography className="aif-insights-title" style={{ marginTop: 16 }}>
+        Key Similarities:
+      </Typography>
+      <Box className="aif-key-similarities">
+        {selected.key_similarities.map((k) => (
+          <Chip key={k} size="small" label={k} className="aif-chip-sm" />
+        ))}
+      </Box>
+    </>
+  )}
+</Box>
 
             {/* Action Buttons arranged exactly like the design */}
             <Box className="aif-actions-wrapper">
