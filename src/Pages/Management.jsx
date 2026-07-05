@@ -297,46 +297,43 @@ const StudentsManagement = () => {
       setLoading(false);
     }
   };
-  const handleExport = async () => {
-    try {
-      let response;
-      let fileName;
+const handleExport = async () => {
+  try {
+    let response;
+    let fileName;
 
-      if (type === "doctors") {
-        response = await Admin.exportDoctor();
-        fileName = "Doctors.xlsx";
-      }
-
-      else if (type === "assistants") {
-        response = await Admin.exportTAs();
-        fileName = "TeachingAssistants.xlsx";
-      }
-
-      else {
-        const courseId = type === "project1" ? 1 : 2;
-
-        response = await Admin.exportStudents(courseId);
-        fileName = `Project-${courseId}-Students.xlsx`;
-      }
-
-      const url = window.URL.createObjectURL(
-        new Blob([response.data])
-      );
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName);
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      window.URL.revokeObjectURL(url);
-      toast.success("File exported successfully");
-    } catch {
-      toast.error("Export failed");
+    // تشكيل اسم الملف بناءً على النوع المختار في الـ Tabs لتسهيل القراءة للمستخدم
+    if (type === "doctors") {
+      response = await Admin.exportDoctor();
+      fileName = `doctors_list_${new Date().toISOString().slice(0,10)}.xlsx`;
+    } else if (type === "assistants") {
+      response = await Admin.exportTAs();
+      fileName = `teaching_assistants_list_${new Date().toISOString().slice(0,10)}.xlsx`;
+    } else {
+      const courseId = type === "project1" ? 1 : 2;
+      response = await Admin.exportStudents(courseId);
+      fileName = `capstone_project_${courseId}_students_${new Date().toISOString().slice(0,10)}.xlsx`;
     }
-  };
+
+    // إنشاء رابط وهمي من الـ Blob المستلم مباشرة من الباك إند
+    const url = window.URL.createObjectURL(response);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", fileName);
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    // تنظيف الذاكرة بعد التحميل
+    window.URL.revokeObjectURL(url);
+    toast.success("File downloaded successfully");
+  } catch (error) {
+    console.error("Export Error:", error);
+    toast.error("Export failed");
+  }
+};
 
   // Refetch when the tab / course changes
   useEffect(() => {

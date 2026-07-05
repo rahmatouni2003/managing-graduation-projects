@@ -26,7 +26,8 @@ export async function submitRequestAsync(
   method = "GET",
   body = null,
   addHeaders = {},
-   rawResponse = false
+  rawResponse = false,
+  isBlob = false // 1. أضفنا هذا الباراميتر هنا
 ) {
   const baseUrl = getBaseUrl();
 
@@ -55,6 +56,11 @@ export async function submitRequestAsync(
           : undefined,
     });
 
+    // 2. إذا كان المطلوب ملف (Blob)، نقوم بقراءته مباشرة دون تحويله لنص
+    if (response.ok && isBlob) {
+      return await response.blob();
+    }
+
     let res;
 
     if (response.status !== 204) {
@@ -73,22 +79,22 @@ export async function submitRequestAsync(
         res?.message || `Error ${response.status}: Request failed`;
       throw new Error(errorMsg);
     }
-return rawResponse ? res : extractResponseData(res);
+    
+    return rawResponse ? res : extractResponseData(res);
   } catch (error) {
-  let errorMsg = "";
-
-  if (error.message.includes("401")) {
-    token.clearUserTokenData();
-    errorMsg = "Session expired, please login again.";
-  } else if (
-    error.message.includes("NetworkError") ||
-    error.message.includes("Failed to fetch")
-  ) {
-    errorMsg = "Network issue! Please check your connection.";
-  } else {
-    errorMsg = error.message || "Unexpected error occurred";
+    // ... باقي كود الـ catch كما هو بدون تغيير
+    let errorMsg = "";
+    if (error.message.includes("401")) {
+      token.clearUserTokenData();
+      errorMsg = "Session expired, please login again.";
+    } else if (
+      error.message.includes("NetworkError") ||
+      error.message.includes("Failed to fetch")
+    ) {
+      errorMsg = "Network issue! Please check your connection.";
+    } else {
+      errorMsg = error.message || "Unexpected error occurred";
+    }
+    throw new Error(errorMsg);
   }
-
-  throw new Error(errorMsg);
-}
 }

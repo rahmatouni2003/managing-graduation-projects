@@ -305,12 +305,15 @@ class Admin {
     );
   }
 
-  static exportStudents(courseId) {
-    return submitRequestAsync(`admin/student/export?course=${courseId}`, "GET");
-  }
-  static exportDoctor() {
-    return submitRequestAsync(`admin/doctor/export`, "GET");
-  }
+static exportStudents(courseId) {
+  // الباراميتر الخامس true (لـ rawResponse) والباراميتر السادس true (لـ isBlob)
+  return submitRequestAsync(`admin/student/export?course=${courseId}`, "GET", null, {}, true, true);
+}
+static exportDoctor() {
+  return submitRequestAsync(`admin/doctor/export`, "GET", null, {}, true, true);
+}
+
+
 
   static getAcademicYears() {
     return submitRequestAsync(`academic-years`, "GET");
