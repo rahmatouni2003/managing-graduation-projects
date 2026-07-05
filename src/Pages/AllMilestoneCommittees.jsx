@@ -188,7 +188,7 @@ const handleDownload = async () => {
               autoHeight
 onRowClick={(params) => {
   navigate(
-    `/all-milestone-committees-details/${params.row.team_id}`
+    `/admin/all-milestone-committees-details/${params.row.team_id}`
   );
 }}
             />

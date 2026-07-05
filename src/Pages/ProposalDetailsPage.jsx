@@ -60,7 +60,13 @@ function DonutChart({ percentage, color }) {
         cy={radius}
         transform={`rotate(-90 ${radius} ${radius})`}
       />
-      <text x="50%" y="50%" textAnchor="middle" dy="0.35em" className="aif-donut-text">
+      <text
+        x="50%"
+        y="50%"
+        textAnchor="middle"
+        dy="0.35em"
+        className="aif-donut-text"
+      >
         {Math.round(percentage)}%
       </text>
     </svg>
@@ -109,11 +115,11 @@ export default function AIFilterPage() {
         (status === "approved"
           ? "Proposal approved successfully"
           : status === "rejected"
-          ? "Proposal rejected successfully"
-          : "Proposal sent for edit");
+            ? "Proposal rejected successfully"
+            : "Proposal sent for edit");
 
       // تم التعديل هنا: مسح أي توستات قديمة معلقة قبل إظهار التوست الجديد لتفادي تراكمها
-      toast.dismiss(); 
+      toast.dismiss();
       toast.success(successMessage);
 
       // هنا نقوم بعمل تأخير بسيط جداً أو مسح التوست فوراً عند الانتقال لكي لا تلاحقك للصفحة التالية
@@ -121,10 +127,10 @@ export default function AIFilterPage() {
         toast.dismiss();
         navigate("/admin/ai-filter");
       }, 1500); // تظهر الرسالة ثانية ونصف ثم تختفي تماماً مع الانتقال
-
     } catch (err) {
       console.error(err);
-      const errorMessage = err?.response?.data?.message || err?.message || "Action failed";
+      const errorMessage =
+        err?.response?.data?.message || err?.message || "Action failed";
       toast.dismiss();
       toast.error(errorMessage);
     } finally {
@@ -132,14 +138,20 @@ export default function AIFilterPage() {
     }
   };
 
-  const handleApprove = (proposalId) => handleProposalAction(proposalId, "approved");
-  const handleReject = (proposalId) => handleProposalAction(proposalId, "rejected");
-  const handleSendForEdit = (proposalId) => handleProposalAction(proposalId, "edit");
+  const handleApprove = (proposalId) =>
+    handleProposalAction(proposalId, "approved");
+  const handleReject = (proposalId) =>
+    handleProposalAction(proposalId, "rejected");
+
 
   return (
     <Box className="aif-layout">
       {/* تم تحديد مدة عرض التوست الافتراضية (duration) بـ 1500 ملي ثانية لضمان اختفائها التلقائي السريع */}
-      <Toaster position="top-right" reverseOrder={false} toastOptions={{ duration: 1500 }} />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{ duration: 1500 }}
+      />
       <Header />
       <Sidebar />
       <Box component="main" className="aif-main">
@@ -161,7 +173,6 @@ export default function AIFilterPage() {
             actionLoadingKey={actionLoadingKey}
             onApprove={handleApprove}
             onReject={handleReject}
-            onSendForEdit={handleSendForEdit}
           />
         )}
       </Box>
@@ -176,7 +187,6 @@ function AIFilterContent({
   actionLoadingKey,
   onApprove,
   onReject,
-  onSendForEdit,
 }) {
   const { proposal, department, team, similarities } = data;
   const selected = similarities[selectedIndex];
@@ -190,7 +200,8 @@ function AIFilterContent({
   const isApproveLoading = actionLoadingKey === `${proposal.id}-approved`;
   const isRejectLoading = actionLoadingKey === `${proposal.id}-rejected`;
   const isEditLoading = actionLoadingKey === `${proposal.id}-edit`;
-  const isAnyActionLoading = isApproveLoading || isRejectLoading || isEditLoading;
+  const isAnyActionLoading =
+    isApproveLoading || isRejectLoading || isEditLoading;
 
   return (
     <Box className="aif-content">
@@ -199,9 +210,13 @@ function AIFilterContent({
       {/* Summary Banner */}
       <Box className="aif-summary-banner">
         <Box className="aif-summary-left">
-          <Typography className="aif-summary-desc">{proposal.description}</Typography>
+          <Typography className="aif-summary-desc">
+            {proposal.description}
+          </Typography>
           <Box className="aif-tags">
-            {department?.name && <Chip label={department.name} className="aif-chip" />}
+            {department?.name && (
+              <Chip label={department.name} className="aif-chip" />
+            )}
             {techList.map((t) => (
               <Chip key={t} label={t} className="aif-chip" />
             ))}
@@ -220,7 +235,9 @@ function AIFilterContent({
               ))}
             </AvatarGroup>
           </Box>
-          <Typography className="aif-date">{proposal.submitted_at || "Nov 5, 2025"}</Typography>
+          <Typography className="aif-date">
+            {proposal.submitted_at || "Nov 5, 2025"}
+          </Typography>
         </Box>
       </Box>
 
@@ -235,34 +252,37 @@ function AIFilterContent({
             >
               <Box className="aif-card-info">
                 <Typography className="aif-card-title">{sim.title}</Typography>
-                <Typography className="aif-card-desc">{sim.description}</Typography>
+                <Typography className="aif-card-desc">
+                  {sim.description}
+                </Typography>
                 <Box className="aif-tags">
                   {sim.technologies
                     ?.split(",")
                     .map((t) => t.trim())
                     .filter(Boolean)
                     .map((t) => (
-                      <Chip key={t} size="small" label={t} className="aif-chip-sm" />
+                      <Chip
+                        key={t}
+                        size="small"
+                        label={t}
+                        className="aif-chip-sm"
+                      />
                     ))}
                 </Box>
               </Box>
-              
+
               {/* Custom Badge to perfectly match image */}
-              <Box className={`aif-badge-container aif-badge-${sim.similarity_color}`}>
-                <Box className="aif-badge-left">
-                  <Typography className="aif-badge-percent">
-                    {Math.round(sim.similarity_score)}%
-                  </Typography>
-                </Box>
-                <Box className="aif-badge-right">
-                  <Typography className="aif-badge-label">
-                    {sim.similarity_level === "high"
-                      ? "High"
-                      : sim.similarity_level === "medium"
+              <Box className={`aif-badge aif-badge-${sim.similarity_color}`}>
+                <Typography className="aif-badge-percent">
+                  {Math.round(sim.similarity_score)}%
+                </Typography>
+                <Typography className="aif-badge-label">
+                  {sim.similarity_level === "high"
+                    ? "High"
+                    : sim.similarity_level === "medium"
                       ? "Medium"
                       : "Low"}
-                  </Typography>
-                </Box>
+                </Typography>
               </Box>
             </Box>
           ))}
@@ -271,44 +291,69 @@ function AIFilterContent({
         {/* Side Detail Panel */}
         {selected && (
           <Box className="aif-detail-panel">
-            <Typography className="aif-detail-title">{selected.title}</Typography>
+            <Typography className="aif-detail-title">
+              {selected.title}
+            </Typography>
 
             <Box className="aif-donut-wrap">
-              <DonutChart percentage={selected.similarity_score} color={selected.similarity_color} />
+              <DonutChart
+                percentage={selected.similarity_score}
+                color={selected.similarity_color}
+              />
             </Box>
 
             <Box className="aif-status-row">
               <Typography className="aif-status-label">Status:</Typography>
-              <Typography className={`aif-status-value aif-status-${selected.similarity_color}`}>
-                {selected.similarity_level === "high" ? "High Risk" : selected.similarity_level === "medium" ? "Medium Risk" : "Low Risk"}
+              <Typography
+                className={`aif-status-value aif-status-${selected.similarity_color}`}
+              >
+                {selected.similarity_level === "high"
+                  ? "High Risk"
+                  : selected.similarity_level === "medium"
+                    ? "Medium Risk"
+                    : "Low Risk"}
               </Typography>
             </Box>
 
             <Box className="aif-scores">
-              {Object.entries(selected.section_scores || {}).map(([key, value]) => (
-                <Box key={key} className="aif-score-row">
-                  <Typography className="aif-score-label">
-                    {SECTION_LABELS[key] || key}:
-                  </Typography>
-                  <Box className="aif-score-bar-bg">
-                    <Box
-                      className="aif-score-bar-fill"
-                      style={{ width: `${value}%`, backgroundColor: scoreBarColor(key) }}
-                    />
+              {Object.entries(selected.section_scores || {}).map(
+                ([key, value]) => (
+                  <Box key={key} className="aif-score-row">
+                    <Typography className="aif-score-label">
+                      {SECTION_LABELS[key] || key}:
+                    </Typography>
+                    <Box className="aif-score-bar-bg">
+                      <Box
+                        className="aif-score-bar-fill"
+                        style={{
+                          width: `${value}%`,
+                          backgroundColor: scoreBarColor(key),
+                        }}
+                      />
+                    </Box>
+                    <Typography className="aif-score-value">
+                      {Math.round(value)}%
+                    </Typography>
                   </Box>
-                  <Typography className="aif-score-value">{Math.round(value)}%</Typography>
-                </Box>
-              ))}
+                ),
+              )}
             </Box>
 
             <Typography className="aif-similar-to">
-              Similar To: <span className="aif-similar-highlight">AI Medical Assistant (Team Delta)</span>
+              Similar To:{" "}
+              <span className="aif-similar-highlight">
+                AI Medical Assistant (Team Delta)
+              </span>
             </Typography>
 
             <Box className="aif-insights">
-              <Typography className="aif-insights-title">AI Insights</Typography>
+              <Typography className="aif-insights-title">
+                AI Insights
+              </Typography>
               <Typography className="aif-insights-text">
-                The idea shares similar core functionality and target domain with a previously submitted project. However, implementation approach and features show moderate variation.
+                The idea shares similar core functionality and target domain
+                with a previously submitted project. However, implementation
+                approach and features show moderate variation.
               </Typography>
             </Box>
 
@@ -330,13 +375,7 @@ function AIFilterContent({
                   {isRejectLoading ? "..." : "Reject Idea"}
                 </Button>
               </Box>
-              <Button
-                className="aif-btn-edit"
-                disabled={isAnyActionLoading}
-                onClick={() => onSendForEdit(proposal.id)}
-              >
-                {isEditLoading ? "..." : "Send For Edit"}
-              </Button>
+
             </Box>
           </Box>
         )}

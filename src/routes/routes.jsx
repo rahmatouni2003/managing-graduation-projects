@@ -464,7 +464,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "all-milestone-committees-details/:id",
-        element: <AllMilestoneCommittees />,
+        element: <FinalDiscussionDetails />,
       },
       {
         path: "suggested-projects",
@@ -477,6 +477,10 @@ export const router = createBrowserRouter([
       {
         path: "/admin/milestones/add",
         element: <AddMilestone />,
+      },
+            {
+        path: "/admin/all-milestone-committees-details/:id",
+        element: <AllMilestoneCommittees />,
       },
       {
         path: "my-reports",
