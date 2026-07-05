@@ -105,9 +105,12 @@ const StudentsManagement = () => {
       [e.target.name]: e.target.value,
     });
   };
+  
   const handleUpdate = async (id) => {
     console.log("UPDATE CLICKED", id);
+const paginator = await Admin.getTAs(currentPage, itemsPerPage);
 
+console.log(paginator.data);
     try {
       const payload = {
         ...getDoctorPayload(),
@@ -611,7 +614,10 @@ const handleExport = async () => {
                           </select>
                         </div>
                       ) : (
-                        item.department?.name || item.department || "-"
+                    item.staffprofile?.department?.name ||
+item.department?.name ||
+item.department ||
+"-"
                       )}
                     </td>
 
@@ -666,8 +672,11 @@ const handleExport = async () => {
                                 national_id: item.national_id || "",
                                 email: item.email || "",
                                 phone: item.phone || "",
-                                department_id: item.department_id || ""
-                              });
+department_id:
+  item.staffprofile?.department_id ??
+  item.department_id ??
+  item.department?.id ??
+  ""                       });
                             }}
                           >
                             <FaPen />
