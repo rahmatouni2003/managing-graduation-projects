@@ -112,11 +112,20 @@ export default function AIFilterPage() {
           ? "Proposal rejected successfully"
           : "Proposal sent for edit");
 
+      // تم التعديل هنا: مسح أي توستات قديمة معلقة قبل إظهار التوست الجديد لتفادي تراكمها
+      toast.dismiss(); 
       toast.success(successMessage);
-      navigate("/admin/ai-filter");
+
+      // هنا نقوم بعمل تأخير بسيط جداً أو مسح التوست فوراً عند الانتقال لكي لا تلاحقك للصفحة التالية
+      setTimeout(() => {
+        toast.dismiss();
+        navigate("/admin/ai-filter");
+      }, 1500); // تظهر الرسالة ثانية ونصف ثم تختفي تماماً مع الانتقال
+
     } catch (err) {
       console.error(err);
       const errorMessage = err?.response?.data?.message || err?.message || "Action failed";
+      toast.dismiss();
       toast.error(errorMessage);
     } finally {
       setActionLoadingKey(null);
@@ -129,7 +138,8 @@ export default function AIFilterPage() {
 
   return (
     <Box className="aif-layout">
-      <Toaster position="top-right" reverseOrder={false} />
+      {/* تم تحديد مدة عرض التوست الافتراضية (duration) بـ 1500 ملي ثانية لضمان اختفائها التلقائي السريع */}
+      <Toaster position="top-right" reverseOrder={false} toastOptions={{ duration: 1500 }} />
       <Header />
       <Sidebar />
       <Box component="main" className="aif-main">

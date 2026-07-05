@@ -376,3 +376,79 @@
 .aif-btn-edit:hover {
   background: #f8f9fa !important;
 }
+/* الحاوية الأساسية للـ Badge (الكبسولة كاملة) */
+.aif-custom-badge {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;       /* حواف دائرية خفيفة نفس الصورة وليست بيضاوية كاملة */
+  overflow: hidden;
+  min-width: 100px;
+  height: 34px;
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* الجزء الأيسر (الخلفية البيضاء للنسبة المئوية) */
+.aif-badge-percent-section {
+  background-color: #ffffff;
+  color: #1a2c42;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  height: 100%;
+  flex: 1;
+}
+
+/* الجزء الأيمن (الخلفية الملونة للنص) */
+.aif-badge-status-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  height: 100%;
+  color: #ffffff;
+  flex: 1.2;
+  text-transform: capitalize;
+}
+
+/* --- تنسيق الألوان بناءً على خطورة الحالة --- */
+
+/* 1. الحالة العالية (High Risk / Red) */
+.aif-badge-red {
+  background-color: #fdecea; /* لون الخلفية الخفيفة المحيطة بالكبسولة إذا وُجدت */
+}
+.aif-badge-red .aif-badge-status-section {
+  background-color: #e74c3c; /* اللون الأحمر للزر الأيمن */
+}
+.aif-badge-red .aif-badge-percent-section {
+  border: 1px solid #fdecea;
+  border-right: none;
+}
+
+/* 2. الحالة المتوسطة (Medium Risk / Orange) */
+.aif-badge-orange {
+  background-color: #fdf0dc;
+}
+.aif-badge-orange .aif-badge-status-section {
+  background-color: #f5a623; /* اللون البرتقالي/الأصفر للزر الأيمن */
+  color: #1a2c42;            /* نص داكن يتناسب مع اللون الأصفر */
+}
+.aif-badge-orange .aif-badge-percent-section {
+  border: 1px solid #fdf0dc;
+  border-right: none;
+}
+
+/* 3. الحالة المنخفضة (Low Risk / Green) */
+.aif-badge-green {
+  background-color: #e6f7ec;
+}
+.aif-badge-green .aif-badge-status-section {
+  background-color: #2ecc71; /* اللون الأخضر للزر الأيمن */
+}
+.aif-badge-green .aif-badge-percent-section {
+  border: 1px solid #e6f7ec;
+  border-right: none;
+}
