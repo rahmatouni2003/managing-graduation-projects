@@ -1,3 +1,142 @@
+// import "./adminHeader.css";
+// import { useState, useEffect } from "react";
+// import Admin from "../services/Admin.model";
+// import { FaSearch, FaBell, FaGraduationCap, FaPen } from "react-icons/fa";
+// import { useAuth } from "../context/AuthContext"; // 👈 تأكدي من كتابة المسار الصحيح لملف الـ Context الخاص بكِ
+
+// import logo from "../assets/logo2.png";
+
+// const Header = () => {
+//   const { user } = useAuth(); // 👈 جلب بيانات المستخدم الحالي من الـ Context
+//   const [academicYear, setAcademicYear] = useState("");
+//   const [academicYears, setAcademicYears] = useState([]);
+//   const [selectedYearId, setSelectedYearId] = useState("");
+//   const [showYearModal, setShowYearModal] = useState(false);
+
+//   const loadAcademicYears = async () => {
+//     try {
+//       const response = await Admin.getAcademicYears();
+//       console.log("Academic Years =>", response);
+//       setAcademicYears(response);
+
+//       const activeYear = response.find((year) => year.is_active === 1);
+//       if (activeYear) {
+//         setAcademicYear(activeYear.code);
+//         setSelectedYearId(activeYear.id);
+//       }
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       await loadAcademicYears();
+//     };
+//     fetchData();
+//   }, []);
+
+//   const handleSave = () => {
+//     const selectedYear = academicYears.find(
+//       (year) => year.id === Number(selectedYearId),
+//     );
+//     if (selectedYear) {
+//       setAcademicYear(selectedYear.code);
+//     }
+//     setShowYearModal(false);
+//   };
+
+//   return (
+//     <>
+//       <header className="header">
+//         <div className="headerr-left">
+//           <img src={logo} alt="logo" className="header-logo" />
+//           <div className="admin-search-boxx">
+//             <FaSearch />
+//             <input placeholder="Search Projects or Students" />
+//           </div>
+//         </div>
+
+//         <div className="header-right">
+//           <div className="academic-year">
+//             <FaGraduationCap className="grad-icon" />
+//             <span>Academic Year : {academicYear}</span>
+//             <button
+//               className="edit-year-btn"
+//               onClick={() => setShowYearModal(true)}
+//             >
+//               <FaPen />
+//             </button>
+//           </div>
+
+//           <FaBell className="bell" />
+
+//           <div className="profile">
+//             <img src="https://i.pravatar.cc/40" alt="profile" />
+            
+//             {/* 👈 هنا قمنا باستبدال الاسم الثابت بالاسم القادم ديناميكياً */}
+//             <span>{user?.full_name || "Admin"}</span> 
+//           </div>
+//         </div>
+//       </header>
+
+//       {showYearModal && (
+//         <div className="modal-overlay" onClick={() => setShowYearModal(false)}>
+//           <div className="year-modal" onClick={(e) => e.stopPropagation()}>
+//             <div className="modal-header">
+//               <h3>Edit Academic Year</h3>
+//               <button
+//                 className="close-btn"
+//                 onClick={() => setShowYearModal(false)}
+//               >
+//                 ×
+//               </button>
+//             </div>
+
+//             <div className="modal-body">
+//               <label>Start Year</label>
+//               <select
+//                 value={selectedYearId}
+//                 onChange={(e) => setSelectedYearId(e.target.value)}
+//               >
+//                 {academicYears.map((year) => (
+//                   <option key={year.id} value={year.id}>
+//                     {year.code}
+//                   </option>
+//                 ))}
+//               </select>
+
+//               <p className="year-note">
+//                 Selected Academic Year :
+//                 <strong>
+//                   {
+//                     academicYears.find(
+//                       (year) => year.id === Number(selectedYearId),
+//                     )?.code
+//                   }
+//                 </strong>
+//               </p>
+//             </div>
+
+//             <div className="modal-footer">
+//               <button
+//                 className="cancel-btn"
+//                 onClick={() => setShowYearModal(false)}
+//               >
+//                 Cancel
+//               </button>
+//               <button className="saVe-btn" onClick={handleSave}>
+//                 Save
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
+// export default Header;
 import "./adminHeader.css";
 import { useState, useEffect } from "react";
 import Admin from "../services/Admin.model";
@@ -10,8 +149,10 @@ const Header = () => {
   const { user } = useAuth(); // 👈 جلب بيانات المستخدم الحالي من الـ Context
   const [academicYear, setAcademicYear] = useState("");
   const [academicYears, setAcademicYears] = useState([]);
-  const [selectedYearId, setSelectedYearId] = useState("");
+  const [newYearCode, setNewYearCode] = useState("");
   const [showYearModal, setShowYearModal] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const loadAcademicYears = async () => {
     try {
@@ -22,7 +163,6 @@ const Header = () => {
       const activeYear = response.find((year) => year.is_active === 1);
       if (activeYear) {
         setAcademicYear(activeYear.code);
-        setSelectedYearId(activeYear.id);
       }
     } catch (error) {
       console.error(error);
@@ -36,13 +176,32 @@ const Header = () => {
     fetchData();
   }, []);
 
-  const handleSave = () => {
-    const selectedYear = academicYears.find(
-      (year) => year.id === Number(selectedYearId),
-    );
-    if (selectedYear) {
-      setAcademicYear(selectedYear.code);
+  const handleSave = async () => {
+    const code = newYearCode.trim();
+    if (!code) {
+      setErrorMsg("من فضلك اكتب كود السنة الدراسية");
+      return;
     }
+
+    setErrorMsg("");
+    setIsSaving(true);
+    try {
+      await Admin.addAcademicYear({ code });
+      await loadAcademicYears();
+      setAcademicYear(code);
+      setNewYearCode("");
+      setShowYearModal(false);
+    } catch (error) {
+      console.error(error);
+      setErrorMsg('An error occurred while saving the academic year');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setNewYearCode("");
+    setErrorMsg("");
     setShowYearModal(false);
   };
 
@@ -73,60 +232,50 @@ const Header = () => {
 
           <div className="profile">
             <img src="https://i.pravatar.cc/40" alt="profile" />
-            
+
             {/* 👈 هنا قمنا باستبدال الاسم الثابت بالاسم القادم ديناميكياً */}
-            <span>{user?.full_name || "Admin"}</span> 
+            <span>{user?.full_name || "Admin"}</span>
           </div>
         </div>
       </header>
 
       {showYearModal && (
-        <div className="modal-overlay" onClick={() => setShowYearModal(false)}>
+        <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="year-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Edit Academic Year</h3>
-              <button
-                className="close-btn"
-                onClick={() => setShowYearModal(false)}
-              >
+              <button className="close-btn" onClick={handleCloseModal}>
                 ×
               </button>
             </div>
 
             <div className="modal-body">
-              <label>Start Year</label>
-              <select
-                value={selectedYearId}
-                onChange={(e) => setSelectedYearId(e.target.value)}
-              >
-                {academicYears.map((year) => (
-                  <option key={year.id} value={year.id}>
-                    {year.code}
-                  </option>
-                ))}
-              </select>
+              <label>Academic Year Code</label>
+              <input
+                type="text"
+                className="year-input"
+                placeholder="e.g. 2025-2026"
+                value={newYearCode}
+                onChange={(e) => setNewYearCode(e.target.value)}
+              />
+
+              {errorMsg && <p className="year-error">{errorMsg}</p>}
 
               <p className="year-note">
-                Selected Academic Year :
-                <strong>
-                  {
-                    academicYears.find(
-                      (year) => year.id === Number(selectedYearId),
-                    )?.code
-                  }
-                </strong>
+                Selected Academic Year :<strong>{newYearCode || "-"}</strong>
               </p>
             </div>
 
             <div className="modal-footer">
-              <button
-                className="cancel-btn"
-                onClick={() => setShowYearModal(false)}
-              >
+              <button className="cancel-btn" onClick={handleCloseModal}>
                 Cancel
               </button>
-              <button className="saVe-btn" onClick={handleSave}>
-                Save
+              <button
+                className="saVe-btn"
+                onClick={handleSave}
+                disabled={isSaving}
+              >
+                {isSaving ? "Saving..." : "Save"}
               </button>
             </div>
           </div>

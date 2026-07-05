@@ -68,7 +68,7 @@ export default function Rules() {
                 project_type_requirements: prev.project_type_requirements.filter((item) => item.id !== id),
             }));
             toast.success("Requirement deleted successfully");
-        } catch (err) {
+        } catch  {
             toast.error("Failed to delete requirement ❌");
         }
     };
@@ -83,7 +83,7 @@ export default function Rules() {
             }));
             await fetchRules();
             toast.success("Criteria deleted successfully 🎉");
-        } catch (err) {
+        } catch {
             toast.error("Failed to delete criteria ❌");
         }
     };
@@ -142,7 +142,7 @@ export default function Rules() {
 
             await fetchRules();
             setNewRequirement("");
-        } catch (err) {
+        } catch  {
             toast.error("Failed to add requirement ❌");
         }
     };

@@ -314,7 +314,9 @@ static exportDoctor() {
     return submitRequestAsync(`admin/TA/export`, "GET", null, {}, true, true);
   }
 
-
+  static addAcademicYear(data) {
+    return submitRequestAsync(`admin/academic-years`, "POST", data);
+  }
   static getAcademicYears() {
     return submitRequestAsync(`academic-years`, "GET");
   }
