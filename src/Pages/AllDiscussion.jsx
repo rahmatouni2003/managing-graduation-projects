@@ -347,18 +347,22 @@ export default function AllDiscussions() {
   onClick={(e) => handleEditClick(params.row, e)}
   sx={{
     color: "#1976d2",
-    "&:hover": { backgroundColor: "rgba(25,118,210,0.08)" },
+    "&:hover": { backgroundColor: "transparent" },
+    
   }}
+  className="final-edit-btn"
 >
   <EditIcon />
 </IconButton>
 
 <IconButton
   onClick={(e) => handleDelete(params.row.id, e)}
-  sx={{
-    color: "#d32f2f",
-    "&:hover": { backgroundColor: "rgba(211,47,47,0.08)" },
+   sx={{
+   
+    "&:hover": { backgroundColor: "transparent" },
+    
   }}
+className="delete-btn"
 >
   <DeleteIcon />
 </IconButton>
