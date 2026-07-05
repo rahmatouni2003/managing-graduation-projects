@@ -85,31 +85,38 @@ const TeamsPage = () => {
   useEffect(() => {
     loadTeams();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStatus, selectedCapstone, selectedDepartment, debouncedSearch, selectedAcademicYear]);
+  }, [
+    selectedStatus,
+    selectedCapstone,
+    selectedDepartment,
+    debouncedSearch,
+    selectedAcademicYear,
+  ]);
 
-const loadTeams = async () => {
-  try {
-    setLoading(true);
-    const params = {};
-    if (selectedStatus !== "all") params.status = selectedStatus;
-    if (selectedCapstone) params.project_course_id = selectedCapstone;
-    if (selectedDepartment !== "all") params.department_id = selectedDepartment;
-    if (debouncedSearch) params.search = debouncedSearch;
-    if (selectedAcademicYear) params.academic_year_id = selectedAcademicYear;
+  const loadTeams = async () => {
+    try {
+      setLoading(true);
+      const params = {};
+      if (selectedStatus !== "all") params.status = selectedStatus;
+      if (selectedCapstone) params.project_course_id = selectedCapstone;
+      if (selectedDepartment !== "all")
+        params.department_id = selectedDepartment;
+      if (debouncedSearch) params.search = debouncedSearch;
+      if (selectedAcademicYear) params.academic_year_id = selectedAcademicYear;
 
-    const response = await Admin.getAllTeams(params, true);
+      const response = await Admin.getAllTeams(params, true);
 
-    setTeams(response?.data || []);                          // <-- كانت response بس
-    setStatistics(response?.statistics || {});
-    setCurrentMilestones(response?.current_milestones || {});
-    setAcademicYearInfo(response?.academic_year || {});
-  } catch (error) {
-    console.error("Error loading teams:", error);
-    setTeams([]);
-  } finally {
-    setLoading(false);
-  }
-};
+      setTeams(response?.data || []); // <-- كانت response بس
+      setStatistics(response?.statistics || {});
+      setCurrentMilestones(response?.current_milestones || {});
+      setAcademicYearInfo(response?.academic_year || {});
+    } catch (error) {
+      console.error("Error loading teams:", error);
+      setTeams([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadCapstones = async () => {
     try {
@@ -169,7 +176,11 @@ const loadTeams = async () => {
       case "delayed":
         return { label: "Delayed", color: "#d32f2f", Icon: WarningAmberIcon };
       case "pending_submission":
-        return { label: "Pending Submission", color: "#ed6c02", Icon: HourglassBottomIcon };
+        return {
+          label: "Pending Submission",
+          color: "#ed6c02",
+          Icon: HourglassBottomIcon,
+        };
       default:
         return { label: "On Track", color: "#2e7d32", Icon: CheckCircleIcon };
     }
@@ -195,11 +206,22 @@ const loadTeams = async () => {
             }}
           >
             <Box>
-              <Typography variant="h5" fontWeight={700} sx={{ color: "#1a1a2e" }}>
+              <Typography
+                variant="h5"
+                fontWeight={700}
+                sx={{ color: "#1a1a2e" }}
+              >
                 All Teams
               </Typography>
 
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                  mt: 0.5,
+                }}
+              >
                 <Typography sx={{ color: "#777" }}>Academic Year</Typography>
                 {editingYear ? (
                   <Select
@@ -221,10 +243,19 @@ const loadTeams = async () => {
                   </Select>
                 ) : (
                   <>
-                    <Typography sx={{ fontStyle: "italic", fontFamily: "serif", color: "#1976d2" }}>
+                    <Typography
+                      sx={{
+                        fontStyle: "italic",
+                        fontFamily: "serif",
+                        color: "#1976d2",
+                      }}
+                    >
                       {activeYearCode}
                     </Typography>
-                    <IconButton size="small" onClick={() => setEditingYear(true)}>
+                    <IconButton
+                      size="small"
+                      onClick={() => setEditingYear(true)}
+                    >
                       <EditIcon fontSize="inherit" />
                     </IconButton>
                   </>
@@ -233,7 +264,9 @@ const loadTeams = async () => {
 
               <Box sx={{ display: "flex", gap: 1.5, mt: 1.5 }}>
                 <Chip
-                  icon={<CheckCircleIcon sx={{ color: "#2e7d32 !important" }} />}
+                  icon={
+                    <CheckCircleIcon sx={{ color: "#2e7d32 !important" }} />
+                  }
                   label={
                     <span>
                       <strong>{statistics.on_track ?? 0}</strong> Teams On Track
@@ -242,10 +275,13 @@ const loadTeams = async () => {
                   sx={{ bgcolor: "#e8f5e9", fontWeight: 500 }}
                 />
                 <Chip
-                  icon={<WarningAmberIcon sx={{ color: "#d32f2f !important" }} />}
+                  icon={
+                    <WarningAmberIcon sx={{ color: "#d32f2f !important" }} />
+                  }
                   label={
                     <span>
-                      <strong>{statistics.delayed_teams_count ?? 0}</strong> Teams At Risk
+                      <strong>{statistics.delayed_teams_count ?? 0}</strong>{" "}
+                      Teams At Risk
                     </span>
                   }
                   sx={{ bgcolor: "#fdecea", fontWeight: 500 }}
@@ -256,19 +292,34 @@ const loadTeams = async () => {
             {activeMilestone && (
               <Card
                 variant="outlined"
-                sx={{ p: 1.5, borderRadius: 3, minWidth: 260, bgcolor: "#fafbff" }}
+                sx={{
+                  p: 1.5,
+                  borderRadius: 3,
+                  minWidth: 260,
+                  bgcolor: "#fafbff",
+                }}
               >
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <FlagIcon fontSize="small" sx={{ color: "#1976d2" }} />
                   <Typography variant="body2" sx={{ color: "#555" }}>
                     Milestone:{" "}
-                    <strong style={{ color: "#1976d2" }}>{activeMilestone.title}</strong>
+                    <strong style={{ color: "#1976d2" }}>
+                      {activeMilestone.title}
+                    </strong>
                   </Typography>
                 </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 0.5 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mt: 0.5,
+                  }}
+                >
                   <EventIcon fontSize="small" sx={{ color: "#1976d2" }} />
                   <Typography variant="body2" sx={{ color: "#555" }}>
-                    Deadline: <strong>{formatDate(activeMilestone.deadline)}</strong>
+                    Deadline:{" "}
+                    <strong>{formatDate(activeMilestone.deadline)}</strong>
                   </Typography>
                 </Box>
               </Card>
@@ -276,7 +327,15 @@ const loadTeams = async () => {
           </Box>
 
           {/* Search & Filters */}
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3, alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              flexWrap: "wrap",
+              mb: 3,
+              alignItems: "center",
+            }}
+          >
             <TextField
               placeholder="Search by team, project, or student"
               size="small"
@@ -342,148 +401,192 @@ const loadTeams = async () => {
           </Box>
 
           {loading && (
-            <Typography sx={{ color: "#999", mb: 2 }}>Loading teams...</Typography>
+            <Typography sx={{ color: "#999", mb: 2 }}>
+              Loading teams...
+            </Typography>
           )}
 
           {!loading && teams.length === 0 && (
-            <Typography sx={{ color: "#999", mb: 2 }}>No teams found.</Typography>
+            <Typography sx={{ color: "#999", mb: 2 }}>
+              No teams found.
+            </Typography>
           )}
 
-<Grid container spacing={3} alignItems="stretch">
-  {teams.map((team) => {
-    const { label, color, Icon } = statusMeta(team.current_milestone_status);
-    const isDelayed = team.current_milestone_status === "delayed";
+          <Grid container spacing={3} alignItems="stretch">
+            {teams.map((team) => {
+              const { label, color, Icon } = statusMeta(
+                team.current_milestone_status,
+              );
+              const isDelayed = team.current_milestone_status === "delayed";
 
-    return (
-      // xs={12} تعني كارت واحد في الموبايل، sm={6} تعني كارتين بجانب بعضهما في الشاشات الأكبر
-      <Grid item xs={12} sm={3} key={team.id} sx={{ display: "flex" }}>
-        <Card
-          
-             sx={{
-    width: "510px",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    borderRadius: 4,
-            overflow: "hidden",
-            border: isDelayed ? "2px solid #ef5350" : "1px solid #eee",
-            boxShadow: isDelayed
-              ? "0 4px 18px rgba(239,83,80,0.15)"
-              : "0 2px 10px rgba(0,0,0,0.05)",
-          }}
-        >
-          <Box sx={{ p: 2, display: "flex", flexDirection: "column", flexGrow: 1 }}>
-            <Box
-              component="img"
-              src={team.project?.image_url || FALLBACK_IMAGE}
-              alt="project"
-              sx={{
-                width: "100%",
-                height: 160,
-                objectFit: "cover",
-                borderRadius: 3,
-                mb: 1.5,
-              }}
-            />
+              return (
+                // xs={12} تعني كارت واحد في الموبايل، sm={6} تعني كارتين بجانب بعضهما في الشاشات الأكبر
+                <Grid
+                  item
+                  xs={12}
+                  sm={3}
+                  key={team.id}
+                  sx={{ display: "flex" }}
+                >
+                  <Card
+                    sx={{
+                      width: "510px",
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      borderRadius: 4,
+                      overflow: "hidden",
+                      border: isDelayed
+                        ? "2px solid #ef5350"
+                        : "1px solid #eee",
+                      boxShadow: isDelayed
+                        ? "0 4px 18px rgba(239,83,80,0.15)"
+                        : "0 2px 10px rgba(0,0,0,0.05)",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        p: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                        flexGrow: 1,
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        src={team.project?.image_url || FALLBACK_IMAGE}
+                        alt="project"
+                        sx={{
+                          width: "100%",
+                          height: 160,
+                          objectFit: "cover",
+                          borderRadius: 3,
+                          mb: 1.5,
+                        }}
+                      />
 
-            <Typography fontWeight={700} sx={{ color: "#1a1a2e" }}>
-              {team.project?.title || "Untitled project"}
-            </Typography>
+                      <Typography fontWeight={700} sx={{ color: "#1a1a2e" }}>
+                        {team.project?.title || "Untitled project"}
+                      </Typography>
 
-            <Typography
-              variant="body2"
-              sx={{ color: "#777", fontStyle: "italic", my: 0.5 }}
-            >
-              "{team.project?.description || "No description available"}"
-            </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#777", fontStyle: "italic", my: 0.5 }}
+                      >
+                        "
+                        {team.project?.description ||
+                          "No description available"}
+                        "
+                      </Typography>
 
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, my: 1 }}>
-              {team.department?.name && (
-                <Chip
-                  label={team.department.name}
-                  size="small"
-                  sx={{ bgcolor: "#e3f2fd", color: "#1976d2", fontWeight: 600 }}
-                />
-              )}
-              {team.project?.technologies
-                ?.split(",")
-                .map((tech) => (
-                  <Chip
-                    key={tech}
-                    label={tech.trim()}
-                    size="small"
-                    sx={{ bgcolor: "#f0f0f0" }}
-                  />
-                ))}
-            </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 0.5,
+                          my: 1,
+                        }}
+                      >
+                        {team.department?.name && (
+                          <Chip
+                            label={team.department.name}
+                            size="small"
+                            sx={{
+                              bgcolor: "#e3f2fd",
+                              color: "#1976d2",
+                              fontWeight: 600,
+                            }}
+                          />
+                        )}
+                        {team.project?.technologies?.split(",").map((tech) => (
+                          <Chip
+                            key={tech}
+                            label={tech.trim()}
+                            size="small"
+                            sx={{ bgcolor: "#f0f0f0" }}
+                          />
+                        ))}
+                      </Box>
 
-            <Typography variant="body2" sx={{ color: "#555", mb: 0.5 }}>
-              Members:{" "}
-              <span className="blue-text" style={{ fontWeight: 600 }}>
-                {team.members_count}
-              </span>
-            </Typography>
-            
-            <AvatarGroup max={4} sx={{ justifyContent: "flex-end", mb: 1 }}>
-              {team.members?.map((member) => (
-                <Avatar key={member.id} sx={{ width: 30, height: 30, fontSize: 14 }}>
-                  {member.name?.charAt(0)?.toUpperCase()}
-                </Avatar>
-              ))}
-            </AvatarGroup>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#555", mb: 0.5 }}
+                      >
+                        Members:{" "}
+                        <span className="blue-text" style={{ fontWeight: 600 }}>
+                          {team.members_count}
+                        </span>
+                      </Typography>
 
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 0.5,
-                color,
-                fontWeight: 600,
-                mb: 1,
-              }}
-            >
-              <Icon fontSize="small" />
-              <Typography variant="body2" sx={{ color, fontWeight: 600 }}>
-                {label}
-              </Typography>
-            </Box>
+                      <AvatarGroup
+                        max={4}
+                        sx={{ justifyContent: "flex-end", mb: 1 }}
+                      >
+                        {team.members?.map((member) => (
+                          <Avatar
+                            key={member.id}
+                            sx={{ width: 30, height: 30, fontSize: 14 }}
+                          >
+                            {member.name?.charAt(0)?.toUpperCase()}
+                          </Avatar>
+                        ))}
+                      </AvatarGroup>
 
-            <Box sx={{ mt: "auto" }}>
-              <Typography variant="caption" display="block">
-                Doctor:{" "}
-                <span className="blue-text font-bold">
-                  {team.supervisors?.doctor?.name || "Not assigned"}
-                </span>
-              </Typography>
-              <Typography variant="caption" display="block">
-                Teacher Assistant:{" "}
-                <span className="blue-text font-bold">
-                  {team.supervisors?.ta?.name || "Not assigned"}
-                </span>
-              </Typography>
-            </Box>
-          </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 0.5,
+                          color,
+                          fontWeight: 600,
+                          mb: 1,
+                        }}
+                      >
+                        <Icon fontSize="small" />
+                        <Typography
+                          variant="body2"
+                          sx={{ color, fontWeight: 600 }}
+                        >
+                          {label}
+                        </Typography>
+                      </Box>
 
-          <Box sx={{ px: 2, pb: 2 }}>
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{
-                borderRadius: 2,
-                textTransform: "none",
-                bgcolor: "#1976d2",
-                "&:hover": { bgcolor: "#1565c0" },
-              }}
-              onClick={() => navigate(`/team-details/${team.id}`)}
-            >
-              View Team
-            </Button>
-          </Box>
-        </Card>
-      </Grid>
-    );
-  })}
-</Grid>
+                      <Box sx={{ mt: "auto" }}>
+                        <Typography variant="caption" display="block">
+                          Doctor:{" "}
+                          <span className="blue-text font-bold">
+                            {team.supervisors?.doctor?.name || "Not assigned"}
+                          </span>
+                        </Typography>
+                        <Typography variant="caption" display="block">
+                          Teacher Assistant:{" "}
+                          <span className="blue-text font-bold">
+                            {team.supervisors?.ta?.name || "Not assigned"}
+                          </span>
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <Box sx={{ px: 2, pb: 2 }}>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        sx={{
+                          borderRadius: 2,
+                          textTransform: "none",
+                          bgcolor: "#1976d2",
+                          "&:hover": { bgcolor: "#1565c0" },
+                        }}
+                        onClick={() => navigate(`/team-details/${team.id}`)}
+                      >
+                        View Team
+                      </Button>
+                    </Box>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
         </Box>
       </Box>
     </Box>

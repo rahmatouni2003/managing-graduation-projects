@@ -1,263 +1,336 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Typography,
+  Chip,
+  Avatar,
+  AvatarGroup,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import toast, { Toaster } from "react-hot-toast";
+
 import Header from "../components/adminHeader";
 import Sidebar from "../components/adminSidebar";
-import Project from "../services/Project.model";
+
+import Project from "../Services/Project.model";
 import "./ProposalDetails.css";
 
-export default function ProposalDetailsPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [details, setDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    loadDetails();
-  }, [id]);
-
-const loadDetails = async () => {
-  setLoading(true);
-  setError(null);
-  try {
-    const res = await Project.getProposalsDetails(id);
-    console.log("Proposal Details Response:", res);
-
-    if (res?.proposal) {
-      setDetails(res);
-    } else {
-      setError(res?.message || "تعذر تحميل التفاصيل");
-    }
-  } catch (err) {
-    console.error(err);
-    setError("حدث خطأ أثناء تحميل التفاصيل");
-  } finally {
-    setLoading(false);
-  }
+const SECTION_LABELS = {
+  objectives: "Title Similarity",
+  technology_stack: "Feature Similarity",
+  solution_approach: "Keywords Match",
 };
 
-  const handleApprove = () => console.log("Approve", id);
-  const handleReject = () => console.log("Reject", id);
+function scoreBarColor(key) {
+  if (key === "objectives") return "#e74c3c"; // Red
+  if (key === "technology_stack") return "#f5a623"; // Orange
+  return "#2ecc71"; // Green
+}
 
+const COLOR_MAP = { red: "#e74c3c", orange: "#f5a623", green: "#2ecc71" };
 
-  const getRiskInfo = (level) => {
-    switch (level) {
-      case "high":
-        return { label: "High Risk", class: "risk-high", color: "#ef4444" };
-      case "medium":
-        return { label: "Medium Risk", class: "risk-medium", color: "#f59e0b" };
-      case "low":
-        return { label: "Low Risk", class: "risk-low", color: "#22c55e" };
-      default:
-        return { label: "No Risk Data", class: "risk-none", color: "#94a3b8" };
+function DonutChart({ percentage, color }) {
+  const strokeColor = COLOR_MAP[color] || "#e74c3c";
+  const radius = 72;
+  const stroke = 14;
+  const normalizedRadius = radius - stroke / 2;
+  const circumference = normalizedRadius * 2 * Math.PI;
+  const dash = (Math.min(percentage, 100) / 100) * circumference;
+
+  return (
+    <svg height={radius * 2} width={radius * 2} className="aif-donut-svg">
+      <circle
+        stroke="#f0f0f0"
+        fill="transparent"
+        strokeWidth={stroke}
+        r={normalizedRadius}
+        cx={radius}
+        cy={radius}
+      />
+      <circle
+        stroke={strokeColor}
+        fill="transparent"
+        strokeWidth={stroke}
+        strokeDasharray={`${dash} ${circumference}`}
+        strokeLinecap="round"
+        r={normalizedRadius}
+        cx={radius}
+        cy={radius}
+        transform={`rotate(-90 ${radius} ${radius})`}
+      />
+      <text x="50%" y="50%" textAnchor="middle" dy="0.35em" className="aif-donut-text">
+        {Math.round(percentage)}%
+      </text>
+    </svg>
+  );
+}
+
+export default function AIFilterPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [actionLoadingKey, setActionLoadingKey] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const res = await Project.getProposalsDetails(id);
+        if (isMounted) {
+          setData(res);
+          setSelectedIndex(0);
+        }
+      } catch (err) {
+        if (isMounted) setError(err.message);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  const handleProposalAction = async (proposalId, status) => {
+    const actionKey = `${proposalId}-${status}`;
+    setActionLoadingKey(actionKey);
+    try {
+      const res = await Project.sendProposalApprovalStatus(proposalId, status);
+      const successMessage =
+        res?.message ||
+        (status === "approved"
+          ? "Proposal approved successfully"
+          : status === "rejected"
+          ? "Proposal rejected successfully"
+          : "Proposal sent for edit");
+
+      toast.success(successMessage);
+      navigate("/admin/ai-filter");
+    } catch (err) {
+      console.error(err);
+      const errorMessage = err?.response?.data?.message || err?.message || "Action failed";
+      toast.error(errorMessage);
+    } finally {
+      setActionLoadingKey(null);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="proposal-details-container">
-        <Sidebar active="ai-filter" />
-        <div className="proposal-details-content">
-          <Header />
-          <main className="proposal-details-main">
-            <p className="status-message">Loading details...</p>
-          </main>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !details) {
-    return (
-      <div className="proposal-details-container">
-        <Sidebar active="ai-filter" />
-        <div className="proposal-details-content">
-          <Header />
-          <main className="proposal-details-main">
-            <p className="status-message error">{error || "لا توجد بيانات"}</p>
-            <button className="btn-back" onClick={() => navigate(-1)}>Back</button>
-          </main>
-        </div>
-      </div>
-    );
-  }
-
-  const { proposal, department, team, similarities, similarity_stats } = details;
-
-  // أعلى تطابق (لو موجود)
-  const topMatch = similarities?.[0];
-  const overallScore = similarity_stats?.highest_score ?? 0;
-  const riskInfo = getRiskInfo(similarity_stats?.highest_level);
-
-  const circumference = 2 * Math.PI * 54;
-  const dashOffset = circumference - (overallScore / 100) * circumference;
+  const handleApprove = (proposalId) => handleProposalAction(proposalId, "approved");
+  const handleReject = (proposalId) => handleProposalAction(proposalId, "rejected");
+  const handleSendForEdit = (proposalId) => handleProposalAction(proposalId, "edit");
 
   return (
-    <div className="proposal-details-container">
-      <Sidebar active="ai-filter" />
-      <div className="proposal-details-content">
-        <Header />
-        <main className="proposal-details-main">
-          <button className="btn-back" onClick={() => navigate(-1)}>
-            ← Back to Proposals
-          </button>
+    <Box className="aif-layout">
+      <Toaster position="top-right" reverseOrder={false} />
+      <Header />
+      <Sidebar />
+      <Box component="main" className="aif-main">
+        {loading && (
+          <Box className="aif-loading">
+            <CircularProgress />
+          </Box>
+        )}
+        {!loading && error && (
+          <Box className="aif-error">
+            <Typography>{error}</Typography>
+          </Box>
+        )}
+        {!loading && !error && data && (
+          <AIFilterContent
+            data={data}
+            selectedIndex={selectedIndex}
+            setSelectedIndex={setSelectedIndex}
+            actionLoadingKey={actionLoadingKey}
+            onApprove={handleApprove}
+            onReject={handleReject}
+            onSendForEdit={handleSendForEdit}
+          />
+        )}
+      </Box>
+    </Box>
+  );
+}
 
-          <div className="proposal-summary-card">
-            <div className="proposal-info">
-              <h1 className="proposal-title">{proposal.title}</h1>
-              <p className="proposal-description">{proposal.description}</p>
-              <div className="tags-container">
-                {proposal.category && <span className="tag tag-blue">{proposal.category}</span>}
-                {department?.name && <span className="tag tag-lightblue">{department.name}</span>}
-                {proposal.technologies && <span className="tag tag-purple">{proposal.technologies}</span>}
-              </div>
-            </div>
+function AIFilterContent({
+  data,
+  selectedIndex,
+  setSelectedIndex,
+  actionLoadingKey,
+  onApprove,
+  onReject,
+  onSendForEdit,
+}) {
+  const { proposal, department, team, similarities } = data;
+  const selected = similarities[selectedIndex];
 
-            <div className="team-info">
-              <span className="team-id">Team #{team?.id}</span>
-              <span className="team-members-count">, Members: {team?.members_count ?? 0}</span>
-              <div className="avatar-group">
-                {team?.members?.slice(0, 4).map((member, idx) => (
-                  <img
-                    key={member.id || idx}
-                    src={member.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${member.name || idx}`}
-                    alt={member.name || "member"}
-                    className="avatar"
-                  />
-                ))}
-              </div>
-              <span className="submission-date">{proposal.submitted_at}</span>
-            </div>
-          </div>
+  const techList =
+    proposal.technologies
+      ?.split(",")
+      .map((t) => t.trim())
+      .filter(Boolean) || [];
 
-          <div className="proposal-details-grid">
-            {/* العمود الشمال: باقي تفاصيل المقترح */}
-            <div className="left-column">
-              <div className="detail-block">
-                <h3>Problem Statement</h3>
-                <p>{proposal.problem_statement || "—"}</p>
-              </div>
-              <div className="detail-block">
-                <h3>Solution</h3>
-                <p>{proposal.solution || "—"}</p>
-              </div>
-              {proposal.attachment_file && (
-                <a
-                  href={proposal.attachment_file}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-attachment"
-                >
-                  View Attachment
-                </a>
-              )}
+  const isApproveLoading = actionLoadingKey === `${proposal.id}-approved`;
+  const isRejectLoading = actionLoadingKey === `${proposal.id}-rejected`;
+  const isEditLoading = actionLoadingKey === `${proposal.id}-edit`;
+  const isAnyActionLoading = isApproveLoading || isRejectLoading || isEditLoading;
 
-              {similarities?.length > 0 && (
-                <div className="detail-block">
-                  <h3>All Matches ({similarities.length})</h3>
-                  {similarities.map((sim, idx) => (
-                    <div key={idx} className="match-row">
-                      <span>{sim.matched_proposal?.title || "—"}</span>
-                      <span>{sim.matched_team?.name ? `Team ${sim.matched_team.name}` : ""}</span>
-                      <span className="match-score">{sim.score}%</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+  return (
+    <Box className="aif-content">
+      <Typography className="aif-page-title">{proposal.title}</Typography>
 
-            {/* العمود اليمين: كارت التشابه زي الصورة */}
-            <div className="right-column">
-              <div className="similarity-summary-card">
-                <h3 className="similarity-card-title">{proposal.title}</h3>
+      {/* Summary Banner */}
+      <Box className="aif-summary-banner">
+        <Box className="aif-summary-left">
+          <Typography className="aif-summary-desc">{proposal.description}</Typography>
+          <Box className="aif-tags">
+            {department?.name && <Chip label={department.name} className="aif-chip" />}
+            {techList.map((t) => (
+              <Chip key={t} label={t} className="aif-chip" />
+            ))}
+          </Box>
+        </Box>
+        <Box className="aif-summary-right">
+          <Typography className="aif-team-label">
+            Team {team?.name || "Alpha"} , Members: {team?.members_count ?? 0}
+          </Typography>
+          <Box className="aif-avatar-row">
+            <AvatarGroup max={4} className="aif-avatar-group">
+              {team?.members?.map((m) => (
+                <Avatar key={m.id} src={m.image || undefined} alt={m.name}>
+                  {m.name?.[0]?.toUpperCase()}
+                </Avatar>
+              ))}
+            </AvatarGroup>
+          </Box>
+          <Typography className="aif-date">{proposal.submitted_at || "Nov 5, 2025"}</Typography>
+        </Box>
+      </Box>
 
-                <div className="score-circle-wrapper">
-                  <svg viewBox="0 0 120 120" className="score-circle">
-                    <circle cx="60" cy="60" r="54" className="score-circle-bg" />
-                    <circle
-                      cx="60"
-                      cy="60"
-                      r="54"
-                      className="score-circle-fill"
-                      style={{
-                        stroke: riskInfo.color,
-                        strokeDasharray: circumference,
-                        strokeDashoffset: dashOffset,
-                      }}
+      {/* Body: Card List + Side Details Panel */}
+      <Box className="aif-body">
+        <Box className="aif-list">
+          {similarities.map((sim, idx) => (
+            <Box
+              key={sim.proposal_id}
+              className={`aif-card ${idx === selectedIndex ? "aif-card-active" : ""}`}
+              onClick={() => setSelectedIndex(idx)}
+            >
+              <Box className="aif-card-info">
+                <Typography className="aif-card-title">{sim.title}</Typography>
+                <Typography className="aif-card-desc">{sim.description}</Typography>
+                <Box className="aif-tags">
+                  {sim.technologies
+                    ?.split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean)
+                    .map((t) => (
+                      <Chip key={t} size="small" label={t} className="aif-chip-sm" />
+                    ))}
+                </Box>
+              </Box>
+              
+              {/* Custom Badge to perfectly match image */}
+              <Box className={`aif-badge-container aif-badge-${sim.similarity_color}`}>
+                <Box className="aif-badge-left">
+                  <Typography className="aif-badge-percent">
+                    {Math.round(sim.similarity_score)}%
+                  </Typography>
+                </Box>
+                <Box className="aif-badge-right">
+                  <Typography className="aif-badge-label">
+                    {sim.similarity_level === "high"
+                      ? "High"
+                      : sim.similarity_level === "medium"
+                      ? "Medium"
+                      : "Low"}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          ))}
+        </Box>
+
+        {/* Side Detail Panel */}
+        {selected && (
+          <Box className="aif-detail-panel">
+            <Typography className="aif-detail-title">{selected.title}</Typography>
+
+            <Box className="aif-donut-wrap">
+              <DonutChart percentage={selected.similarity_score} color={selected.similarity_color} />
+            </Box>
+
+            <Box className="aif-status-row">
+              <Typography className="aif-status-label">Status:</Typography>
+              <Typography className={`aif-status-value aif-status-${selected.similarity_color}`}>
+                {selected.similarity_level === "high" ? "High Risk" : selected.similarity_level === "medium" ? "Medium Risk" : "Low Risk"}
+              </Typography>
+            </Box>
+
+            <Box className="aif-scores">
+              {Object.entries(selected.section_scores || {}).map(([key, value]) => (
+                <Box key={key} className="aif-score-row">
+                  <Typography className="aif-score-label">
+                    {SECTION_LABELS[key] || key}:
+                  </Typography>
+                  <Box className="aif-score-bar-bg">
+                    <Box
+                      className="aif-score-bar-fill"
+                      style={{ width: `${value}%`, backgroundColor: scoreBarColor(key) }}
                     />
-                  </svg>
-                  <span className="score-circle-label">{overallScore ?? 0}%</span>
-                </div>
+                  </Box>
+                  <Typography className="aif-score-value">{Math.round(value)}%</Typography>
+                </Box>
+              ))}
+            </Box>
 
-                <div className={`status-badge ${riskInfo.class}`}>
-                  Status: {riskInfo.label}
-                </div>
+            <Typography className="aif-similar-to">
+              Similar To: <span className="aif-similar-highlight">AI Medical Assistant (Team Delta)</span>
+            </Typography>
 
-                <div className="similarity-bars">
-                  <div className="similarity-bar-row">
-                    <span>Title Similarity:</span>
-                    <div className="bar-track">
-                      <div
-                        className="bar-fill bar-red"
-                        style={{ width: `${topMatch?.title_similarity ?? 0}%` }}
-                      />
-                    </div>
-                  </div>
-                  <div className="similarity-bar-row">
-                    <span>Feature Similarity:</span>
-                    <div className="bar-track">
-                      <div
-                        className="bar-fill bar-orange"
-                        style={{ width: `${topMatch?.feature_similarity ?? 0}%` }}
-                      />
-                    </div>
-                  </div>
-                  <div className="similarity-bar-row">
-                    <span>Keywords Match:</span>
-                    <div className="bar-track">
-                      <div
-                        className="bar-fill bar-green"
-                        style={{ width: `${topMatch?.keywords_similarity ?? 0}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
+            <Box className="aif-insights">
+              <Typography className="aif-insights-title">AI Insights</Typography>
+              <Typography className="aif-insights-text">
+                The idea shares similar core functionality and target domain with a previously submitted project. However, implementation approach and features show moderate variation.
+              </Typography>
+            </Box>
 
-                {topMatch && (
-                  <p className="similar-to-text">
-                    Similar To:{" "}
-                    <strong>
-                      {topMatch.matched_proposal?.title}
-                      {topMatch.matched_team?.name ? ` (Team ${topMatch.matched_team.name})` : ""}
-                    </strong>
-                  </p>
-                )}
-
-                {similarities?.length === 0 && (
-                  <p className="no-similarity-text">No similar proposals found.</p>
-                )}
-
-                {topMatch?.ai_insight && (
-                  <div className="ai-insights-box">
-                    <h4>AI Insights</h4>
-                    <p>{topMatch.ai_insight}</p>
-                  </div>
-                )}
-
-                <div className="detail-actions">
-                  <button className="btn-action btn-approvee" onClick={handleApprove}>
-                    Approve Idea
-                  </button>
-                  <button className="btn-action btn-rejectt" onClick={handleReject}>
-                    Reject Idea
-                  </button>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
+            {/* Action Buttons arranged exactly like the design */}
+            <Box className="aif-actions-wrapper">
+              <Box className="aif-actions-row">
+                <Button
+                  className="aif-btn-approve"
+                  disabled={isAnyActionLoading}
+                  onClick={() => onApprove(proposal.id)}
+                >
+                  {isApproveLoading ? "..." : "Approve Idea"}
+                </Button>
+                <Button
+                  className="aif-btn-reject"
+                  disabled={isAnyActionLoading}
+                  onClick={() => onReject(proposal.id)}
+                >
+                  {isRejectLoading ? "..." : "Reject Idea"}
+                </Button>
+              </Box>
+              <Button
+                className="aif-btn-edit"
+                disabled={isAnyActionLoading}
+                onClick={() => onSendForEdit(proposal.id)}
+              >
+                {isEditLoading ? "..." : "Send For Edit"}
+              </Button>
+            </Box>
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 }

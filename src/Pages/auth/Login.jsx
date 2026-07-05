@@ -164,10 +164,12 @@ if (loginResponse?.token) {
           >
             {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
           </Button>
-
-          <Typography sx={styles.guestLink}>
-            Don't have an account? Continue as a Guest
-          </Typography>
+<Typography
+  sx={styles.guestLink}
+  onClick={() => navigate("/guestHomePage")}
+>
+  Don't have an account? Continue as a Guest
+</Typography>
         </Box>
       </Box>
     </Box>

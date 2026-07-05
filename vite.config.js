@@ -10,7 +10,6 @@ export default defineConfig({
         target: "https://mango-attendant-handyman.ngrok-free.dev",
         changeOrigin: true,
         secure: true,
-
         headers: {
           "ngrok-skip-browser-warning": "true",
         },
