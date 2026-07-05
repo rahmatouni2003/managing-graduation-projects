@@ -183,7 +183,7 @@ return (
   autoHeight
   onRowClick={(params) => {
     navigate(
-      `/discussion-details/${params.row.team_id}`
+      `/admin/discussion-details/${params.row.team_id}`
     );
   }}
 />

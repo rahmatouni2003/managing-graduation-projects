@@ -368,6 +368,13 @@ class Admin {
   static getFormData(id) {
     return submitRequestAsync(`admin/milestone-committees/${id}/form-data`, "GET");
   }
+    static updateMilestoneCommittees(id, data) {
+    return submitRequestAsync(
+      `admin/milestone-committees/${id}/update`,
+      "PUT",
+      data
+    );
+  }
   static scheduleMilestoneCommittee(data) {
     return submitRequestAsync(
       `/admin/milestone-committees`,

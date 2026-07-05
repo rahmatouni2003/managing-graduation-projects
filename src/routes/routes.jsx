@@ -447,7 +447,7 @@ export const router = createBrowserRouter([
         element: <AiFilter />,
       },
       {
-        path: "discussion-details/:id",
+        path: "/admin/discussion-details/:id",
         element: <FinalDiscussionDetails />,
       },
       {

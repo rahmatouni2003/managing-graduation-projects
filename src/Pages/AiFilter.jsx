@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Search, Folder, XCircle, FileCheck2 } from "lucide-react";
 import Header from "../components/adminHeader";
 import Sidebar from "../components/adminSidebar";
@@ -35,11 +35,8 @@ export default function AIFilterPage() {
 
   useEffect(() => {
     loadFilterOptions();
-  }, []);
-
-  useEffect(() => {
     loadProposals();
-  }, [filters]);
+  }, []);
 
   const loadFilterOptions = async () => {
     try {
@@ -66,6 +63,55 @@ export default function AIFilterPage() {
       setLoading(false);
     }
   };
+
+  // ✅ الفلترة بتحصل هنا على الداتا اللي عندنا already من الـ API
+  // كل ما اليوزر يغيّر فلتر، الليستة دي بتتحدث تلقائي من غير ما نطلب من السيرفر تاني
+  const filteredProposals = useMemo(() => {
+    return proposals.filter((proposal) => {
+      // فلتر الـ status
+      if (filters.status && proposal.status) {
+        if (proposal.status !== filters.status) return false;
+      }
+
+      // فلتر الـ department
+      if (filters.department_id) {
+        const proposalDeptId =
+          proposal.department?.id ?? proposal.department_id;
+        if (String(proposalDeptId) !== String(filters.department_id)) {
+          return false;
+        }
+      }
+
+      // فلتر الـ similarity level
+      if (filters.similarity_level) {
+        if (proposal.similarity_level !== filters.similarity_level) {
+          return false;
+        }
+      }
+
+      // فلتر الـ search (بيبحث في العنوان، الوصف، واسم التيم)
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        const title = proposal.title?.toLowerCase() || "";
+        const description = proposal.description?.toLowerCase() || "";
+        const teamName = proposal.team?.name?.toLowerCase() || "";
+        const studentNames =
+          proposal.team?.members
+            ?.map((m) => m.name?.toLowerCase() || "")
+            .join(" ") || "";
+
+        const matchesSearch =
+          title.includes(searchTerm) ||
+          description.includes(searchTerm) ||
+          teamName.includes(searchTerm) ||
+          studentNames.includes(searchTerm);
+
+        if (!matchesSearch) return false;
+      }
+
+      return true;
+    });
+  }, [proposals, filters]);
 
   // ✅ دالة موحدة تتعامل مع القبول والرفض
   // بنعمل مفتاح فريد لكل زرار (proposalId-status) عشان يبقى مستقل عن الزرار التاني
@@ -248,87 +294,35 @@ export default function AIFilterPage() {
 
           <div className="ai-filter-proposals-list">
             {loading && <p className="status-message">Loading proposals...</p>}
+
             {!loading && proposals.length === 0 && (
-              <div className="ai-filter-proposal-card">
-                <div className="ai-filter-proposal-header">
-                  <div className="proposal-info">
-                    <h3 className="ai-filter-proposal-title">Robot ccc</h3>
-                    <p className="ai-filter-proposal-description">
-                      AI-powered system for managing patient diagnosis and
-                      appointments using machine learning
-                    </p>
-                    <div className="ai-filter-tags-container">
-                      <span className="ai-filter-tag ai-filter-tag-blue">
-                        AI
-                      </span>
-                      <span className="ai-filter-tag ai-filter-tag-lightblue">
-                        Healthcare
-                      </span>
-                      <span className="ai-filter-tag ai-filter-tag-purple">
-                        Data Science
-                      </span>
-                    </div>
-                  </div>
+              <p className="status-message">No proposals available yet.</p>
+            )}
 
-                  <div className="ai-filter-similarity-badge ai-filter-sim-high">
-                    <span className="ai-filter-score-part">95%</span>
-                    <span className="ai-filter-label-part">High</span>
-                  </div>
-                </div>
-
-                <div className="ai-filter-proposal-meta">
-                  <div className="ai-filter-meta-left">
-                    <span className="ai-filter-team-id">Team Alpha</span>
-                    <span className="team-members-count">, Members: 6</span>
-                    <div className="ai-filter-avatar-group">
-                      {defaultAvatars.map((url, index) => (
-                        <img
-                          key={index}
-                          src={url}
-                          alt="member avatar"
-                          className="ai-filter-avatar"
-                        />
-                      ))}
-                      <span className="ai-filter-avatar-more">+2</span>
-                    </div>
-                    <span className="ai-filter-submission-date">
-                      Nov 5, 2025
-                    </span>
-                  </div>
-
-                  <div className="ai-filter-meta-right">
-                    <span className="ai-filter-match-details">
-                      Matched with:{" "}
-                      <strong>AI Medical Assistant (Team Delta)</strong>
-                    </span>
-                    <button
-                      onClick={() => handleViewDetails(1)}
-                      className="ai-filter-btn-view-details"
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </div>
-
-                <div className="ai-filter-actions-container">
-                  <button
-                    onClick={() => handleApprove(1)}
-                    className="ai-filter-btn-action ai-filter-btn-approve"
-                  >
-                    Approve Idea
-                  </button>
-                  <button
-                    onClick={() => handleReject(1)}
-                    className="ai-filter-btn-action ai-filter-btn-reject"
-                  >
-                    Reject Idea
-                  </button>
-                </div>
+            {!loading && proposals.length > 0 && filteredProposals.length === 0 && (
+              <div className="ai-filter-no-results">
+                <p className="status-message">
+                  No proposals match the selected filters.
+                </p>
+                <button
+                  className="ai-filter-btn-clear-filters"
+                  onClick={() =>
+                    setFilters({
+                      search: "",
+                      department_id: "",
+                      track: "",
+                      similarity_level: "",
+                      status: "",
+                    })
+                  }
+                >
+                  Clear Filters
+                </button>
               </div>
             )}
 
             {!loading &&
-              proposals.map((proposal) => {
+              filteredProposals.map((proposal) => {
                 const simInfo = getSimilarityInfo(proposal.similarity_level);
 
                 // ✅ كل زرار بيتحقق من مفتاحه الخاص بيه بس (proposalId + status)
