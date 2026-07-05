@@ -262,7 +262,7 @@ export default function MilestonesSetup() {
                         <Box className="card-top">
                           <Box className="card-info-side">
                             <Typography variant="h6" fontWeight={700} className="milestone-card-title">
-                              Phase {milestone.phase_number} : {milestone.title}
+                               {milestone.title}
                             </Typography>
 
                             <ul className="requirements-list">
