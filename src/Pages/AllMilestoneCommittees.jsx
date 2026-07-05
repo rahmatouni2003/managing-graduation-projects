@@ -101,31 +101,31 @@ const getData = async () => {
   };
 
   // ---- submit edit ----
-  const handleSubmitClick = async (row, e) => {
- e.stopPropagation();
+const handleSubmitClick = async (row, e) => {
+  e.stopPropagation();
   try {
     setSubmitting(true);
 
     const data = {
-      doctors: selectedDoctors.filter(Boolean),
-      tas: selectedTAs.filter(Boolean),
+      doctor_ids: selectedDoctors.filter(Boolean),
+      ta_ids: selectedTAs.filter(Boolean),
     };
 
     console.log("Row ID:", row.id);
     console.log("Payload being sent:", data);
 
-      await Admin.updateMilestoneCommittees(row.id, data);
+    await Admin.updateMilestoneCommittees(row.id, data);
 
-      toast.success("Committee updated successfully");
-      setEditingRowId(null);
-      await getData();
-    } catch (err) {
-      console.log(err);
-      toast.error("Failed to save changes");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    toast.success("Committee updated successfully");
+    setEditingRowId(null);
+    await getData();
+  } catch (err) {
+    console.log(err);
+    toast.error("Failed to save changes");
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const renderDoctorCell = (index) => (params) => {
     if (params.row.id === editingRowId) {
