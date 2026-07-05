@@ -1,4 +1,3 @@
-
 import {
     Box,
     Paper,
@@ -14,7 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import Header from "../components/adminHeader";
 import Sidebar from "../components/adminSidebar";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import "./AddMilestone.css";
 import Admin from "../services/Admin.model";
 import { useEffect, useState } from "react";
@@ -22,6 +21,7 @@ import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
+
 export default function EditMilestone() {
     const { id } = useParams();
     const [position, setPosition] = useState(1);
@@ -35,6 +35,7 @@ export default function EditMilestone() {
     const [startDate, setStartDate] = useState(null);
     const [deadline, setDeadline] = useState(null);
     const [requirements, setRequirements] = useState([]);
+
     useEffect(() => {
         if (location.state?.focusDeadline && deadlineRef.current) {
             setTimeout(() => {
@@ -45,11 +46,10 @@ export default function EditMilestone() {
             }, 500);
         }
     }, [deadline, location.state]);
+
     useEffect(() => {
         const fetchMilestone = async () => {
             try {
-
-
                 const res = await Admin.getMilestones();
                 const data = res?.data || res;
 
@@ -78,25 +78,36 @@ export default function EditMilestone() {
                     (milestone?.requirements || []).map((r) => ({
                         id: r.id || null,
                         text: r.text || r.requirement || "",
-                        action: "keep",
+                        action: "", // التعديل هنا: نص فارغ للعناصر الثابتة حتى لا يراها السيرفر كخطأ
                     }))
                 );
 
             } catch (err) {
                 console.log("Fetch milestone error:", err?.response || err);
-
                 toast.error(
                     err?.response?.data?.message || "Failed to load milestone"
                 );
-            } finally {
-                // setLoading(false);
             }
         };
 
         fetchMilestone();
     }, [id]);
+
     const handleUpdateMilestone = async () => {
+        const loadingToast = toast.loading("Updating milestone...");
         try {
+            // تصفية المصفوفة لإرسال العناصر التي تحتوي على أكشن فقط (new, update, delete)
+            // واستبعاد العناصر الثابتة (النص الفارغ) والعناصر التي حُذفت فوراً دون إرسالها للسيرفر
+            const formattedRequirements = requirements
+                .filter((r) => r.action !== "new-remove" && r.action !== "")
+                .map((r) => {
+                    const item = { text: r.text, action: r.action };
+                    if (r.id) {
+                        item.id = r.id; // نرسل الـ id فقط للعناصر القديمة الموجودة بالفعل بالسيرفر
+                    }
+                    return item;
+                });
+
             const payload = {
                 title,
                 max_score: Number(maxScore),
@@ -104,34 +115,29 @@ export default function EditMilestone() {
                 previous_milestone_id: position,
                 project_course_id: capstone,
                 description,
-                requirements: requirements
-                    .filter((r) => r.action !== "new-remove")
-                    .map((r) => ({
-                        id: r.id,
-                        text: r.text,
-                        action: r.action,
-                    })),
+                requirements: formattedRequirements
             };
 
             await Admin.updateMilestone(id, payload);
-
-            toast.success("Milestone updated successfully");
+            toast.success("Milestone updated successfully", { id: loadingToast });
+            
+            // إعادة تحديث الصفحة أو البيانات هنا إذا رغبت لضمان قراءة البيانات الجديدة من السيرفر
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Update failed");
+            toast.error(error?.response?.data?.message || "Update failed", { id: loadingToast });
         }
     };
+
     const addRequirement = () => {
         setRequirements([
             ...requirements,
             { id: null, text: "", action: "new" },
         ]);
     };
+
     const removeRequirement = (index) => {
         const updated = [...requirements];
-
-        updated[index].action =
-            updated[index].id ? "delete" : "new-remove";
-
+        // إذا كان العنصر قادم من السيرفر (لديه id) نضع أكشن delete، وإلا نقوم بوسمه كـ new-remove لتجاهله
+        updated[index].action = updated[index].id ? "delete" : "new-remove";
         setRequirements(updated);
     };
 
@@ -139,14 +145,17 @@ export default function EditMilestone() {
         const updated = [...requirements];
         updated[index].text = value;
 
+        // إذا لم يكن مضافاً حديثاً، يتم وسمه كـ update
         if (updated[index].action !== "new") {
             updated[index].action = "update";
         }
 
         setRequirements(updated);
     };
+
     return (
         <Box className="admin-layout">
+            <Toaster position="top-center" />
             <Sidebar />
 
             <Box className="main-content">
@@ -155,7 +164,7 @@ export default function EditMilestone() {
                 <Box className="add-milestone-page">
                     <Box className="page-header">
                         <Typography variant="h4" fontWeight={700}>
-                            Add New Milestone
+                            Edit Milestone
                         </Typography>
 
                         <Box className="capstone-switch">
@@ -258,31 +267,34 @@ export default function EditMilestone() {
                                 Requirements
                             </Typography>
 
-                            {requirements.map((req, index) => (
-                                <Box
-                                    key={index}
-                                    className="requirement-item"
-                                >
-                                    <TextField
-                                        fullWidth
-                                        value={req.text}
-                                        onChange={(e) =>
-                                            updateRequirement(
-                                                index,
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-
-                                    <IconButton
-                                        onClick={() =>
-                                            removeRequirement(index)
-                                        }
+                            {/* نعرض الشروط النشطة فقط ونخفي ما تم حذفه بالواجهة */}
+                            {requirements
+                                .filter((req) => req.action !== "new-remove" && req.action !== "delete")
+                                .map((req, index) => (
+                                    <Box
+                                        key={index}
+                                        className="requirement-item"
                                     >
-                                        <FaTrash />
-                                    </IconButton>
-                                </Box>
-                            ))}
+                                        <TextField
+                                            fullWidth
+                                            value={req.text}
+                                            onChange={(e) =>
+                                                updateRequirement(
+                                                    requirements.indexOf(req), // نمرر الـ index الحقيقي داخل المصفوفة الأصلية
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+
+                                        <IconButton
+                                            onClick={() =>
+                                                removeRequirement(requirements.indexOf(req))
+                                            }
+                                        >
+                                            <FaTrash />
+                                        </IconButton>
+                                    </Box>
+                                ))}
 
                             <Button
                                 startIcon={<FaPlus />}
@@ -303,7 +315,6 @@ export default function EditMilestone() {
 
                                     <DateCalendar
                                         value={startDate}
-
                                         readOnly
                                     />
                                 </Box>
