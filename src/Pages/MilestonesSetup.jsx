@@ -322,7 +322,7 @@ export default function MilestonesSetup() {
                               variant="contained"
                               className="main-update-btn"
                               onClick={() =>
-                                navigate(`/milestones/edit/${milestone.id}`, {
+                                navigate(`/admin/milestones/edit/${milestone.id}`, {
                                   state: { focusDeadline: true },
                                 })
                               }
@@ -401,7 +401,7 @@ export default function MilestonesSetup() {
                                 variant="text"
                                 startIcon={<FaEdit />}
                                 className="action-text-btn"
-                                onClick={() => navigate(`/milestones/edit/${milestone.id}`)}
+                                onClick={() => navigate(`/admin/milestones/edit/${milestone.id}`)}
                               >
                                 Edit
                               </Button>
