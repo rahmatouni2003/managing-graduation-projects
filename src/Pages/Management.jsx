@@ -302,12 +302,11 @@ const handleExport = async () => {
     let response;
     let fileName;
 
-    // تشكيل اسم الملف بناءً على النوع المختار في الـ Tabs لتسهيل القراءة للمستخدم
     if (type === "doctors") {
-      response = await Admin.exportDoctor();
+      response = await Admin.exportDoctor(); // ستعمل بنجاح الآن كـ Blob
       fileName = `doctors_list_${new Date().toISOString().slice(0,10)}.xlsx`;
     } else if (type === "assistants") {
-      response = await Admin.exportTAs();
+      response = await Admin.exportTAs(); // ستعمل بنجاح الآن كـ Blob
       fileName = `teaching_assistants_list_${new Date().toISOString().slice(0,10)}.xlsx`;
     } else {
       const courseId = type === "project1" ? 1 : 2;
@@ -315,9 +314,7 @@ const handleExport = async () => {
       fileName = `capstone_project_${courseId}_students_${new Date().toISOString().slice(0,10)}.xlsx`;
     }
 
-    // إنشاء رابط وهمي من الـ Blob المستلم مباشرة من الباك إند
     const url = window.URL.createObjectURL(response);
-
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", fileName);
@@ -326,7 +323,6 @@ const handleExport = async () => {
     link.click();
     link.remove();
 
-    // تنظيف الذاكرة بعد التحميل
     window.URL.revokeObjectURL(url);
     toast.success("File downloaded successfully");
   } catch (error) {

@@ -273,9 +273,7 @@ class Admin {
       data
     );
   }
-  static exportTAs() {
-    return submitRequestAsync(`admin/TA/export`, "GET");
-  }
+
   // Now paginated the same way as getStudents (page / per_page query params)
   static getTAs(page = 1, perPage = 10) {
     return submitRequestAsync(
@@ -312,7 +310,9 @@ static exportStudents(courseId) {
 static exportDoctor() {
   return submitRequestAsync(`admin/doctor/export`, "GET", null, {}, true, true);
 }
-
+  static exportTAs() {
+    return submitRequestAsync(`admin/TA/export`, "GET", null, {}, true, true);
+  }
 
 
   static getAcademicYears() {
