@@ -22,7 +22,11 @@ const SECTION_LABELS = {
   technology_stack: "Feature Similarity",
   solution_approach: "Keywords Match",
 };
-
+function donutColorByPercentage(percentage) {
+  if (percentage >= 80) return "#e74c3c"; 
+  if (percentage >= 50) return "#f5a623";
+  return "#2ecc71"; // 
+}
 function scoreBarColor(key) {
   if (key === "objectives") return "#e74c3c"; // Red
   if (key === "technology_stack") return "#f5a623"; // Orange
@@ -31,8 +35,9 @@ function scoreBarColor(key) {
 
 const COLOR_MAP = { red: "#e74c3c", orange: "#f5a623", green: "#2ecc71" };
 
-function DonutChart({ percentage, color }) {
-  const strokeColor = COLOR_MAP[color] || "#e74c3c";
+function DonutChart({ percentage }) {
+  
+  const strokeColor = donutColorByPercentage(percentage);
   const radius = 72;
   const stroke = 14;
   const normalizedRadius = radius - stroke / 2;
@@ -205,7 +210,9 @@ function AIFilterContent({
 
   return (
     <Box className="aif-content">
-      <Typography className="aif-page-title">{proposal.title}</Typography>
+<Typography className="aif-page-title" style={{ fontWeight: "bold" }}>
+  {proposal.title}
+</Typography>
 
       {/* Summary Banner */}
       <Box className="aif-summary-banner">
@@ -244,48 +251,54 @@ function AIFilterContent({
       {/* Body: Card List + Side Details Panel */}
       <Box className="aif-body">
         <Box className="aif-list">
-          {similarities.map((sim, idx) => (
-            <Box
-              key={sim.proposal_id}
-              className={`aif-card ${idx === selectedIndex ? "aif-card-active" : ""}`}
-              onClick={() => setSelectedIndex(idx)}
-            >
-              <Box className="aif-card-info">
-                <Typography className="aif-card-title">{sim.title}</Typography>
-                <Typography className="aif-card-desc">
-                  {sim.description}
-                </Typography>
-                <Box className="aif-tags">
-                  {sim.technologies
-                    ?.split(",")
-                    .map((t) => t.trim())
-                    .filter(Boolean)
-                    .map((t) => (
-                      <Chip
-                        key={t}
-                        size="small"
-                        label={t}
-                        className="aif-chip-sm"
-                      />
-                    ))}
-                </Box>
-              </Box>
-
-              {/* Custom Badge to perfectly match image */}
-              <Box className={`aif-badge aif-badge-${sim.similarity_color}`}>
-                <Typography className="aif-badge-percent">
-                  {Math.round(sim.similarity_score)}%
-                </Typography>
-                <Typography className="aif-badge-label">
-                  {sim.similarity_level === "high"
-                    ? "High"
-                    : sim.similarity_level === "medium"
-                      ? "Medium"
-                      : "Low"}
-                </Typography>
-              </Box>
-            </Box>
+{similarities.map((sim, idx) => (
+  <Box
+    key={sim.proposal_id}
+    className={`aif-card ${idx === selectedIndex ? "aif-card-active" : ""}`}
+    onClick={() => setSelectedIndex(idx)}
+  >
+    <Box className="aif-card-info">
+      <Typography className="aif-card-title">{sim.title}</Typography>
+      <Typography className="aif-card-desc">
+        {sim.description}
+      </Typography>
+      <Box className="aif-tags">
+        {sim.technologies
+          ?.split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+          .map((t) => (
+            <Chip
+              key={t}
+              size="small"
+              label={t}
+              className="aif-chip-sm"
+            />
           ))}
+      </Box>
+      {/* تاريخ تقديم الـ proposal المشابه */}
+      {sim.submitted_at && (
+        <Typography className="aif-card-datee">
+          {sim.submitted_at}
+        </Typography>
+      )}
+    </Box>
+
+    {/* Custom Badge to perfectly match image */}
+    <Box className={`aif-badge aif-badge-${sim.similarity_color}`}>
+      <Typography className="aif-badge-percent">
+        {Math.round(sim.similarity_score)}%
+      </Typography>
+      <Typography className="aif-badge-label">
+        {sim.similarity_level === "high"
+          ? "High"
+          : sim.similarity_level === "medium"
+            ? "Medium"
+            : "Low"}
+      </Typography>
+    </Box>
+  </Box>
+))}
         </Box>
 
         {/* Side Detail Panel */}

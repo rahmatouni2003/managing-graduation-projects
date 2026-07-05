@@ -3,6 +3,11 @@
   background: #f4f5f9;
   font-family: "Segoe UI", Tahoma, sans-serif;
 }
+.aif-card-datee {
+  color: #a0a0b0;
+  font-size: 12px !important;
+  margin-top: 10px !important;
+}
 
 .aif-main {
   margin-left: 250px;
