@@ -179,7 +179,7 @@ const Header = () => {
   const handleSave = async () => {
     const code = newYearCode.trim();
     if (!code) {
-      setErrorMsg("من فضلك اكتب كود السنة الدراسية");
+      setErrorMsg("Please enter the academic year code");
       return;
     }
 

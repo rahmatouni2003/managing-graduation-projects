@@ -69,36 +69,41 @@ const getData = async () => {
 };
 
   // ---- enter edit mode ----
-  const handleEditClick = async (row, e) => {
-    e.stopPropagation();
-    try {
-      const res = await Admin.getFormData(row.id);
+// ---- enter edit mode ----
+const handleEditClick = async (row, e) => {
+  e.stopPropagation();
+  try {
+    // 1. هنجيب الخيارات المتاحة فقط من الـ API
+    const res = await Admin.getFormData(row.id);
 
-      setFormOptions({
-        doctors: res.available_doctors || [],
-        tas: res.available_tas || [],
-      });
+    setFormOptions({
+      doctors: res.available_doctors || [],
+      tas: res.available_tas || [],
+    });
 
-      const docs = res.current_committee?.doctors || [];
-      const tas = res.current_committee?.tas || [];
+    // 2. الحل السحري: هنقرا الداتا الحالية مباشرة من الـ row المعروض في الجدول
+    // تأكدي إن الباك إند في الجدول بيبعت المصفوفة فيها id (شوفي params.row.doctors?.[index]?.id)
+    const docs = row.doctors || [];
+    const tas = row.tas || [];
 
-      setSelectedDoctors([
-        docs[0]?.id || "",
-        docs[1]?.id || "",
-        docs[2]?.id || "",
-      ]);
-      setSelectedTAs([
-        tas[0]?.id || "",
-        tas[1]?.id || "",
-        tas[2]?.id || "",
-      ]);
+    setSelectedDoctors([
+      docs[0]?.id || docs[0]?.doctor_id || "", 
+      docs[1]?.id || docs[1]?.doctor_id || "",
+      docs[2]?.id || docs[2]?.doctor_id || "",
+    ]);
+    
+    setSelectedTAs([
+      tas[0]?.id || tas[0]?.ta_id || "",
+      tas[1]?.id || tas[1]?.ta_id || "",
+      tas[2]?.id || tas[2]?.ta_id || "",
+    ]);
 
-      setEditingRowId(row.id);
-    } catch (err) {
-      console.log(err);
-      toast.error("Failed to load edit data");
-    }
-  };
+    setEditingRowId(row.id);
+  } catch (err) {
+    console.log(err);
+    toast.error("Failed to load edit data");
+  }
+};
 
   // ---- submit edit ----
 const handleSubmitClick = async (row, e) => {
@@ -106,10 +111,10 @@ const handleSubmitClick = async (row, e) => {
   try {
     setSubmitting(true);
 
-    const data = {
-      doctor_ids: selectedDoctors.filter(Boolean),
-      ta_ids: selectedTAs.filter(Boolean),
-    };
+const data = {
+  doctor_ids: selectedDoctors.map(id => id === "" ? null : id),
+  ta_ids: selectedTAs.map(id => id === "" ? null : id),
+};
 
     console.log("Row ID:", row.id);
     console.log("Payload being sent:", data);
