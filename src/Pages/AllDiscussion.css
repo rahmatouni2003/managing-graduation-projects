@@ -2,6 +2,7 @@
   padding: 25px;
   background: #f5f6f8;
   min-height: 100vh;
+  
 }
 
 .discussion-header {
@@ -14,6 +15,7 @@
 .discussion-table {
   border-radius: 12px !important;
   overflow: hidden;
+  
 }
 
 .MuiDataGrid-root {
@@ -36,12 +38,24 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  margin-top: -3px;
 }
 
-.EDIT-btn {
-  color: #1976d2 !important;
+.EDIT-btn,
+.delete-btn {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
+.EDIT-btn svg,
+.delete-btn svg {
+  display: inline-block !important;
+  fill: currentColor !important;
+}
+
+.EDIT-btn { color: #1976d2 !important; }
+.delete-btn { color: #d32f2f !important; }
 .delete-btn {
   color: #d32f2f !important;
 }

@@ -80,9 +80,7 @@ const handleEditClick = async (row, e) => {
       doctors: res.available_doctors || [],
       tas: res.available_tas || [],
     });
-
-    // 2. الحل السحري: هنقرا الداتا الحالية مباشرة من الـ row المعروض في الجدول
-    // تأكدي إن الباك إند في الجدول بيبعت المصفوفة فيها id (شوفي params.row.doctors?.[index]?.id)
+ 
     const docs = row.doctors || [];
     const tas = row.tas || [];
 
