@@ -24,7 +24,7 @@ import { useRef } from "react";
 
 export default function EditMilestone() {
     const { id } = useParams();
-    const [position, setPosition] = useState(1);
+    const [position, setPosition] = useState("");
     const [capstone, setCapstone] = useState(1);
 
     const [title, setTitle] = useState("");
@@ -35,6 +35,16 @@ export default function EditMilestone() {
     const [startDate, setStartDate] = useState(null);
     const [deadline, setDeadline] = useState(null);
     const [requirements, setRequirements] = useState([]);
+
+    // قائمة الـ milestones (id + phase_number) اللي هتيجي من السيرفر بدل [1,2,3,4,5]
+    // لازم نبعت الـ id الحقيقي بتاع الـ milestone كـ previous_milestone_id مش رقم ترتيبي وهمي
+    const [milestonesList, setMilestonesList] = useState([]);
+
+    // بيستخرج الرقم من نص زي "Phase 8" ويرجعه كـ number، أو null لو مفيش رقم
+    const extractPhaseNum = (phaseNumber) => {
+        const match = String(phaseNumber ?? "").match(/\d+/);
+        return match ? Number(match[0]) : null;
+    };
 
     useEffect(() => {
         if (location.state?.focusDeadline && deadlineRef.current) {
@@ -53,6 +63,16 @@ export default function EditMilestone() {
                 const res = await Admin.getMilestones();
                 const data = res?.data || res;
 
+                // بناء قائمة الاختيار من الـ id الحقيقي + phase_number
+                // بنستبعد الـ milestone الحالي نفسه (مينفعش يكون سابق لنفسه)
+                const options = (data || [])
+                    .filter((m) => m.id !== Number(id))
+                    .map((m) => ({
+                        id: m.id,
+                        phase_number: m.phase_number,
+                    }));
+                setMilestonesList(options);
+
                 const milestone = data.find((m) => m.id === Number(id));
 
                 if (!milestone) {
@@ -63,8 +83,26 @@ export default function EditMilestone() {
                 setTitle(milestone?.title || "");
                 setMaxScore(milestone?.max_score ?? 0);
                 setDescription(milestone?.description || "");
-                setPosition(milestone?.previous_milestone_id || 1);
                 setCapstone(milestone?.project_course_id || 1);
+                let initialPosition = "";
+
+                if (milestone?.previous_milestone_id != null) {
+                    initialPosition = Number(milestone.previous_milestone_id);
+                } else {
+                    const currentPhaseNum = extractPhaseNum(milestone?.phase_number);
+
+                    if (currentPhaseNum != null) {
+                        const previousMilestone = options.find(
+                            (o) => extractPhaseNum(o.phase_number) === currentPhaseNum - 1
+                        );
+
+                        if (previousMilestone) {
+                            initialPosition = previousMilestone.id;
+                        }
+                    }
+                }
+
+                setPosition(initialPosition);
 
                 setStartDate(
                     milestone?.start_date ? dayjs(milestone.start_date) : null
@@ -141,6 +179,15 @@ export default function EditMilestone() {
         setRequirements(updated);
     };
 
+    // بيحسب رقم الفيز الجاي بناءً على رقم الفيز بتاع الـ milestone المختارة كـ "previous"
+    const getNextPhaseNumber = () => {
+        const selected = milestonesList.find((m) => m.id === position);
+        if (!selected) return "-";
+
+        const phaseNum = extractPhaseNum(selected.phase_number);
+        return phaseNum != null ? phaseNum + 1 : "-";
+    };
+
     const updateRequirement = (index, value) => {
         const updated = [...requirements];
         updated[index].text = value;
@@ -202,9 +249,9 @@ export default function EditMilestone() {
                                     onChange={(e) => setPosition(Number(e.target.value))}
                                     sx={{ width: 300 }}
                                 >
-                                    {[1, 2, 3, 4, 5].map((num) => (
-                                        <MenuItem key={num} value={num}>
-                                            {num}
+                                    {milestonesList.map((m) => (
+                                        <MenuItem key={m.id} value={m.id}>
+                                            {m.phase_number}
                                         </MenuItem>
                                     ))}
                                 </TextField>
@@ -213,7 +260,7 @@ export default function EditMilestone() {
                             <Typography className="phase-text">
                                 This will be phase:
                                 <span className="phase-badge">
-                                    {position + 1}
+                                    {getNextPhaseNumber()}
                                 </span>
                             </Typography>
                         </Box>
@@ -255,7 +302,6 @@ export default function EditMilestone() {
                                 multiline
                                 rows={4}
                                 value={description}
-                                disabled
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Describe The Milestone..."
                             />
