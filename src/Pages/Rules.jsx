@@ -28,7 +28,7 @@ import "./Rules.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Rules() {
     const [newRequirement, setNewRequirement] = useState("");
@@ -68,14 +68,13 @@ export default function Rules() {
                 project_type_requirements: prev.project_type_requirements.filter((item) => item.id !== id),
             }));
             toast.success("Requirement deleted successfully");
-        } catch  {
+        } catch {
             toast.error("Failed to delete requirement ❌");
         }
     };
 
     const handleDeleteCriteria = async (id) => {
         try {
-            // تم إزالة النداء المتكرر هنا
             await Admin.deletRules(id);
             setForm((prev) => ({
                 ...prev,
@@ -88,80 +87,91 @@ export default function Rules() {
         }
     };
 
+    // ملحوظة: الفنكشن دي بقت "صامتة" (مفيش toast جواها) عشان الرسالة تظهر مرة واحدة بس
+    // من handleGraduationRulesSave، بدل ما تتكرر لو الاتنين (requirement و criteria) اتضافوا مع بعض.
     const handleAddIdeaSelectionCriteria = async () => {
         if (!newCriteria.trim()) {
-            return;
+            return false;
         }
 
-        try {
-            const payload = { rule: newCriteria };
+        const payload = { rule: newCriteria };
+        await Admin.addideaSelectionCriteria(payload);
 
-            // نداء واحد فقط للـ API
-            await Admin.addideaSelectionCriteria(payload);
+        setForm((prev) => ({
+            ...prev,
+            idea_selection_criteria: [
+                ...prev.idea_selection_criteria,
+                {
+                    id: Date.now(),
+                    rules: newCriteria,
+                },
+            ],
+        }));
 
-            setForm((prev) => ({
-                ...prev,
-                idea_selection_criteria: [
-                    ...prev.idea_selection_criteria,
-                    {
-                        id: Date.now(),
-                        rules: newCriteria,
-                    },
-                ],
-            }));
-
-            await fetchRules();
-            setNewCriteria("");
-        } catch (err) {
-            toast.error("Failed to add criteria ❌");
-        }
+        await fetchRules();
+        setNewCriteria("");
+        return true;
     };
 
     const handleAddProjectRequirement = async () => {
         if (!newRequirement.trim()) {
-            toast.error("Please enter a requirement");
-            return;
+            return false;
         }
 
-        try {
-            const payload = { rule: newRequirement };
+        const payload = { rule: newRequirement };
+        await Admin.addProjectTypeRequirements(payload);
 
-            // نداء واحد فقط للـ API
-            await Admin.addProjectTypeRequirements(payload);
+        setForm((prev) => ({
+            ...prev,
+            project_type_requirements: [
+                ...prev.project_type_requirements,
+                {
+                    id: Date.now(),
+                    rules: newRequirement,
+                },
+            ],
+        }));
 
-            setForm((prev) => ({
-                ...prev,
-                project_type_requirements: [
-                    ...prev.project_type_requirements,
-                    {
-                        id: Date.now(),
-                        rules: newRequirement,
-                    },
-                ],
-            }));
-
-            await fetchRules();
-            setNewRequirement("");
-        } catch  {
-            toast.error("Failed to add requirement ❌");
-        }
+        await fetchRules();
+        setNewRequirement("");
+        return true;
     };
 
     const handleGraduationRulesSave = async () => {
-        try {
-            if (newRequirement.trim()) {
-                await handleAddProjectRequirement();
-            }
+        const hasRequirement = newRequirement.trim();
+        const hasCriteria = newCriteria.trim();
 
-            if (newCriteria.trim()) {
-                await handleAddIdeaSelectionCriteria();
-            }
+        if (!hasRequirement && !hasCriteria) {
+            toast.error("Please enter a requirement or criteria first");
+            return;
+        }
 
+        let addedRequirement = false;
+        let addedCriteria = false;
+        let hadError = false;
+
+        if (hasRequirement) {
+            try {
+                addedRequirement = await handleAddProjectRequirement();
+            } catch {
+                hadError = true;
+                toast.error("Failed to add requirement ❌");
+            }
+        }
+
+        if (hasCriteria) {
+            try {
+                addedCriteria = await handleAddIdeaSelectionCriteria();
+            } catch {
+                hadError = true;
+                toast.error("Failed to add criteria ❌");
+            }
+        }
+
+        if ((addedRequirement || addedCriteria) && !hadError) {
             toast.success("Rules saved successfully 🎉");
-        } catch (err) {
-            toast.error(
-                err?.response?.data?.message || "Something went wrong ❌"
-            );
+        } else if ((addedRequirement || addedCriteria) && hadError) {
+            toast.success("Some rules were saved, but an error occurred with the rest");
         }
     };
 
@@ -256,6 +266,9 @@ export default function Rules() {
 
     return (
         <div className="admin-layout">
+            {/* Toaster لازم يكون موجود عشان رسايل success/error تظهر فعليًا */}
+            <Toaster position="top-right" reverseOrder={false} />
+
             <Sidebar />
 
             <div className="main-content">
