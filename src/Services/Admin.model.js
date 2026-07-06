@@ -349,7 +349,7 @@ static exportDoctor() {
     return submitRequestAsync(`/admin/defense-committees`, "POST", data);
   }
   static getDefenseCommittees(id) {
-    return submitRequestAsync(`/admin/defense-committees?project_course_id=${id}`, "GET");
+    return submitRequestAsync(`/admin/defense-committees`, "GET");
   }
   static deleteDefenseCommittee(id) {
     return submitRequestAsync(`/admin/defense-committees/${id}`, "DELETE");
