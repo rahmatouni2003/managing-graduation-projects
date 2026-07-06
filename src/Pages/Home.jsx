@@ -94,7 +94,7 @@ const {
 
         {/* ==================== PROJECT SECTION ==================== */}
         <div className="project-section">
-          <h3>Project</h3>
+          <h3> {project?.title}</h3>
           <p className="project-desc">
             {project?.description || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et"}
           </p>
