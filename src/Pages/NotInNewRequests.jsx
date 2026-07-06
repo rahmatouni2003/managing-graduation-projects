@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom"; // تم إضافة useLocation هنا
+import toast, { Toaster } from "react-hot-toast";
 import Student from "../Services/Student.model";
 import Requests from "../Services/Requests.model";
 import "./NotInNewRequests.css";
@@ -71,6 +72,7 @@ export default function NotInNewRequests() {
       setStudents(Array.isArray(list) ? list : []);
     } catch {
       setError("Failed to load students. Please try again.");
+      toast.error("Failed to load students. Please try again.");
       setStudents([]);
     } finally {
       setLoading(false);
@@ -86,6 +88,7 @@ export default function NotInNewRequests() {
       setTeams(Array.isArray(list) ? list : []);
     } catch {
       setError("Failed to load teams. Please try again.");
+      toast.error("Failed to load teams. Please try again.");
       setTeams([]);
     } finally {
       setLoading(false);
@@ -97,12 +100,16 @@ export default function NotInNewRequests() {
     setSendingId(id);
     try {
       await Requests.sendRequest({
-        to_id: id, 
-        request_type: type === "team" ? "join_team" : "team_form",
+        to_user_id: id, 
+        request_type: type === "team" ? "team_join" : "team_form",
       });
       setSentIds((prev) => new Set(prev).add(id));
+      toast.success(
+        type === "team" ? "Request sent to the team." : "Request sent successfully."
+      );
     } catch {
       setError("Failed to send request. Please try again.");
+      toast.error("Failed to send request. Please try again.");
     } finally {
       setSendingId(null);
     }
@@ -134,6 +141,8 @@ export default function NotInNewRequests() {
 
   return (
     <div className="nrPage">
+      <Toaster position="top-center" />
+
       <div className="nrHeader">
         <button className="nrBackBtn" aria-label="Back" onClick={() => navigate(-1)}>
           <BackIcon />
