@@ -133,26 +133,48 @@ const StudentsManagement = () => {
       toast.error("Update failed");
     }
   };
+
+  // ===== Upload Excel (Students / Doctors / TAs) =====
   const handleUploadExcel = async () => {
     try {
       const formData = new FormData();
-
-      const course = type === "project1" ? 1 : 2;
-
       formData.append("file", excelFile);
-      formData.append("course", course);
 
-      const response = await Admin.uploadStudent(formData);
+      if (type === "doctors") {
+        // Doctors import doesn't need a course
+        await Admin.uploadDoctor(formData);
+      } else if (type === "assistants") {
+        // TAs import doesn't need a course
+        await Admin.uploadTA(formData);
+      } else {
+        const course = type === "project1" ? 1 : 2;
+        formData.append("course", course);
 
-      console.log("Upload Response:", response);
+        await Admin.uploadStudent(formData);
+      }
 
       loadData();
 
       setExcelFile(null);
       setShowUploadModal(false);
-      toast.success("File uploaded successfully");
-    } catch {
-      toast.error("Upload failed");
+
+      if (type === "doctors") {
+        toast.success("Doctors file uploaded successfully");
+      } else if (type === "assistants") {
+        toast.success("Teaching assistants file uploaded successfully");
+      } else {
+        toast.success("Students file uploaded successfully");
+      }
+    } catch (error) {
+      console.error("Upload Error:", error);
+
+      if (type === "doctors") {
+        toast.error("Doctors upload failed");
+      } else if (type === "assistants") {
+        toast.error("Teaching assistants upload failed");
+      } else {
+        toast.error("Students upload failed");
+      }
     }
   };
 

@@ -330,6 +330,9 @@ static exportDoctor() {
       "GET"
     );
   }
+    static uploadTA(data) {
+    return submitRequestAsync(`/admin/TA/import`, "POST", data);
+  }
   static uploadDoctor(data) {
     return submitRequestAsync(`admin/doctor/import`, "POST", data);
   }
