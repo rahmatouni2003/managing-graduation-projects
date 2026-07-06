@@ -40,7 +40,8 @@ export const StudentNavbar = () => {
 
   const openNotifRef = useRef(false);
   const { user: currentUser, updateUser } = useAuth();
-console.log("currentUser:", currentUser);
+  console.log("currentUser:", currentUser);
+  
   // 💡 Ref لتتبع أحدث قيمة لـ currentUser بشكل لحظي (يحل مشكلة الـ race condition)
   const currentUserRef = useRef(currentUser);
   useEffect(() => {
@@ -172,15 +173,15 @@ console.log("currentUser:", currentUser);
   }, [currentUser]);
 
   const openMilestones = milestones?.filter((m) => m.is_open === true) || [];
-
-  // 💡 مصدر واحد فقط للحقيقة: currentUser.proposal_status
   const isProposalApproved = currentUser?.proposal_status === "approved";
+  
+
+  const isProposalPending = currentUser?.proposal_status === "pending" ;
   
   const uploadButtonText = isProposalApproved ? "Upload Task" : "Upload Idea";
   const popupTitle = isProposalApproved ? "Upload Task" : "Upload Idea";
 
   const handleUpload = async () => {
-    
     try {
       const formData = new FormData();
       formData.append("milestone_id", milestoneId);
@@ -222,7 +223,9 @@ console.log("currentUser:", currentUser);
       );
     }
   };
-console.log("currentUser:", currentUser);
+
+  console.log("currentUser:", currentUser);
+
   return (
     <div className="flex items-center student-navbar justify-between px-8 py-3 bg-white ">
       {/* Left */}
@@ -298,15 +301,15 @@ console.log("currentUser:", currentUser);
         ) : (
           <button
             onClick={() => {
-              if (!currentUser) return;
+              if (!currentUser || isProposalPending) return;
               if (isProposalApproved) {
                 setShowPopup(true);
               } else {
                 navigate("student/inteam/upload-project-idea");
               }
             }}
-            className={`upload-btn ${!currentUser ? "upload-btn-disabled" : ""}`}
-            disabled={!currentUser}
+            className={`upload-btn ${(!currentUser || isProposalPending) ? "upload-btn-disabled" : ""}`}
+            disabled={!currentUser || isProposalPending}
           >
             <FiUpload />
             {uploadButtonText}
@@ -373,14 +376,14 @@ console.log("currentUser:", currentUser);
           className={`flex items-center gap-2 cursor-pointer user-profile-container ${isProfilePage ? "profile-active" : ""}`}
           onClick={() => currentUser && navigate("/student/profile")}
         >
-                  {!currentUser && (
-          <button
-            className="nav-login-btn"
-            onClick={() => navigate("/login")}
-          >
-         login
-          </button>
-        )}
+          {!currentUser && (
+            <button
+              className="nav-login-btn"
+              onClick={() => navigate("/login")}
+            >
+              login
+            </button>
+          )}
           {currentUser ? (
             <>
               <img
@@ -398,9 +401,6 @@ console.log("currentUser:", currentUser);
             </>
           )}
         </div>
-
-        {/* زر تسجيل الدخول - يظهر فقط للـ Guest */}
-
       </div>
     </div>
   );
