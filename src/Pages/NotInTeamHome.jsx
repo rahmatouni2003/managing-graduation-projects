@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ChevronUp, ChevronDown, Search, Users } from "lucide-react";
 import StudentService from "../services/Student.model";
 import "./NotInTeamHome.css";
-
+import { useNavigate } from "react-router-dom";
 // رسمة الـ SVG التوضيحية
 const TeamIllustration = () => (
   <svg viewBox="0 0 320 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="nit-hero-illustration">
@@ -52,7 +52,7 @@ export default function NotInTeamHome() {
   const [error, setError] = useState(null);
   const [guidelinesOpen, setGuidelinesOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const navigate = useNavigate();
   useEffect(() => {
     StudentService.getHome()
       .then((res) => {
@@ -106,14 +106,26 @@ export default function NotInTeamHome() {
           <p className="nit-status-subtitle">Find a team to join or start your own!</p>
           
           <div className="nit-action-buttons">
-            <button className="nit-btn nit-btn-secondary">
+                        <button
+              className="nit-btn nit-btn-secondary"
+              onClick={() =>
+                navigate("/student/notinteam/notInNewRequests", {
+                  state: { activeTab: "teams" },
+                })
+              }
+            >
               <Search size={16} />
               Find a Team
             </button>
-            <button className="nit-btn nit-btn-primary">
-              <Users size={16} />
-              Start a Team
-            </button>
+            <button
+              className="nit-btn nit-btn-primary"
+              onClick={() =>
+                navigate("/student/notinteam/notInNewRequests", {
+                  state: { activeTab: "students" },
+                })
+              }
+            > Start a Team</button>
+
           </div>
         </div>
       </div>
