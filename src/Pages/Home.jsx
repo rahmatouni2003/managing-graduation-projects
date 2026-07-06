@@ -114,8 +114,8 @@ const {
           {/* Deadline */}
           {next_deadline && (
             <div className="deadline-alert">
-              <MdErrorOutline />
-              <span>{next_deadline}</span>
+             <MdErrorOutline />
+    <span> Next Deadline in {next_deadline.days_left} days left</span>
             </div>
           )}
 
