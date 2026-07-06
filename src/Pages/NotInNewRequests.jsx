@@ -99,10 +99,18 @@ export default function NotInNewRequests() {
     if (sentIds.has(id) || sendingId === id) return;
     setSendingId(id);
     try {
-      await Requests.sendRequest({
-        to_user_id: id, 
-        request_type: type === "team" ? "team_join" : "team_form",
-      });
+      const payload =
+        type === "team"
+          ? {
+              team_id: id,
+              request_type: "team_join",
+            }
+          : {
+              to_user_id: id,
+              request_type: "team_form",
+            };
+
+      await Requests.sendRequest(payload);
       setSentIds((prev) => new Set(prev).add(id));
       toast.success(
         type === "team" ? "Request sent to the team." : "Request sent successfully."
