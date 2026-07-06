@@ -275,20 +275,21 @@ const handleSubmit = async (e) => {
             <div className="form-group password-group">
               <label>Password</label>
               <div className="password-input">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-                <button
-                  type="button"
-                  className="eye-btn"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
+<input
+  type={showPassword ? "text" : "password"}
+  name="password"
+  autoComplete="new-password"   // ⬅️ ناقصة
+  placeholder="••••••••"
+  value={formData.password}
+  onChange={handleChange}
+/>
+<button
+  type="button"
+  className="eye-btn"
+  onClick={() => setShowPassword(!showPassword)}
+>
+  {showPassword ? <FaEyeSlash /> : <FaEye />}
+</button>
               </div>
             </div>
 
