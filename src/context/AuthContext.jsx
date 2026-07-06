@@ -1,12 +1,10 @@
+// src/context/AuthContext.jsx
 import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [isAuth, setIsAuth] = useState(
-    localStorage.getItem("isAuth") === "true"
-  );
-
+  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth") === "true");
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
@@ -15,7 +13,6 @@ export function AuthProvider({ children }) {
   const login = (userData) => {
     setIsAuth(true);
     setUser(userData);
-
     localStorage.setItem("isAuth", "true");
     localStorage.setItem("user", JSON.stringify(userData));
   };
@@ -23,7 +20,6 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setIsAuth(false);
     setUser(null);
-
     localStorage.removeItem("isAuth");
     localStorage.removeItem("user");
   };

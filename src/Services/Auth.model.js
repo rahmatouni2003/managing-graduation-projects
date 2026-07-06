@@ -14,7 +14,9 @@ class Auth {
     static getProfileData() {
     return submitRequestAsync("profile", "GET");
   }
-
+  static updatePassword(data) {
+    return submitRequestAsync("profile/change-password", "POST", data);
+  }
     static getHome() {
   return submitRequestAsync(`home`, "GET");
 } 

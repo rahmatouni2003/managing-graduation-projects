@@ -61,6 +61,7 @@ export default function ProfileSidebar() {
           <LogOut size={16} />
           <span>Log Out</span>
         </button>
+
       </div>
 
     </div>

@@ -87,7 +87,7 @@ export default function MilestonesTimeline() {
                   </div>
 
                   <div className="cardHeaderText">
-                    <h2 className="cardTitle">{milestone.title}</h2>
+                    <h2 className="cardTitle">{milestone.phase_number}:{milestone.title}</h2>
 
                     <div className="cardDate">
                       <CalendarIcon />

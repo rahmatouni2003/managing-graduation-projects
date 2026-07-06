@@ -40,7 +40,7 @@ export const StudentNavbar = () => {
 
   const openNotifRef = useRef(false);
   const { user: currentUser, updateUser } = useAuth();
-
+console.log("currentUser:", currentUser);
   // 💡 Ref لتتبع أحدث قيمة لـ currentUser بشكل لحظي (يحل مشكلة الـ race condition)
   const currentUserRef = useRef(currentUser);
   useEffect(() => {
@@ -180,6 +180,7 @@ export const StudentNavbar = () => {
   const popupTitle = isProposalApproved ? "Upload Task" : "Upload Idea";
 
   const handleUpload = async () => {
+    
     try {
       const formData = new FormData();
       formData.append("milestone_id", milestoneId);
@@ -221,7 +222,7 @@ export const StudentNavbar = () => {
       );
     }
   };
-
+console.log("currentUser:", currentUser);
   return (
     <div className="flex items-center student-navbar justify-between px-8 py-3 bg-white ">
       {/* Left */}
@@ -372,6 +373,14 @@ export const StudentNavbar = () => {
           className={`flex items-center gap-2 cursor-pointer user-profile-container ${isProfilePage ? "profile-active" : ""}`}
           onClick={() => currentUser && navigate("/student/profile")}
         >
+                  {!currentUser && (
+          <button
+            className="nav-login-btn"
+            onClick={() => navigate("/login")}
+          >
+         login
+          </button>
+        )}
           {currentUser ? (
             <>
               <img
@@ -389,6 +398,9 @@ export const StudentNavbar = () => {
             </>
           )}
         </div>
+
+        {/* زر تسجيل الدخول - يظهر فقط للـ Guest */}
+
       </div>
     </div>
   );
