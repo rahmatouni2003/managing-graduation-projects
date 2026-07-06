@@ -15,8 +15,7 @@ export default function AIFilterPage() {
   const [statistics, setStatistics] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // ✅ بدل ما يكون فيه actionLoadingId واحد للكارت كله،
-  // هنستخدم object فيه مفتاح مركب (proposalId + status) عشان كل زرار يتحكم في نفسه لوحده
+
   const [actionLoadingKey, setActionLoadingKey] = useState(null);
 
   const navigate = useNavigate();
@@ -200,7 +199,7 @@ export default function AIFilterPage() {
             <div className="ai-filter-stat-item pendingg">
               <span className="ai-filter-stat-badge">
                 <Folder size={16} className="ai-filter-icon-orange" />
-                <strong>{statistics.total_pending ?? 12}</strong> Pending
+                <strong>{statistics.total_pending ?? 0}</strong> Pending
                 Reviews
               </span>
             </div>
@@ -208,7 +207,7 @@ export default function AIFilterPage() {
             <div className="ai-filter-stat-item high-sim">
               <span className="ai-filter-stat-badge">
                 <XCircle size={16} className="ai-filter-icon-red" />
-                <strong>{statistics.high_similarity ?? 3}</strong> High
+                <strong>{statistics.high_similarity ?? 0}</strong> High
                 Similarity
               </span>
             </div>
@@ -216,7 +215,7 @@ export default function AIFilterPage() {
             <div className="ai-filter-stat-item approved">
               <span className="ai-filter-stat-badge">
                 <FileCheck2 size={16} className="ai-filter-icon-green" />
-                <strong>{statistics.total_approved ?? 8}</strong> Approved
+                <strong>{statistics.total_approved ?? 0}</strong> Approved
               </span>
             </div>
           </div>
@@ -347,13 +346,13 @@ export default function AIFilterPage() {
                         </p>
                         <div className="ai-filter-tags-container">
                           <span className="ai-filter-tag ai-filter-tag-blue">
-                            {proposal.category || "AI"}
+                            {proposal.category || ""}
                           </span>
                           <span className="ai-filter-tag ai-filter-tag-blue">
-                            {proposal.department?.name || "Healthcare"}
+                            {proposal.department?.name || ""}
                           </span>
                           <span className="ai-filter-tag ai-filter-tag-blue">
-                            {proposal.project_type || "Data Science"}
+                            {proposal.project_type || ""}
                           </span>
                         </div>
                       </div>
@@ -373,7 +372,7 @@ export default function AIFilterPage() {
                     <div className="ai-filter-proposal-meta">
                       <div className="ai-filter-meta-left">
                         <span className="ai-filter-team-id">
-                          Team {proposal.team?.name || "Alpha"}
+                          Team {proposal.team?.name || ""}
                         </span>
                         <span className="team-members-count">
                           , Members: {proposal.team?.members_count || 0}
@@ -399,7 +398,7 @@ export default function AIFilterPage() {
                           )}
                         </div>
                         <span className="ai-filter-submission-date">
-                          {proposal.submitted_date || "Nov 5, 2025"}
+                          {proposal.submitted_date || ""}
                         </span>
                       </div>
 
