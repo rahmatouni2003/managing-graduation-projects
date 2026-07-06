@@ -26,7 +26,7 @@ import Sidebar from "../components/adminSidebar";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import "./Rules.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
 
@@ -95,7 +95,7 @@ export default function Rules() {
 
         try {
             const payload = { rule: newCriteria };
-            
+
             // نداء واحد فقط للـ API
             await Admin.addideaSelectionCriteria(payload);
 
@@ -109,7 +109,7 @@ export default function Rules() {
                     },
                 ],
             }));
-            
+
             await fetchRules();
             setNewCriteria("");
         } catch (err) {
@@ -315,11 +315,17 @@ export default function Rules() {
                             <Grid item xs={12} md={4}>
                                 <Typography className="field-label">Team Formation Deadline</Typography>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DateCalendar
+                                    <DatePicker
                                         value={selectedDate}
                                         onChange={(newValue) => {
                                             setSelectedDate(newValue);
                                             setForm((prev) => ({ ...prev, project1_team_formation_deadline: newValue }));
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                size: "small",
+                                                className: "date-field",
+                                            },
                                         }}
                                     />
                                 </LocalizationProvider>
