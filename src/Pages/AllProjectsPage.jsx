@@ -1,16 +1,10 @@
-import {
-  FaHeart,
-  FaRegHeart,
-  FaArrowLeft,
-} from "react-icons/fa";
-
-import {
-  useEffect,
-  useState,
-} from "react";
+import { FaHeart, FaRegHeart, FaArrowLeft } from "react-icons/fa";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Project from "../Services/Project.model";
 import "./AllProjectsPage.css";
+
+// دالة التحقق من تسجيل الدخول
 const isLoggedIn = () => {
   return !!localStorage.getItem("token");
 };
@@ -25,6 +19,7 @@ function ProjectCard({
   favorite,
   type,
   onFavoriteClick,
+  showFavoriteBtn, // 👈 استقبال الـ Prop الجديد لمعرفة هل يظهر الزر أم لا
 }) {
   const navigate = useNavigate();
 
@@ -38,13 +33,17 @@ function ProjectCard({
             <span>{year}</span>
           </div>
         </div>
-        <button className="favorite-btn" onClick={() => onFavoriteClick(id)}>
-          {favorite ? (
-            <FaHeart className="heart-filled" />
-          ) : (
-            <FaRegHeart className="heart-outline" />
-          )}
-        </button>
+        
+        {/* 👈 إذا كان المستخدم مسجل دخول، سيظهر الزر، وإذا لم يكن مسجل دخول لن يظهر أي شيء هنا */}
+        {showFavoriteBtn && (
+          <button className="favorite-btn" onClick={() => onFavoriteClick(id)}>
+            {favorite ? (
+              <FaHeart className="heart-filled" />
+            ) : (
+              <FaRegHeart className="heart-outline" />
+            )}
+          </button>
+        )}
       </div>
 
       <p className="card-description">{description}</p>
@@ -137,12 +136,15 @@ export default function AllProjectsPage() {
 
   return (
     <div className="projects-page">
-<div className="section-headerr">
-  <button className="back-btnn" onClick={() => navigate("/projectsLiberary")}>
-    <FaArrowLeft />
-  </button>
-  <h2>{type === "previous" ? "Previous Projects" : "Suggestions"}</h2>
-</div>
+      <div className="section-headerr">
+        <button
+          className="back-btnn"
+          onClick={() => navigate("/projectsLiberary")}
+        >
+          <FaArrowLeft />
+        </button>
+        <h2>{type === "previous" ? "Previous Projects" : "Suggestions"}</h2>
+      </div>
 
       <div className="cards-grid">
         {projects.map((project) => (
@@ -157,6 +159,7 @@ export default function AllProjectsPage() {
             tags={project.technologies}
             favorite={project.favorite}
             onFavoriteClick={handleFavorite}
+            showFavoriteBtn={isLoggedIn()} // 👈 تمرير حالة التسجيل ديناميكياً لكل كارت بناءً على وجود الـ Token
           />
         ))}
       </div>

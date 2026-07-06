@@ -1,12 +1,12 @@
 .home-page {
   background: #ebebeb;
   min-height: 100vh;
-  /* padding: 28px 24px 24px; */
+  padding: 40px 48px; /* يعطي مساحة تنفس وحواف متطابقة للصورة */
   display: flex;
   flex-direction: column;
-  
   align-items: center;
   font-family: "Inter", "Segoe UI", sans-serif;
+  box-sizing: border-box;
 }
 
 .home-loading,
@@ -23,16 +23,16 @@
 
 .home-hero {
   width: 100%;
-  max-width: 760px;
+  max-width: 1140px; /* تم تكبير الحجم ليمتد على كامل عرض الشاشة المتاحة */
   text-align: center;
   margin-bottom: 32px;
 }
 
 .home-title {
-  font-size: 36px;
+  font-size: 42px; /* تكبير الخط قليلاً ليناسب العرض */
   font-weight: 800;
   color: #111827;
-  margin: 0 0 8px;
+  margin: 0 0 12px;
 }
 
 .wave {
@@ -40,9 +40,9 @@
 }
 
 .home-subtitle {
-  font-size: 15px;
+  font-size: 16px;
   color: #6b7280;
-  margin: 0 0 24px;
+  margin: 0 0 28px;
 }
 
 .home-search {
@@ -50,11 +50,11 @@
   align-items: center;
   gap: 10px;
   background: #ffffff;
-  border-radius: 10px;
-  padding: 12px 18px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  max-width: 480px;
-  margin: 0 auto 20px;
+  border-radius: 12px;
+  padding: 14px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  max-width: 520px;
+  margin: 0 auto 24px;
 }
 
 .home-search-icon {
@@ -66,7 +66,7 @@
   border: none;
   outline: none;
   flex: 1;
-  font-size: 14px;
+  font-size: 15px;
   color: #111827;
   background: transparent;
 }
@@ -79,27 +79,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 24px;
   background: #ffffff;
   border-radius: 999px;
-  padding: 10px 24px;
+  padding: 12px 32px;
   width: fit-content;
   margin: 0 auto;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .home-stat-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #374151;
+  gap: 8px;
+  font-size: 14px;
+  color: #4b5563;
   white-space: nowrap;
 }
 
-.home-stat-icon {
-  color: #2563eb;
-}
+.home-stat-icon { color: #2563eb; }
+.home-stat-icon-yellow { color: #ca8a04; }
+.home-stat-icon-purple { color: #4f46e5; }
 
 .home-stat-item strong {
   font-weight: 700;
@@ -108,7 +108,7 @@
 
 .home-stat-divider {
   width: 1px;
-  height: 16px;
+  height: 18px;
   background: #e5e7eb;
 }
 
@@ -116,28 +116,29 @@
 
 .home-card {
   background: #ffffff;
-  border-radius: 14px;
-  padding: 24px 28px;
+  border-radius: 16px;
+  padding: 28px 32px;
   width: 100%;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-sizing: border-box;
 }
 
 .card-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: #111827;
 }
 
 .card-divider {
   border: none;
-  border-top: 1px solid #f0f0f0;
-  margin: 14px 0 18px;
+  border-top: 1px solid #f3f4f6;
+  margin: 16px 0 20px;
 }
 
 /* ---------- Featured projects ---------- */
 
 .featured-card {
-  max-width: 760px;
+  max-width: 1140px; /* تم التكبير ليملأ الشاشة بالتوازي مع الـ grid السفلي */
   margin-bottom: 24px;
 }
 
@@ -148,30 +149,30 @@
 }
 
 .featured-star {
-  color: #f59e0b;
-  fill: #f59e0b;
+  color: #eab308;
+  fill: #eab308;
 }
 
 .featured-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
 .featured-project {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: #f9fafb;
-  border-radius: 10px;
-  padding: 14px;
+  gap: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
 }
 
 .featured-project-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,12 +182,12 @@
 .featured-project-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
 }
 
 .featured-project-title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: #111827;
   white-space: nowrap;
@@ -196,7 +197,7 @@
 
 .featured-project-meta {
   font-size: 12px;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .browse-link {
@@ -204,10 +205,11 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: #2563eb;
   text-decoration: none;
+  margin-top: 8px;
 }
 
 .browse-link:hover {
@@ -219,8 +221,8 @@
 .home-bottom-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  max-width: 760px;
+  gap: 24px;
+  max-width: 1140px; /* جعل الكروت السفلية تمتد بنفس عرض الكرت العلوي تماماً */
   width: 100%;
 }
 
@@ -235,7 +237,7 @@
 }
 
 .ideas-icon {
-  color: #f59e0b;
+  color: #eab308;
 }
 
 .guidelines-list,
@@ -245,23 +247,23 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .guidelines-list li,
 .ideas-list li {
   position: relative;
-  padding-left: 16px;
+  padding-left: 18px;
   font-size: 13px;
   color: #374151;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .guidelines-list li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 6px;
+  top: 7px;
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -272,11 +274,11 @@
   content: "";
   position: absolute;
   left: 0;
-  top: 6px;
+  top: 7px;
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #f59e0b;
+  background: #eab308;
 }
 
 .explore-link {
@@ -288,7 +290,7 @@
   font-weight: 600;
   color: #2563eb;
   text-decoration: none;
-  margin-top: 18px;
+  margin-top: 24px;
 }
 
 .explore-link:hover {
@@ -297,7 +299,7 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .featured-grid {
     grid-template-columns: 1fr;
   }
@@ -306,7 +308,7 @@
     grid-template-columns: 1fr;
   }
 
-  .home-stats {
-    flex-wrap: wrap;
+  .home-page {
+    padding: 24px 16px;
   }
 }
