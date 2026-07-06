@@ -466,6 +466,10 @@ export const router = createBrowserRouter([
         path: "all-milestone-committees-details/:id",
         element: <FinalDiscussionDetails />,
       },
+            {
+        path: "student/edit-profile",
+        element: <EditStudentProfile />,
+      },
       {
         path: "suggested-projects",
         element: <SuggestedProjects />,
@@ -601,6 +605,10 @@ export const router = createBrowserRouter([
 
   // ================= STUDENT LAYOUT =================
 
+      {
+        path: "student/profile",
+        element: <EditStudentProfile />,
+      },
   {
     path: "/",
 

@@ -142,18 +142,18 @@ import { useState, useEffect } from "react";
 import Admin from "../services/Admin.model";
 import { FaSearch, FaBell, FaGraduationCap, FaPen } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext"; // 👈 تأكدي من كتابة المسار الصحيح لملف الـ Context الخاص بكِ
-
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo2.png";
 
 const Header = () => {
   const { user } = useAuth(); // 👈 جلب بيانات المستخدم الحالي من الـ Context
   const [academicYear, setAcademicYear] = useState("");
-  const [academicYears, setAcademicYears] = useState([]);
+  const [, setAcademicYears] = useState([]);
   const [newYearCode, setNewYearCode] = useState("");
   const [showYearModal, setShowYearModal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-
+ const navigate = useNavigate();
   const loadAcademicYears = async () => {
     try {
       const response = await Admin.getAcademicYears();
@@ -229,13 +229,14 @@ const Header = () => {
           </div>
 
           <FaBell className="bell" />
-
-          <div className="profile">
-            <img src="https://i.pravatar.cc/40" alt="profile" />
-
-            {/* 👈 هنا قمنا باستبدال الاسم الثابت بالاسم القادم ديناميكياً */}
-            <span>{user?.full_name || "Admin"}</span>
-          </div>
+  <div 
+    className="profile" 
+    onClick={() => navigate("/admin/student/edit-profile")}
+    style={{ cursor: "pointer" }}
+  >
+    <img src="https://i.pravatar.cc/40" alt="profile" />
+    <span>{user?.full_name || "Admin"}</span>
+  </div>
         </div>
       </header>
 
