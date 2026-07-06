@@ -45,6 +45,18 @@ const [tas, setTas] = useState([]);
     dayjs().hour(10).minute(0)
   );
 
+// Helper موحّد لاستخراج رسالة الخطأ من الباك اند
+const getBackendErrorMessage = (error, fallback = "Something went wrong") => {
+  const validationErrors = error?.response?.data?.errors;
+
+  if (validationErrors) {
+    const firstError = Object.values(validationErrors)?.[0]?.[0];
+    if (firstError) return firstError;
+  }
+
+  return error?.response?.data?.message || fallback;
+};
+
 const fetchCommitteeOptions = async (teamId) => {
   try {
     const res = await Admin.getAvailableDoctorsAndTA(teamId);
@@ -71,6 +83,12 @@ const fetchCommitteeOptions = async (teamId) => {
 
   } catch (error) {
     console.error(error);
+    toast.error(
+      getBackendErrorMessage(
+        error,
+        "Failed to load doctors and TAs"
+      )
+    );
   }
 };
 const handleScheduleDiscussion = async () => {
@@ -96,24 +114,14 @@ const handleScheduleDiscussion = async () => {
       res?.message || "Discussion scheduled successfully"
     );
 
-    console.log(res);
+    // الانتظار قليلاً لإظهار الرسالة ثم الانتقال
+    setTimeout(() => {
+      navigate("/admin/all-discussions");
+    }, 1000);
+
   } catch (error) {
     console.error(error);
-
-    const validationErrors =
-      error?.response?.data?.errors;
-
-    if (validationErrors) {
-      const firstError =
-        Object.values(validationErrors)[0]?.[0];
-
-      toast.error(firstError);
-    } else {
-      toast.error(
-        error?.response?.data?.message ||
-          "Something went wrong"
-      );
-    }
+    toast.error(getBackendErrorMessage(error));
   }
 };
 const fetchProjects = async (id) => {
@@ -136,6 +144,9 @@ const fetchProjects = async (id) => {
     }
   } catch (error) {
     console.error("fetchProjects error:", error);
+    toast.error(
+      getBackendErrorMessage(error, "Failed to load projects")
+    );
   }
 };
 useEffect(() => {
