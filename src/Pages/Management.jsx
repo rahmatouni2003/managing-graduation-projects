@@ -7,7 +7,7 @@ import {
   FaUpload,
   FaShareAlt,
   FaChevronLeft,
-  FaChevronRight
+  FaChevronRight,
 } from "react-icons/fa";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ const StudentsManagement = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("project1");
-  const [courseId,] = useState(1);
+  const [courseId] = useState(1);
   const [editingId, setEditingId] = useState(null);
   const [departments, setDepartments] = useState([]);
   const [editMode, setEditMode] = useState("student");
@@ -44,7 +44,7 @@ const StudentsManagement = () => {
   });
 
   useEffect(() => {
-    Project.getDepartments().then(res => {
+    Project.getDepartments().then((res) => {
       setDepartments(res);
     });
   }, []);
@@ -54,14 +54,10 @@ const StudentsManagement = () => {
     email: "",
     phone: "",
     department_id: "",
-    gpa: ""
+    gpa: "",
   });
   const dataToRender =
-    type === "doctors"
-      ? doctors
-      : type === "assistants"
-        ? tas
-        : students;
+    type === "doctors" ? doctors : type === "assistants" ? tas : students;
 
   // ===== Pagination calculations =====
   // Every tab (students / doctors / assistants) is now server-paginated,
@@ -97,7 +93,7 @@ const StudentsManagement = () => {
     national_id: editForm.national_id,
     phone: editForm.phone,
     email: editForm.email,
-    department_id: editForm.department_id
+    department_id: editForm.department_id,
   });
   const handleChange = (e) => {
     setEditForm({
@@ -105,12 +101,12 @@ const StudentsManagement = () => {
       [e.target.name]: e.target.value,
     });
   };
-  
+
   const handleUpdate = async (id) => {
     console.log("UPDATE CLICKED", id);
-const paginator = await Admin.getTAs(currentPage, itemsPerPage);
+    const paginator = await Admin.getTAs(currentPage, itemsPerPage);
 
-console.log(paginator.data);
+    console.log(paginator.data);
     try {
       const payload = {
         ...getDoctorPayload(),
@@ -119,11 +115,9 @@ console.log(paginator.data);
 
       if (editMode === "doctor") {
         await Admin.updateTAs(id, payload);
-      }
-      else if (editMode === "assistant") {
+      } else if (editMode === "assistant") {
         await Admin.updateTAs(id, payload);
-      }
-      else {
+      } else {
         await Admin.updateStudent(id, editForm);
       }
 
@@ -169,7 +163,7 @@ console.log(paginator.data);
       toast.success(
         response.is_active
           ? "User activated successfully"
-          : "User deactivated successfully"
+          : "User deactivated successfully",
       );
 
       loadData();
@@ -194,9 +188,7 @@ console.log(paginator.data);
           email: newForm.email,
           department_id: newForm.department_id,
         });
-      }
-
-      else if (type === "assistants") {
+      } else if (type === "assistants") {
         await Admin.addTAs({
           name: newForm.name,
           national_id: newForm.national_id,
@@ -204,9 +196,7 @@ console.log(paginator.data);
           email: newForm.email,
           department_id: newForm.department_id,
         });
-      }
-
-      else {
+      } else {
         await Admin.addStudent({
           name: newForm.name,
           national_id: newForm.national_id,
@@ -254,9 +244,7 @@ console.log(paginator.data);
 
         setStudents([]);
         setTAs([]);
-      }
-
-      else if (type === "assistants") {
+      } else if (type === "assistants") {
         // Now paginated the same way students are: server returns a
         // Laravel paginator (data / current_page / last_page / total / per_page)
         const paginator = await Admin.getTAs(currentPage, itemsPerPage);
@@ -273,12 +261,14 @@ console.log(paginator.data);
 
         setStudents([]);
         setDoctors([]);
-      }
-
-      else {
+      } else {
         const course = type === "project1" ? 1 : 2;
 
-        const paginator = await Admin.getStudents(course, currentPage, itemsPerPage);
+        const paginator = await Admin.getStudents(
+          course,
+          currentPage,
+          itemsPerPage,
+        );
 
         if (paginator) {
           setStudents(paginator.data || []);
@@ -293,46 +283,45 @@ console.log(paginator.data);
         setDoctors([]);
         setTAs([]);
       }
-
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
-const handleExport = async () => {
-  try {
-    let response;
-    let fileName;
+  const handleExport = async () => {
+    try {
+      let response;
+      let fileName;
 
-    if (type === "doctors") {
-      response = await Admin.exportDoctor(); // ستعمل بنجاح الآن كـ Blob
-      fileName = `doctors_list_${new Date().toISOString().slice(0,10)}.xlsx`;
-    } else if (type === "assistants") {
-      response = await Admin.exportTAs(); // ستعمل بنجاح الآن كـ Blob
-      fileName = `teaching_assistants_list_${new Date().toISOString().slice(0,10)}.xlsx`;
-    } else {
-      const courseId = type === "project1" ? 1 : 2;
-      response = await Admin.exportStudents(courseId);
-      fileName = `capstone_project_${courseId}_students_${new Date().toISOString().slice(0,10)}.xlsx`;
+      if (type === "doctors") {
+        response = await Admin.exportDoctor(); // ستعمل بنجاح الآن كـ Blob
+        fileName = `doctors_list_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      } else if (type === "assistants") {
+        response = await Admin.exportTAs(); // ستعمل بنجاح الآن كـ Blob
+        fileName = `teaching_assistants_list_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      } else {
+        const courseId = type === "project1" ? 1 : 2;
+        response = await Admin.exportStudents(courseId);
+        fileName = `capstone_project_${courseId}_students_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      }
+
+      const url = window.URL.createObjectURL(response);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(url);
+      toast.success("File downloaded successfully");
+    } catch (error) {
+      console.error("Export Error:", error);
+      toast.error("Export failed");
     }
-
-    const url = window.URL.createObjectURL(response);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", fileName);
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    window.URL.revokeObjectURL(url);
-    toast.success("File downloaded successfully");
-  } catch (error) {
-    console.error("Export Error:", error);
-    toast.error("Export failed");
-  }
-};
+  };
 
   // Refetch when the tab / course changes
   useEffect(() => {
@@ -350,21 +339,17 @@ const handleExport = async () => {
       <>
         <Sidebar />
         <Header />
-        <div className="page">
-          Loading Students...
-        </div>
+        <div className="page">Loading Students...</div>
       </>
     );
   }
   return (
-
     <>
       <div className="admin-managment">
         <Sidebar />
         <Header />
 
         <div className="admin-managment">
-
           <h2>
             {type === "project1" && "Project 1 Students"}
             {type === "project2" && "Project 2 Students"}
@@ -402,15 +387,10 @@ const handleExport = async () => {
           </div>
 
           <div className="table-card">
-
             <div className="top-bar">
-
               <div className="search-wrapper">
                 <FaSearch className="search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search"
-                />
+                <input type="text" placeholder="Search" />
               </div>
 
               <div className="top-actions">
@@ -428,18 +408,13 @@ const handleExport = async () => {
 
                 <button
                   className="btn-secondary"
-                  onClick={() =>
-                    document.getElementById("excelUpload").click()
-                  }
+                  onClick={() => document.getElementById("excelUpload").click()}
                 >
                   <FaUpload />
                   Upload Excel
                 </button>
 
-                <button
-                  className="btn-secondary"
-                  onClick={handleExport}
-                >
+                <button className="btn-secondary" onClick={handleExport}>
                   <FaShareAlt />
 
                   {type === "project1" && "Share Project 1 List"}
@@ -447,9 +422,7 @@ const handleExport = async () => {
                   {type === "doctors" && "Share Doctors List"}
                   {type === "assistants" && "Share TA List"}
                 </button>
-
               </div>
-
             </div>
             <input
               type="file"
@@ -462,7 +435,6 @@ const handleExport = async () => {
               }}
             />
             <table>
-
               <thead>
                 <tr>
                   <th>ID</th>
@@ -518,7 +490,6 @@ const handleExport = async () => {
                         value={newForm.department_id}
                         onChange={handleNewChange}
                         className="table-select"
-
                       >
                         <option value="">Department</option>
 
@@ -541,13 +512,9 @@ const handleExport = async () => {
                     )}
 
                     <td>
-                      <button
-                        className="save-btn"
-                        onClick={handleAdd}
-                      >
+                      <button className="save-btn" onClick={handleAdd}>
                         Submit
                       </button>
-
                     </td>
                   </tr>
                 )}
@@ -614,16 +581,15 @@ const handleExport = async () => {
                           </select>
                         </div>
                       ) : (
-                    item.staffprofile?.department?.name ||
-item.department?.name ||
-item.department ||
-"-"
+                        item.staffprofile?.department?.name ||
+                        item.department?.name ||
+                        item.department ||
+                        "-"
                       )}
                     </td>
 
                     {/* GPA */}
                     {type !== "doctors" && type !== "assistants" && (
-
                       <td>
                         {editingId === item.id ? (
                           <input
@@ -635,7 +601,7 @@ item.department ||
                             className="table-input"
                           />
                         ) : (
-                          item.gpa ?? "-"
+                          (item.gpa ?? "-")
                         )}
                       </td>
                     )}
@@ -643,7 +609,6 @@ item.department ||
                     {/* ACTION */}
                     <td>
                       <div className="action-buttons">
-
                         {editingId === item.id ? (
                           <button
                             className="save-btn"
@@ -658,25 +623,23 @@ item.department ||
                               setEditingId(item.id);
                               if (type === "doctors") {
                                 setEditMode("doctor");
-                              }
-                              else if (type === "assistants") {
+                              } else if (type === "assistants") {
                                 setEditMode("assistant");
-                              }
-                              else {
+                              } else {
                                 setEditMode("student");
                               }
-
 
                               setEditForm({
                                 name: item.name || item.full_name,
                                 national_id: item.national_id || "",
                                 email: item.email || "",
                                 phone: item.phone || "",
-department_id:
-  item.staffprofile?.department_id ??
-  item.department_id ??
-  item.department?.id ??
-  ""                       });
+                                department_id:
+                                  item.staffprofile?.department_id ??
+                                  item.department_id ??
+                                  item.department?.id ??
+                                  "",
+                              });
                             }}
                           >
                             <FaPen />
@@ -685,8 +648,9 @@ department_id:
                         )}
 
                         <button
-                          className={`status ${item.is_active ? "active" : "inactive"
-                            }`}
+                          className={`status ${
+                            item.is_active ? "active" : "inactive"
+                          }`}
                           onClick={() => handleToggleStatus(item.id)}
                         >
                           {item.is_active ? (
@@ -701,13 +665,11 @@ department_id:
                             </>
                           )}
                         </button>
-
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
-
             </table>
 
             {/* ===== Pagination Controls (English) ===== */}
@@ -744,7 +706,6 @@ department_id:
             {showUploadModal && (
               <div className="modal-overlay">
                 <div className="year-modal">
-
                   <div className="modal-header">
                     <h3>Confirm Upload</h3>
 
@@ -757,9 +718,7 @@ department_id:
                   </div>
 
                   <div className="modal-body">
-                    <p>
-                      Are you sure you want to upload this Excel file?
-                    </p>
+                    <p>Are you sure you want to upload this Excel file?</p>
 
                     {excelFile && (
                       <p style={{ marginTop: "10px", fontWeight: "bold" }}>
@@ -769,7 +728,6 @@ department_id:
                   </div>
 
                   <div className="modal-footer">
-
                     <button
                       className="cancel-btn"
                       onClick={() => setShowUploadModal(false)}
@@ -777,20 +735,14 @@ department_id:
                       Cancel
                     </button>
 
-                    <button
-                      className="save-btn"
-                      onClick={handleUploadExcel}
-                    >
+                    <button className="save-btn" onClick={handleUploadExcel}>
                       Confirm
                     </button>
-
                   </div>
-
                 </div>
               </div>
             )}
           </div>
-
         </div>
       </div>
     </>

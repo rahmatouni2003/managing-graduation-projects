@@ -348,7 +348,7 @@ static exportDoctor() {
   static defenseCommittees(data) {
     return submitRequestAsync(`/admin/defense-committees`, "POST", data);
   }
-  static getDefenseCommittees(id) {
+  static getDefenseCommittees() {
     return submitRequestAsync(`/admin/defense-committees`, "GET");
   }
   static deleteDefenseCommittee(id) {
@@ -366,6 +366,9 @@ static exportDoctor() {
   static downloadMilestoneCommittees() {
     return submitRequestAsync(`/admin/milestone-committees/export`, "GET");
   }
+static downloadDefenseCommittees() {
+  return submitRequestAsync(`/admin/defense-committees/export`, "GET", null, {}, true, true);
+}
   static getEigibleTeams() {
     return submitRequestAsync(`admin/milestone-committees/eligible-teams`, "GET");
   }

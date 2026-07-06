@@ -67,7 +67,30 @@ const getData = async () => {
       toast.error("Failed to delete discussion");
     }
   };
+// ---- download / export ----
+  const handleDownload = async () => {
+    try {
+      const response = await Admin.downloadDefenseCommittees();
 
+      const url = window.URL.createObjectURL(response);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `defense_committees_${new Date().toISOString().slice(0, 10)}.xlsx`
+      );
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(url);
+      toast.success("File downloaded successfully");
+    } catch (error) {
+      console.error("Download Error:", error);
+      toast.error("Download failed");
+    }
+  };
   // ---- convert "2026-05-25 10:30:00" <-> "2026-05-25T10:30" for datetime-local ----
   const toInputDateTime = (value) => {
     if (!value) return "";
@@ -389,8 +412,7 @@ className="delete-btn"
             <Typography variant="h4" fontWeight={700}>
               All Final Discussions
             </Typography>
-
-            <Button variant="contained" startIcon={<DownloadIcon />}>
+<Button variant="contained" startIcon={<DownloadIcon />} onClick={handleDownload}>
               Download
             </Button>
           </Box>
