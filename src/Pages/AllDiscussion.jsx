@@ -42,17 +42,18 @@ export default function AllDiscussions() {
     getData();
   }, [projectCourseId]);
 
-  const getData = async () => {
-    try {
-      setLoading(true);
-      const response = await Admin.getDefenseCommittees(projectCourseId);
-      setRows(response || []);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+const getData = async () => {
+  try {
+    setLoading(true);
+    const response = await Admin.getDefenseCommittees(projectCourseId);
+    console.log("Sample row:", response?.[0]); // شوف شكل الداتا
+    setRows(response || []);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ---- delete ----
   const handleDelete = async (id, e) => {
@@ -86,9 +87,11 @@ export default function AllDiscussions() {
 
   // ---- enter edit mode ----
   const handleEditClick = async (row, e) => {
+    
     e.stopPropagation();
     try {
-      const res = await Admin.getAvailableDoctorsAndTA(row.id);
+
+       const res = await Admin.getAvailableDoctorsAndTA(row.team_id)
 
       setFormOptions({
         doctors: res?.doctors || [],
@@ -118,16 +121,16 @@ export default function AllDiscussions() {
 
   // ---- submit edit ----
   const handleSubmitClick = async (row, e) => {
-    e.stopPropagation();
-    try {
-      setSubmitting(true);
+ e.stopPropagation();
+  try {
+    setSubmitting(true);
 
-      const data = {
-        scheduled_at: toApiDateTime(scheduledAt),
-        location: location,
-        doctor_ids: selectedDoctors.map((id) => (id === "" ? null : id)),
-        ta_ids: selectedTAs.map((id) => (id === "" ? null : id)),
-      };
+    const data = {
+      scheduled_at: toApiDateTime(scheduledAt),
+      location: location,
+      doctor_ids: selectedDoctors.map((id) => (id === "" ? null : id)),
+      ta_ids: selectedTAs.map((id) => (id === "" ? null : id)),
+    };
 
       await Admin.updateDefenseCommittee(row.id, data);
 
