@@ -25,8 +25,8 @@ import Project from "../Services/Project.model";
 function PreviuosProjectDetails() {
 
   const { id } = useParams();
-const [hoveredMember, setHoveredMember] =
-  useState(null);
+  const [hoveredMember, setHoveredMember] =
+    useState(null);
   const navigate = useNavigate();
 
   const [project, setProject] =
@@ -51,7 +51,12 @@ const [hoveredMember, setHoveredMember] =
         const response =
           await Project.getProjectDetails(id);
 
-        setProject(response);
+        // The API returns { success, data }, so we unwrap `data`
+        const payload = response?.data
+          ? response.data
+          : response;
+
+        setProject(payload);
 
       } catch (error) {
 
@@ -80,6 +85,11 @@ const [hoveredMember, setHoveredMember] =
     );
   }
 
+  // Everything related to the project's content
+  // (title, description, technologies, etc.) lives
+  // inside `proposal`.
+  const proposal = project.proposal || {};
+
   return (
 
     <div className="project-wrapper">
@@ -106,7 +116,7 @@ const [hoveredMember, setHoveredMember] =
             <div className="title-box">
 
               <h2>
-                {project.title}
+                {proposal.title}
               </h2>
 
               <span>
@@ -115,118 +125,162 @@ const [hoveredMember, setHoveredMember] =
 
             </div>
 
-            <a
-              href={project.attachment_file}
-              target="_blank"
-              rel="noreferrer"
-              className="download-btn"
-            >
-              <FaDownload />
-            </a>
+            {proposal.attachment_file && (
+              <a
+                href={proposal.attachment_file}
+                target="_blank"
+                rel="noreferrer"
+                className="download-btn"
+              >
+                <FaDownload />
+              </a>
+            )}
 
           </div>
 
           {/* IMAGE */}
 
           <img
-            src={
-              project.image_url ||
-              "https://via.placeholder.com/800x400"
-            }
-            alt={project.title}
+ src={
+            project.image_url ||
+            `https://picsum.photos/1000/450?random=${project.id}`
+          }
+            alt={proposal.title}
             className="project-image"
           />
 
           {/* DESCRIPTION */}
 
           <p className="project-description">
-            {project.description}
+            {proposal.description}
           </p>
 
           {/* PROBLEM */}
 
-          <div className="problem-box">
+          {proposal.problem_statement && (
+            <div className="problem-box">
 
-            <div className="problem-title">
+              <div className="problem-title">
 
-              <FaCircle />
+                <FaCircle />
 
-              <h4>
-                Problem Statement
-              </h4>
+                <h4>
+                  Problem Statement
+                </h4>
+
+              </div>
+
+              <p>
+                {proposal.problem_statement}
+              </p>
 
             </div>
+          )}
 
-            <p>
-              {project.problem_statement}
-            </p>
+          {/* SOLUTION (extra field from API) */}
 
-          </div>
+          {proposal.solution && (
+            <div className="problem-box">
+
+              <div className="problem-title">
+
+                <FaCircle />
+
+                <h4>
+                  Solution
+                </h4>
+
+              </div>
+
+              <p>
+                {proposal.solution}
+              </p>
+
+            </div>
+          )}
 
           {/* GRADE */}
 
-          <div className="grade-box">
+          {project.grade && (
+            <div className="grade-box">
 
-            <h4>
-              Grade
-            </h4>
+              <h4>
+                Grade
+              </h4>
 
-            <span className="final-score">
-              Final Score
-            </span>
-
-            <div className="grade-score">
-              {project.grade}%
-            </div>
-
-            <div className="progress-bar">
-
-              <div
-                className="progress-fill"
-                style={{
-                  width: `${project.grade}%`,
-                }}
-              ></div>
-
-            </div>
-
-          </div>
-
-          {/* FEEDBACK */}
-
-          <div className="feedback-box">
-
-            <h4>
-              Feedback
-            </h4>
-
-            <p>
-              {project.feedback?.text ||
-                "No Feedback Yet"}
-            </p>
-
-            <div className="feedback-footer">
-
-              <span>
-                Graded By:
-                {" "}
-                {project.feedback
-                  ?.graded_by || "-"}
+              <span className="final-score">
+                Final Score
               </span>
 
-              <span>
-                November 16, 2024
-              </span>
+              <div className="grade-score">
+                {project.grade}%
+              </div>
+
+              <div className="progress-bar">
+
+                <div
+                  className="progress-fill"
+                  style={{
+                    width: `${project.grade}%`,
+                  }}
+                ></div>
+
+              </div>
+
+              {project.graded_at && (
+                <div className="feedback-footer">
+                  <span>
+                    Graded At: {project.graded_at}
+                  </span>
+                </div>
+              )}
 
             </div>
-
-          </div>
+          )}
 
         </div>
 
         {/* RIGHT SIDE */}
 
         <div className="details-right">
+
+          {/* PROJECT INFO (extra fields from API) */}
+
+          {(proposal.category ||
+            project.department ||
+            project.project_type) && (
+            <div className="side-card">
+
+              <h3>
+                Project Info
+              </h3>
+
+              {proposal.category && (
+                <p>
+                  <strong>Category:</strong>
+                  {" "}
+                  {proposal.category}
+                </p>
+              )}
+
+              {project.department?.name && (
+                <p>
+                  <strong>Department:</strong>
+                  {" "}
+                  {project.department.name}
+                </p>
+              )}
+
+              {project.project_type?.name && (
+                <p>
+                  <strong>Type:</strong>
+                  {" "}
+                  {project.project_type.name}
+                </p>
+              )}
+
+            </div>
+          )}
 
           {/* RESOURCES */}
 
@@ -254,123 +308,99 @@ const [hoveredMember, setHoveredMember] =
 
             <h3>
               Members
-            </h3>
-
-<div className="members-list">
-
-  {project.team?.members?.map(
-    (member) => (
-
-      <div
-        className="member-wrapper"
-        key={member.id}
-        onMouseEnter={() =>
-          setHoveredMember(member)
-        }
-        onMouseLeave={() =>
-          setHoveredMember(null)
-        }
-      >
-
-        <div className="member-item">
-
-          <img
-          src={project.image_url || `https://picsum.photos/1000/450?random=${project.id}`}
-            alt={member.name}
-          />
-
-          <span>
-            {member.name}
-          </span>
-
-        </div>
-
-        {/* Hover Card */}
-
-        {hoveredMember?.id === member.id && (
-
-          <div className="member-card">
-
-            <div className="member-card-header">
-
-              <img
-                src={`https://i.pravatar.cc/150?u=${member.id}`}
-                alt={member.name}
-              />
-
-              <div>
-
-                <h4>
-                  {member.name}
-                </h4>
-
-                <p>
-                  {member.track}
-                </p>
-
-              </div>
-
-            </div>
-
-            <div className="member-info">
-
-              <p>
-                <strong>Role:</strong>
-                {" "}
-                {member.role}
-              </p>
-
-              <p>
-                <strong>Email:</strong>
-                {" "}
-                {member.email}
-              </p>
-
-              <p>
-                <strong>Department:</strong>
-                {" "}
-                {member.department || "-"}
-              </p>
-
-            </div>
-
-          </div>
-        )}
-
-      </div>
-    )
-  )}
-
-</div>
-
-          </div>
-
-          {/* SUPERVISION */}
-
-          <div className="side-card">
-
-            <h3>
-              Supervision
+              {project.team?.name && (
+                <span className="team-name">
+                  {" "}
+                  ({project.team.name})
+                </span>
+              )}
             </h3>
 
             <div className="members-list">
 
-              {project.team?.supervisors?.map(
-                (supervisor) => (
+              {project.team?.members?.map(
+                (member) => (
 
                   <div
-                    className="member-item"
-                    key={supervisor.id}
+                    className="member-wrapper"
+                    key={member.id}
+                    onMouseEnter={() =>
+                      setHoveredMember(member)
+                    }
+                    onMouseLeave={() =>
+                      setHoveredMember(null)
+                    }
                   >
 
-                    <img
-                      src={`https://i.pravatar.cc/150?u=${supervisor.id}`}
-                      alt=""
-                    />
+                    <div className="member-item">
 
-                    <span>
-                      {supervisor.name}
-                    </span>
+                      <img
+                        src={`https://i.pravatar.cc/150?u=${member.id}`}
+                        alt={member.name}
+                      />
+
+                      <span>
+                        {member.name}
+                      </span>
+
+                    </div>
+
+                    {/* Hover Card */}
+
+                    {hoveredMember?.id === member.id && (
+
+                      <div className="member-card">
+
+                        <div className="member-card-header">
+
+                          <img
+                            src={`https://i.pravatar.cc/150?u=${member.id}`}
+                            alt={member.name}
+                          />
+
+                          <div>
+
+                            <h4>
+                              {member.name}
+                            </h4>
+
+                            <p>
+                              {member.track}
+                            </p>
+
+                          </div>
+
+                        </div>
+
+                        <div className="member-info">
+
+                          <p>
+                            <strong>Role:</strong>
+                            {" "}
+                            {member.role}
+                          </p>
+
+                          {member.email &&
+                            member.email !== "Unknown" && (
+                              <p>
+                                <strong>Email:</strong>
+                                {" "}
+                                {member.email}
+                              </p>
+                            )}
+
+                          {member.department && (
+                            <p>
+                              <strong>Department:</strong>
+                              {" "}
+                              {member.department}
+                            </p>
+                          )}
+
+                        </div>
+
+                      </div>
+                    )}
 
                   </div>
                 )
@@ -380,27 +410,72 @@ const [hoveredMember, setHoveredMember] =
 
           </div>
 
+          {/* SUPERVISION */}
+
+          {project.team?.supervisors?.length > 0 && (
+            <div className="side-card">
+
+              <h3>
+                Supervision
+              </h3>
+
+              <div className="members-list">
+
+                {project.team.supervisors.map(
+                  (supervisor) => (
+
+                    <div
+                      className="member-item"
+                      key={supervisor.id}
+                    >
+
+                      <img
+                        src={`https://i.pravatar.cc/150?u=${supervisor.id}`}
+                        alt=""
+                      />
+
+                      <span>
+                        {supervisor.name}
+                        {supervisor.role && (
+                          <>
+                            {" "}
+                            <em>({supervisor.role})</em>
+                          </>
+                        )}
+                      </span>
+
+                    </div>
+                  )
+                )}
+
+              </div>
+
+            </div>
+          )}
+
           {/* TECH STACK */}
 
-          <div className="side-card">
+          {proposal.technologies?.length > 0 && (
+            <div className="side-card">
 
-            <h3>
-              Tech Stack
-            </h3>
+              <h3>
+                Tech Stack
+              </h3>
 
-            <ul className="tech-list">
+              <ul className="tech-list">
 
-              {project.technologies?.map(
-                (tech, index) => (
-                  <li key={index}>
-                    {tech}
-                  </li>
-                )
-              )}
+                {proposal.technologies.map(
+                  (tech, index) => (
+                    <li key={index}>
+                      {tech}
+                    </li>
+                  )
+                )}
 
-            </ul>
+              </ul>
 
-          </div>
+            </div>
+          )}
 
           {/* SHARE */}
 
