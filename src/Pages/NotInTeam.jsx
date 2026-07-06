@@ -78,15 +78,15 @@ export default function NotInTeam() {
           <div className="nth-actions">
             <button 
               className="nth-btn-outline" 
-              onClick={() => navigate("/student/notinteam/notInNewRequests", { state: { activeTab: "students" } })}
-            >
+              onClick={() => navigate("/student/notinteam/notInNewRequests", { state: { activeTab: "teams" } })} 
+              >
               <Search size={16} />
               Find a Team
             </button>
             
             <button 
               className="nth-btn-filled"
-              onClick={() => navigate("/student/notinteam/notInNewRequests", { state: { activeTab: "teams" } })}
+              onClick={() => navigate("/student/notinteam/notInNewRequests", { state: { activeTab: "students" } })}
             >
               <Users size={16} />
               Start a Team
