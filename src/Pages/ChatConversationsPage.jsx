@@ -171,6 +171,8 @@ export default function ChatConversationPage() {
 
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const pollingRef = useRef(null);
+  const isSendingRef = useRef(false);
 
   useEffect(() => {
     initConversation();
@@ -179,6 +181,23 @@ export default function ChatConversationPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Polling: كل 3 ثواني نجيب الرسايل الجديدة من غير ما نعمل reload لكل الصفحة
+  useEffect(() => {
+    if (!conversationId) return;
+
+    pollingRef.current = setInterval(() => {
+      if (isSendingRef.current) return; // منعاً لتعارض وقت الإرسال
+      fetchConversation(conversationId, { silent: true });
+    }, 3000);
+
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, [conversationId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -218,7 +237,9 @@ export default function ChatConversationPage() {
     }
   };
 
-  const fetchConversation = async (convId) => {
+  // silent = true معناها ميحصلش setLoading(true) عشان الصفحة متلخبطش وقت الـ polling
+  const fetchConversation = async (convId, { silent = false } = {}) => {
+    if (!silent) setLoading(true);
     try {
       const res = await Student.getChatConversations(convId);
       const data = res?.data ?? res;
@@ -251,12 +272,26 @@ export default function ChatConversationPage() {
           };
         });
       }
-      setMessages(data?.messages ?? []);
+
+      const incomingMessages = data?.messages ?? [];
+
+      // نستبدل الرسايل بس لو فيه اختلاف فعلي، عشان منعملش re-render/scroll غير ضروري كل 3 ثواني
+      setMessages((prevMessages) => {
+        if (prevMessages.length !== incomingMessages.length) {
+          return incomingMessages;
+        }
+        const lastPrev = prevMessages[prevMessages.length - 1];
+        const lastIncoming = incomingMessages[incomingMessages.length - 1];
+        const sameLast =
+          lastPrev?.id === lastIncoming?.id &&
+          lastPrev?.created_at === lastIncoming?.created_at;
+        return sameLast ? prevMessages : incomingMessages;
+      });
     } catch (err) {
       console.error(err);
-      setError("An error occurred while loading the conversation");
+      if (!silent) setError("An error occurred while loading the conversation");
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -276,6 +311,7 @@ export default function ChatConversationPage() {
     if ((!trimmed && !attachment) || sending || !conversationId) return;
 
     setSending(true);
+    isSendingRef.current = true;
     try {
       const formData = new FormData();
       formData.append("conversation_id", conversationId);
@@ -292,12 +328,13 @@ export default function ChatConversationPage() {
       const sentMessage = res?.data ?? res;
 
       setMessages((prev) => [...prev, sentMessage]);
-      newMessage("");
+      setNewMessage("");
       handleRemoveAttachment();
     } catch (err) {
       console.error("An error occurred while sending:", err);
     } finally {
       setSending(false);
+      isSendingRef.current = false;
     }
   };
 
@@ -457,40 +494,6 @@ export default function ChatConversationPage() {
               </div>
             </div>
           </div>
-
-          {/* <div className="nitr-sidebar-widget">
-            <h3>Shared Files & Links</h3>
-            <ul className="links-list">
-              {sharedFilesFromMessages.length > 0 ? (
-                sharedFilesFromMessages.map((msg, index) => {
-                  const fileName = msg.message || `Attachment_${index + 1}`;
-                  return (
-                    <li key={msg.id || index}>
-                      <span className="link-icon doc">📎</span>
-                      <a href={msg.file_url} target="_blank" rel="noopener noreferrer" title={msg.file_url}>
-                        {fileName.length > 25 ? `${fileName.substring(0, 25)}...` : fileName}
-                      </a>
-                    </li>
-                  );
-                })
-              ) : (
-                <>
-                  <li>
-                    <span className="link-icon figma">❖</span>
-                    <a href="#figma">Figma Design System (Project Prototype)</a>
-                  </li>
-                  <li>
-                    <span className="link-icon github">&lt;&gt;</span>
-                    <a href="#github">GitHub Repository (Front-end Source Code)</a>
-                  </li>
-                  <li>
-                    <span className="link-icon doc">📄</span>
-                    <a href="#docs">Research Paper Draft (Google Docs)</a>
-                  </li>
-                </>
-              )}
-            </ul>
-          </div> */}
 
           <div className="nitr-sidebar-widget">
             <h3>Supervision</h3>

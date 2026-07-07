@@ -112,6 +112,7 @@
 /* تلميح اسم المستخدم عند الوقوف بالماوس على الأفتار */
 .nitr-avatar-tooltip {
   position: absolute;
+  index-z :10000;
   bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%) translateY(4px);
