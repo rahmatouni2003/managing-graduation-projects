@@ -458,7 +458,7 @@ export default function ChatConversationPage() {
             </div>
           </div>
 
-          <div className="nitr-sidebar-widget">
+          {/* <div className="nitr-sidebar-widget">
             <h3>Shared Files & Links</h3>
             <ul className="links-list">
               {sharedFilesFromMessages.length > 0 ? (
@@ -490,7 +490,7 @@ export default function ChatConversationPage() {
                 </>
               )}
             </ul>
-          </div>
+          </div> */}
 
           <div className="nitr-sidebar-widget">
             <h3>Supervision</h3>
