@@ -700,14 +700,14 @@ export const router = createBrowserRouter([
         path: "student/inteam/sent-requests",
         element: <SentRequestsPage />,
       },
-      {
-        path: "student/inteam/chatconversations",
-        element: (
-          <StudentRoute teamStatus="no-team">
-            <ChatConversationsPage />
-          </StudentRoute>
-        ),
-      },
+{
+  path: "student/inteam/chatconversations",
+  element: (
+    <StudentRoute>
+      <ChatConversationsPage />
+    </StudentRoute>
+  ),
+},
       // {
       //   path: "user/inteam/new-request",
       //   element: <NewRequestPage />,
