@@ -658,7 +658,18 @@ export const router = createBrowserRouter([
         element: <ReportProblemPage />,
       },
 
-
+      {
+        path: "student/inteam/received",
+        element: <ReceivedRequests />,
+      },
+      {
+        path: "student/inteam/sent-requests",
+        element: <SentRequestsPage />,
+      },
+      {
+        path: "student/inteam/new-request",
+        element: <NewRequestPage />,
+      },
       {
         path: "projectsLiberary",
         element: <ProjectsLiberary />,
@@ -743,6 +754,7 @@ export const router = createBrowserRouter([
         path: "student/inteam/supervision/requests",
         element: <SentRequestsPage />,
       },
+
       {
         path: "student/notinteam/new-requests",
         element: (

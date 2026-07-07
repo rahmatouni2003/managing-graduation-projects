@@ -154,7 +154,7 @@ function RequestsPage() {
         <button
           className="new-request-btn"
           onClick={() =>
-            navigate("/student/inteam/supervision/new-requests")
+            navigate("/student/inteam/new-request")
           }
         >
           Send New Requests
