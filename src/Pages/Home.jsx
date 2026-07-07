@@ -158,13 +158,13 @@ const {
 
                     {/* استخدام رابط حقيقي قادم من الـ API بدلاً من التثبيت الاستاتيكي */}
                     <a 
-                      href={meeting.meeting_link?.startsWith('http') ? meeting.meeting_link : `https://meet.google.com/${meeting.meeting_link}`} 
+                      href={meeting.meeting_link?.startsWith('http') ? meeting.meeting_link : meeting.meeting_link } 
                       target="_blank" 
                       rel="noreferrer" 
                       className="meeting-google-link"
                     >
                       <FaLink />
-                      <span>https://meet.google.com/{meeting.meeting_link?.substring(0, 8)}...</span>
+                      <span>{meeting.meeting_link }</span>
                     </a>
                   </div>
                 </div>

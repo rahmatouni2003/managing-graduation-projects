@@ -658,10 +658,7 @@ export const router = createBrowserRouter([
         element: <ReportProblemPage />,
       },
 
-      {
-        path: "student/inteam/supervision/new-requests",
-        element: <NewRequestPage />,
-      },
+
       {
         path: "projectsLiberary",
         element: <ProjectsLiberary />,
@@ -737,6 +734,10 @@ export const router = createBrowserRouter([
       {
         path: "/guestHomePage",
         element: <GuestHomePage />,
+      },
+            {
+        path: "student/inteam/supervision/new-requests",
+        element: <NewRequestPage />,
       },
       {
         path: "student/inteam/supervision/requests",
