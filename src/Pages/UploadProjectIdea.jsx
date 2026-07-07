@@ -341,7 +341,7 @@
 //             <div className="field-group">
 //               <label>Attach Files (if any):</label>
 
-//               <label className="upload-box cursor-pointer">
+//               <label className="cursor-pointer upload-box">
 //                 <div
 //                   style={{ display: "flex", alignItems: "center", gap: "8px" }}
 //                 >
@@ -363,7 +363,7 @@
 //             <div className="field-group">
 //               <label>Project Picture:</label>
 
-//               <label className="upload-box cursor-pointer">
+//               <label className="cursor-pointer upload-box">
 //                 <div
 //                   style={{ display: "flex", alignItems: "center", gap: "8px" }}
 //                 >
@@ -735,8 +735,8 @@ export default function UploadProjectIdea() {
           {/* عمود مخصص لرفع الملفات */}
           <div className="files-upload-column">
             <div className="field-group">
-              <label>Attach Files (if any):</label>
-              <label className="upload-box cursor-pointer">
+              <label>Attach Files <span className="required">*</span></label>
+              <label className="cursor-pointer upload-box">
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   <FaPaperclip style={{ color: "#777", flexShrink: 0 }} />
                   <span style={{ color: "#444" }}>
@@ -753,7 +753,7 @@ export default function UploadProjectIdea() {
 
             <div className="field-group">
               <label>Project Picture:</label>
-              <label className="upload-box cursor-pointer">
+              <label className="cursor-pointer upload-box">
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   <FaPaperclip style={{ color: "#777", flexShrink: 0 }} />
                   <span style={{ color: "#444" }}>
