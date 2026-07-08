@@ -399,6 +399,7 @@ import { FaPaperclip, FaChevronDown, FaLightbulb } from "react-icons/fa";
 import "./uploadProjectIdea.css";
 import { useEffect, useState } from "react";
 import Project from "../Services/Project.model";
+import toast from "react-hot-toast";
 
 export default function UploadProjectIdea() {
   const [departments, setDepartments] = useState([]);
@@ -411,7 +412,8 @@ export default function UploadProjectIdea() {
   const [files, setFiles] = useState(null);
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState("Software Engineering");
-  
+  const [submitting, setSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -460,6 +462,22 @@ export default function UploadProjectIdea() {
   }, [image]);
 
   const handleSubmit = async () => {
+    // تحقق بسيط من الحقول المطلوبة قبل الإرسال
+    if (
+      !form.title.trim() ||
+      !form.description.trim() ||
+      !form.problem_statement.trim() ||
+      !form.solution.trim() ||
+      !form.department_id ||
+      !form.leader_user_id ||
+      tools.length === 0 ||
+      !files
+    ) {
+      toast.error("من فضلك املأ كل الحقول المطلوبة (*)");
+      return;
+    }
+
+    setSubmitting(true);
     try {
       const formData = new FormData();
       formData.append("title", form.title);
@@ -477,8 +495,16 @@ export default function UploadProjectIdea() {
 
       const res = await Project.uploadIdea(formData);
       console.log("Success:", res);
+      toast.success("تم رفع فكرة المشروع بنجاح!");
     } catch (error) {
       console.log("Submit error:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "حدث خطأ أثناء رفع فكرة المشروع، حاول مرة أخرى"
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -500,7 +526,7 @@ export default function UploadProjectIdea() {
         const res = await Project.getFormData();
         const data = res;
         console.log("Form Data:", data);
-        
+
         setTeamMembers(data.team_members || []);
         setLeaderId(data.team?.leader_user_id || null);
         setDepartments(data.departments || []);
@@ -515,6 +541,7 @@ export default function UploadProjectIdea() {
 
       } catch (error) {
         console.log("Error loading form data:", error);
+        toast.error("حدث خطأ أثناء تحميل بيانات الفورم");
       }
     };
 
@@ -529,6 +556,7 @@ export default function UploadProjectIdea() {
         setDepartments(res);
       } catch (error) {
         console.log("Error loading departments:", error);
+        toast.error("حدث خطأ أثناء تحميل الأقسام");
       } finally {
         setLoading(false);
       }
@@ -543,6 +571,7 @@ export default function UploadProjectIdea() {
         setProjectTypes(res);
       } catch (error) {
         console.log("Error loading project types:", error);
+        toast.error("حدث خطأ أثناء تحميل أنواع المشاريع");
       }
     };
     fetchProjectTypes();
@@ -774,8 +803,12 @@ export default function UploadProjectIdea() {
 
         {/* Submit */}
         <div className="submit-wrapper">
-          <button className="submit-btn" onClick={handleSubmit}>
-            Submit
+          <button
+            className="submit-btn"
+            onClick={handleSubmit}
+            disabled={submitting}
+          >
+            {submitting ? "Submitting..." : "Submit"}
           </button>
         </div>
       </div>
